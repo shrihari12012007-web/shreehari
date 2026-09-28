@@ -298,3 +298,40 @@ const navObserver = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.35 });
 allSections.forEach(s => navObserver.observe(s));
+
+// ── 14. ONE-BY-ONE GLASS CARD STAGGER ────────────────────────
+// When .skills-grid or .projects-grid scrolls into view,
+// reveal each child card one by one with a 140ms gap.
+const STAGGER_MS = 140;  // delay between each card appearing
+
+function setupCardStagger(gridSelector, cardSelector) {
+  const grids = document.querySelectorAll(gridSelector);
+  grids.forEach(grid => {
+    const cards = Array.from(grid.querySelectorAll(cardSelector));
+    let triggered = false;
+
+    const gridObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !triggered) {
+          triggered = true;
+          cards.forEach((card, i) => {
+            setTimeout(() => {
+              card.classList.add('card-visible');
+            }, i * STAGGER_MS);
+          });
+        }
+
+        // Reset when fully out of view (scroll back up)
+        if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
+          triggered = false;
+          cards.forEach(card => card.classList.remove('card-visible'));
+        }
+      });
+    }, { threshold: 0.08 });
+
+    gridObserver.observe(grid);
+  });
+}
+
+setupCardStagger('.skills-grid',   '.skill-group');
+setupCardStagger('.projects-grid', '.project-card');

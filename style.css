@@ -55,17 +55,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 
 
-/* stagger children of skill groups & cert grid */
-.skills-grid .reveal:nth-child(1) { transition-delay: 0s; }
-.skills-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
-.skills-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
-.skills-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
-.skills-grid .reveal:nth-child(5) { transition-delay: 0.4s; }
-.projects-grid .reveal:nth-child(1) { transition-delay: 0s; }
-.projects-grid .reveal:nth-child(2) { transition-delay: 0.12s; }
-.projects-grid .reveal:nth-child(3) { transition-delay: 0.24s; }
-.projects-grid .reveal:nth-child(4) { transition-delay: 0.36s; }
-.projects-grid .reveal:nth-child(5) { transition-delay: 0.48s; }
+/* card stagger is handled by JS (setupCardStagger) */
 
 /* ── NAVBAR ── */
 .navbar {
@@ -331,7 +321,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .hl-label { font-size: 12px; color: #555; }
 
-/* ── SKILLS ── */
+/* ── GLASS CARDS — Skills ── */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -339,15 +329,29 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .skill-group {
   padding: 28px;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  background: rgba(255,255,255,0.02);
-  transition: border-color 0.4s, background 0.4s, transform 0.4s;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07);
+  transition: border-color 0.4s, background 0.4s, transform 0.4s, box-shadow 0.4s;
+  /* stagger hidden state */
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+              transform 0.55s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.4s, background 0.4s, box-shadow 0.4s;
+}
+.skill-group.card-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .skill-group:hover {
-  border-color: rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.045);
-  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .skill-group-title {
   font-size: 13px; font-weight: 600; color: #888;
@@ -369,7 +373,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform: translateY(-2px);
 }
 
-/* ── PROJECTS ── */
+/* ── GLASS CARDS — Projects ── */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -378,18 +382,31 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .project-card {
   display: flex; flex-direction: column;
   padding: 28px;
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07);
   transition: border-color 0.45s, background 0.45s, transform 0.45s, box-shadow 0.45s;
   cursor: pointer;
   color: inherit;
+  /* stagger hidden state */
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+              transform 0.55s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.45s, background 0.45s, box-shadow 0.45s;
+}
+.project-card.card-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .project-card:hover {
-  border-color: rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.05);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 .project-card-header {
   display: flex; justify-content: space-between; align-items: flex-start;
