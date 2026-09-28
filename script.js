@@ -397,3 +397,25 @@ if (backToTopBtn) {
   });
 }
 
+// ── 17. LIVE GITHUB METRICS SYNC ─────────────────────────────
+async function syncGitHubStats() {
+  const repoEl      = document.getElementById('ghRepoCount');
+  const followersEl = document.getElementById('ghFollowersCount');
+  if (!repoEl || !followersEl) return;
+  try {
+    const res = await fetch('https://api.github.com/users/shrihari12012007-web');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.public_repos !== undefined) {
+      repoEl.textContent = data.public_repos;
+    }
+    if (data.followers !== undefined) {
+      followersEl.textContent = data.followers;
+    }
+  } catch (err) {
+    // Graceful fallback to default numbers already in HTML
+  }
+}
+syncGitHubStats();
+
+
