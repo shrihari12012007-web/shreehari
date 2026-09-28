@@ -20,17 +20,39 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   pointer-events: none;
 }
 
-/* ── SCROLL REVEAL — medium speed ── */
-.reveal {
+/* ── SCROLL REVEAL — 4 directions, medium speed ── */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale {
   opacity: 0;
-  transform: translateY(36px);
   transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.reveal-right { transform: translateX(36px); }
-/* Scrolling UP — element enters from above */
-.reveal.reveal-from-below { transform: translateY(-36px); }
-.reveal.visible { opacity: 1; transform: translate(0, 0); }
+/* ↑ from bottom (default) */
+.reveal           { transform: translateY(40px); }
+/* ← from left */
+.reveal-left      { transform: translateX(-50px); }
+/* → from right */
+.reveal-right     { transform: translateX(50px); }
+/* ⊙ scale in (front-to-back / zoom) */
+.reveal-scale     { transform: scale(0.88); }
+
+/* Scrolling UP reverse directions */
+.reveal.reveal-from-above        { transform: translateY(-40px); }
+.reveal-left.reveal-from-above   { transform: translateX(50px); }
+.reveal-right.reveal-from-above  { transform: translateX(-50px); }
+.reveal-scale.reveal-from-above  { transform: scale(1.1); }
+
+/* Visible state — all directions land at zero */
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible,
+.reveal-scale.visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
 
 
 /* stagger children of skill groups & cert grid */
@@ -274,19 +296,22 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   grid-template-columns: 260px 1fr;
   gap: 64px; align-items: start;
 }
-.photo-placeholder {
-  width: 100%; aspect-ratio: 1;
+/* ── PROFILE PHOTO ── */
+.about-photo { flex-shrink: 0; }
+.profile-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; color: #444; font-size: 13px;
-  background: rgba(255,255,255,0.02);
-  transition: border-color 0.4s, background 0.4s;
+  box-shadow: 0 0 60px rgba(80,80,255,0.12), 0 20px 60px rgba(0,0,0,0.5);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s;
+  display: block;
 }
-.photo-placeholder:hover {
-  border-color: rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.04);
+.profile-photo:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 0 0 80px rgba(100,100,255,0.2), 0 30px 80px rgba(0,0,0,0.6);
 }
 .about-text p { color: #777; font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
 .about-text strong { color: #e8e8e8; font-weight: 600; }

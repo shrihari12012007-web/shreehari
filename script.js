@@ -213,42 +213,39 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
-// ── 9. BIDIRECTIONAL SCROLL REVEAL ───────────────────────────
-// Down → slide UP into view | Up → slide DOWN into view
-const reveals = document.querySelectorAll('.reveal');
+// ── 9. MULTI-DIRECTION SCROLL REVEAL ─────────────────────────
+// ↑ .reveal      = slides up   (scroll down entrance)
+// ← .reveal-left = slides from left
+// → .reveal-right= slides from right
+// ⊙ .reveal-scale= zooms in (front-to-back)
+// Each reverses direction when scrolling back up
+
+const REVEAL_SELECTORS = '.reveal, .reveal-left, .reveal-right, .reveal-scale';
+const reveals = document.querySelectorAll(REVEAL_SELECTORS);
 
 function checkReveals() {
-  const wTop    = window.scrollY;
-  const wBottom = wTop + window.innerHeight;
-  const dir     = scrollDir;  // +1 down, -1 up
-
   reveals.forEach(el => {
-    const rect    = el.getBoundingClientRect();
-    const elTop   = rect.top;
-    const elBot   = rect.bottom;
-    const inView  = elTop < window.innerHeight - 50 && elBot > 50;
+    const rect   = el.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight - 50 && rect.bottom > 50;
 
     if (inView) {
-      // Remove opposite class before adding visible
-      el.classList.remove('reveal-from-below');
+      el.classList.remove('reveal-from-above');
       el.classList.add('visible');
     } else {
-      // Out of view — reset so it can re-animate
       el.classList.remove('visible');
-      // Set direction for next entrance
-      if (elTop >= window.innerHeight) {
-        // Element is below viewport → will enter from below (scrolling down)
-        el.classList.remove('reveal-from-below');
+      // Tag direction for re-entrance animation
+      if (rect.top < 0) {
+        // Element scrolled above viewport — will re-enter from top when scrolling up
+        el.classList.add('reveal-from-above');
       } else {
-        // Element is above viewport → will enter from above (scrolling up)
-        el.classList.add('reveal-from-below');
+        el.classList.remove('reveal-from-above');
       }
     }
   });
 }
 
 window.addEventListener('scroll', checkReveals, { passive: true });
-checkReveals(); // Initial check
+checkReveals();
 
 // ── 10. TYPING ANIMATION ─────────────────────────────────────
 const typingEl = document.getElementById('typing');
