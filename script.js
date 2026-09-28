@@ -335,3 +335,65 @@ function setupCardStagger(gridSelector, cardSelector) {
 
 setupCardStagger('.skills-grid',   '.skill-group');
 setupCardStagger('.projects-grid', '.project-card');
+
+// ── 15. INTERACTIVE CONTACT FORM ─────────────────────────────
+const contactForm = document.getElementById('contactForm');
+const formStatus  = document.getElementById('formStatus');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name    = document.getElementById('name').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (!name || !email || !message) {
+      formStatus.textContent = 'Please fill out all required fields.';
+      formStatus.className   = 'form-status error';
+      return;
+    }
+
+    formStatus.textContent = 'Opening your email client...';
+    formStatus.className   = 'form-status success';
+
+    const mailtoSubject = encodeURIComponent(`[Portfolio] ${subject || 'New Message from ' + name}`);
+    const mailtoBody    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const mailtoUrl     = `mailto:shrihari12012007@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+    setTimeout(() => {
+      window.location.href = mailtoUrl;
+      contactForm.reset();
+      formStatus.textContent = 'Message prepared! Thank you for reaching out.';
+    }, 600);
+  });
+}
+
+// ── 16. BACK TO TOP BUTTON WITH SCROLL PROGRESS ──────────────
+const backToTopBtn    = document.getElementById('backToTop');
+const progressCircle  = document.getElementById('progressCircle');
+const CIRCLE_LENGTH   = 125.66; // 2 * PI * 20
+
+function updateBackToTop() {
+  if (!backToTopBtn || !progressCircle) return;
+  const scrollY     = window.scrollY;
+  const docHeight   = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollRatio = docHeight > 0 ? Math.min(1, Math.max(0, scrollY / docHeight)) : 0;
+
+  // Toggle button visibility
+  backToTopBtn.classList.toggle('show', scrollY > 280);
+
+  // Update SVG stroke-dashoffset for circular progress
+  const offset = CIRCLE_LENGTH - (scrollRatio * CIRCLE_LENGTH);
+  progressCircle.style.strokeDashoffset = offset;
+}
+
+window.addEventListener('scroll', updateBackToTop, { passive: true });
+updateBackToTop();
+
+if (backToTopBtn) {
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
