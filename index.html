@@ -1,122 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shree Hari S B | CSE Student & Developer</title>
-<meta name="description" content="Portfolio of Shree Hari S B — Computer Science Engineering student, developer and AI enthusiast.">
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shree Hari S B | Developer & CSE Student</title>
+  <meta name="description" content="Portfolio of Shree Hari S B — Computer Science Engineering student at Jain Institute of Technology, developer and AI enthusiast.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="background-grid"></div>
-<div class="glow glow-1"></div><div class="glow glow-2"></div>
 
-<header class="navbar">
-<a href="#home" class="logo">SH<span>.</span></a>
-<nav id="navMenu">
-<a href="#home" class="active">Home</a><a href="#about">About</a><a href="#skills">Skills</a>
-<a href="#projects">Projects</a><a href="#education">Education</a><a href="#contact">Contact</a>
-</nav>
-<button class="menu-btn" id="menuBtn">☰</button>
-</header>
+  <div class="bg-noise"></div>
 
-<main>
-<section class="hero section" id="home">
-<div class="hero-content">
-<div class="status"><span class="status-dot"></span>Available for opportunities</div>
-<p class="small-title">HELLO, I'M</p>
-<h1>Shree Hari <span>S B</span></h1>
-<h2><span id="typing"></span></h2>
-<p class="hero-description">Computer Science Engineering student passionate about software development, artificial intelligence, automation and building useful technology.</p>
-<div class="hero-buttons">
-<a href="#projects" class="btn primary">View Projects <span>↗</span></a>
-<a href="https://github.com/shrihari12012007-web" target="_blank" class="btn secondary">GitHub <span>↗</span></a>
-</div>
-<div class="socials">
-<a href="https://github.com/shrihari12012007-web" target="_blank">GitHub</a>
-<a href="mailto:shrihari12012007@gmail.com">Email</a><span>•</span><span>Davangere, Karnataka</span>
-</div>
-</div>
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <a href="#home" class="logo">SH<span>.</span></a>
+    <nav id="navMenu">
+      <a href="#home"      class="nav-link active">Home</a>
+      <a href="#about"     class="nav-link">About</a>
+      <a href="#skills"    class="nav-link">Skills</a>
+      <a href="#projects"  class="nav-link">Projects</a>
+      <a href="#education" class="nav-link">Education</a>
+      <a href="#contact"   class="nav-link">Contact</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-<div class="hero-card">
-<div class="window-bar"><span></span><span></span><span></span></div>
-<div class="code">
-<p><span class="purple">const</span> developer = <span class="cyan">"Shree Hari"</span>;</p>
-<p><span class="purple">const</span> skills = [</p>
-<p class="indent"><span class="green">"Python"</span>,</p>
-<p class="indent"><span class="green">"JavaScript"</span>,</p>
-<p class="indent"><span class="green">"AI / ML"</span>,</p>
-<p class="indent"><span class="green">"Web Development"</span></p><p>];</p><br>
-<p><span class="purple">while</span> (learning) {</p>
-<p class="indent">build<span class="cyan">();</span></p>
-<p class="indent">improve<span class="cyan">();</span></p>
-<p class="indent">repeat<span class="cyan">();</span></p><p>}</p>
-</div></div>
-</section>
+  <main>
 
-<section class="section" id="about">
-<div class="section-heading"><p>01 — ABOUT ME</p><h2>Building my <span>future</span> with code.</h2></div>
-<div class="about-grid">
-<div class="about-text">
-<p>I'm <strong>Shree Hari S B</strong>, a Computer Science Engineering student at Jain Institute of Technology, Davangere.</p>
-<p>I'm interested in software development, artificial intelligence, automation and creating practical projects that solve real problems.</p>
-<p>I'm currently improving my programming, data structures, web development and AI/ML skills while building projects and exploring new technologies.</p>
-</div>
-<div class="about-stats">
-<div class="stat"><strong>3rd</strong><span>Semester</span></div>
-<div class="stat"><strong>4+</strong><span>Projects</span></div>
-<div class="stat"><strong>∞</strong><span>Things to Learn</span></div>
-</div>
-</div>
-</section>
+    <!-- HERO -->
+    <section class="hero section" id="home">
+      <div class="hero-text reveal">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Available for opportunities
+        </div>
+        <p class="eyebrow">HELLO, I'M</p>
+        <h1>Shree Hari <span class="accent">S B</span></h1>
+        <h2 class="typewriter"><span id="typing"></span><span class="cursor">|</span></h2>
+        <p class="hero-desc">
+          Computer Science Engineering student at Jain Institute of Technology, Davangere.
+          Passionate about AI, Machine Learning, Computer Vision and building practical software.
+        </p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">View Projects <span class="arrow">↗</span></a>
+          <a href="#contact" class="btn btn-secondary">Contact Me <span class="arrow">→</span></a>
+        </div>
+        <div class="hero-meta">
+          <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="meta-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            GitHub
+          </a>
+          <a href="mailto:shrihari12012007@gmail.com" class="meta-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </a>
+          <span class="meta-sep">·</span>
+          <span class="meta-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Davangere, Karnataka
+          </span>
+        </div>
+      </div>
 
-<section class="section" id="skills">
-<div class="section-heading"><p>02 — SKILLS</p><h2>Tools I <span>work with.</span></h2></div>
-<div class="skills-grid">
-<div class="skill-card"><div class="skill-icon">PY</div><h3>Python</h3><p>Programming & AI projects</p></div>
-<div class="skill-card"><div class="skill-icon">JS</div><h3>JavaScript</h3><p>Interactive web applications</p></div>
-<div class="skill-card"><div class="skill-icon">&lt;/&gt;</div><h3>HTML & CSS</h3><p>Modern responsive websites</p></div>
-<div class="skill-card"><div class="skill-icon">AI</div><h3>AI / ML</h3><p>Exploring intelligent systems</p></div>
-<div class="skill-card"><div class="skill-icon">GIT</div><h3>Git & GitHub</h3><p>Version control & collaboration</p></div>
-<div class="skill-card"><div class="skill-icon">AND</div><h3>Android</h3><p>Android application development</p></div>
-</div>
-</section>
+      <div class="hero-card reveal reveal-right">
+        <div class="card-bar">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="card-title">shreehari.js</span>
+        </div>
+        <div class="card-code">
+          <p><span class="kw">const</span> developer = <span class="str">"Shree Hari S B"</span>;</p>
+          <p><span class="kw">const</span> skills = [</p>
+          <p class="ind"><span class="str">"Python"</span>, <span class="str">"Java"</span>,</p>
+          <p class="ind"><span class="str">"JavaScript"</span>, <span class="str">"C"</span>,</p>
+          <p class="ind"><span class="str">"AI / ML"</span>,</p>
+          <p class="ind"><span class="str">"Computer Vision"</span></p>
+          <p>];</p>
+          <br>
+          <p><span class="kw">while</span> (alive) {</p>
+          <p class="ind">build<span class="fn">()</span>;</p>
+          <p class="ind">learn<span class="fn">()</span>;</p>
+          <p class="ind">improve<span class="fn">()</span>;</p>
+          <p>}</p>
+        </div>
+      </div>
+    </section>
 
-<section class="section" id="projects">
-<div class="section-heading"><p>03 — PROJECTS</p><h2>Things I've <span>built.</span></h2></div>
-<div class="projects-grid">
-<article class="project-card featured"><div class="project-top"><span class="project-number">01</span><span class="project-type">AI / PYTHON</span></div><h3>Panda AI Assistant</h3><p>A personal AI assistant designed to interact through voice commands, perform automation tasks, provide AI-powered responses and explore computer vision.</p><div class="tags"><span>Python</span><span>Gemini</span><span>Speech Recognition</span><span>Edge TTS</span></div></article>
-<article class="project-card"><div class="project-top"><span class="project-number">02</span><span class="project-type">COMPUTER VISION</span></div><h3>Hand Gesture Camera</h3><p>A gesture-based project exploring camera input, hand landmarks and gesture recognition to control applications through hand movements.</p><div class="tags"><span>Android</span><span>Computer Vision</span><span>Hand Tracking</span></div></article>
-<article class="project-card"><div class="project-top"><span class="project-number">03</span><span class="project-type">WEB</span></div><h3>Srinidhi Eye Care</h3><p>A modern healthcare-oriented website concept focused on eye care services, clean UI and responsive frontend development.</p><div class="tags"><span>React</span><span>Vite</span><span>CSS</span></div></article>
-<article class="project-card"><div class="project-top"><span class="project-number">04</span><span class="project-type">DESKTOP</span></div><h3>Electron Eye Widget</h3><p>A desktop widget experiment featuring animated eyes that respond to mouse movement.</p><div class="tags"><span>Electron</span><span>JavaScript</span><span>Desktop</span></div></article>
-</div>
-</section>
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="section-heading reveal">
+        <p class="tag">01 / ABOUT</p>
+        <h2>A little <span class="accent">about me</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-photo reveal">
+          <div class="photo-placeholder">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Your Photo Here</span>
+          </div>
+        </div>
+        <div class="about-text reveal">
+          <p>
+            I'm <strong>Shree Hari S B</strong>, a B.E. Computer Science Engineering student at
+            <strong>Jain Institute of Technology, Davangere</strong>. I'm passionate about building
+            practical, impactful software using cutting-edge technologies.
+          </p>
+          <p>
+            My interests lie in <strong>Artificial Intelligence</strong>, <strong>Machine Learning</strong>,
+            <strong>Computer Vision</strong>, and <strong>automation</strong>. I love turning ideas into
+            real projects — from AI voice assistants to gesture-controlled systems.
+          </p>
+          <p>
+            I actively participate in coding challenges on HackerRank and continuously grow my skills
+            in Python, AI/ML, and full-stack development alongside my academic studies.
+          </p>
+          <div class="about-highlights">
+            <div class="highlight-card">
+              <span class="hl-num">5+</span>
+              <span class="hl-label">Projects Built</span>
+            </div>
+            <div class="highlight-card">
+              <span class="hl-num">4+</span>
+              <span class="hl-label">Languages</span>
+            </div>
+            <div class="highlight-card">
+              <span class="hl-num">∞</span>
+              <span class="hl-label">Things to Learn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="section" id="education">
-<div class="section-heading"><p>04 — EDUCATION</p><h2>My <span>journey.</span></h2></div>
-<div class="timeline"><div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content">
-<span>2025 — PRESENT</span><h3>Bachelor of Engineering — CSE</h3><p>Jain Institute of Technology, Davangere</p><small>Currently pursuing Computer Science & Engineering.</small>
-</div></div></div>
-</section>
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="section-heading reveal">
+        <p class="tag">02 / SKILLS</p>
+        <h2>What I <span class="accent">work with</span></h2>
+      </div>
+      <div class="skills-grid">
 
-<section class="section learning">
-<div class="learning-box"><div><p class="eyebrow">CURRENTLY LEARNING</p><h2>Turning curiosity into <span>skills.</span></h2><p>DSA • AI/ML • Web Development • Git & GitHub • Software Development</p></div><div class="learning-orbit"><span>CODE</span></div></div>
-</section>
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title">Programming Languages</h3>
+          <div class="tags">
+            <span class="tag-badge">Python</span>
+            <span class="tag-badge">Java</span>
+            <span class="tag-badge">JavaScript</span>
+            <span class="tag-badge">C</span>
+          </div>
+        </div>
 
-<section class="section contact" id="contact">
-<div class="section-heading"><p>05 — CONTACT</p><h2>Let's build something <span>cool.</span></h2><p class="contact-description">Have an idea, project or opportunity? Feel free to reach out.</p></div>
-<div class="contact-card">
-<a href="mailto:shrihari12012007@gmail.com" class="contact-item"><span class="contact-icon">✉</span><div><small>EMAIL</small><strong>shrihari12012007@gmail.com</strong></div></a>
-<a href="tel:+918105403378" class="contact-item"><span class="contact-icon">☎</span><div><small>PHONE</small><strong>+91 81054 03378</strong></div></a>
-<a href="https://github.com/shrihari12012007-web" target="_blank" class="contact-item"><span class="contact-icon">◈</span><div><small>GITHUB</small><strong>shrihari12012007-web</strong></div></a>
-</div>
-</section>
-</main>
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title">Web Development</h3>
+          <div class="tags">
+            <span class="tag-badge">HTML5</span>
+            <span class="tag-badge">CSS3</span>
+            <span class="tag-badge">JavaScript</span>
+            <span class="tag-badge">React</span>
+            <span class="tag-badge">Vite</span>
+          </div>
+        </div>
 
-<footer><div class="footer-logo">SH<span>.</span></div><p>Designed & built by Shree Hari S B</p><p>© <span id="year"></span> Shree Hari S B</p></footer>
-<script src="script.js"></script>
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title">AI / ML & Vision</h3>
+          <div class="tags">
+            <span class="tag-badge">Machine Learning</span>
+            <span class="tag-badge">Computer Vision</span>
+            <span class="tag-badge">NumPy</span>
+            <span class="tag-badge">Gemini API</span>
+            <span class="tag-badge">MediaPipe</span>
+          </div>
+        </div>
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title">Tools & Platforms</h3>
+          <div class="tags">
+            <span class="tag-badge">Git & GitHub</span>
+            <span class="tag-badge">VS Code</span>
+            <span class="tag-badge">Android Studio</span>
+            <span class="tag-badge">Canva</span>
+            <span class="tag-badge">Vercel</span>
+            <span class="tag-badge">Render</span>
+          </div>
+        </div>
+
+        <div class="skill-group reveal">
+          <h3 class="skill-group-title">Other Skills</h3>
+          <div class="tags">
+            <span class="tag-badge">Data Structures</span>
+            <span class="tag-badge">Algorithms</span>
+            <span class="tag-badge">Automation</span>
+            <span class="tag-badge">Problem Solving</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
+      <div class="section-heading reveal">
+        <p class="tag">03 / PROJECTS</p>
+        <h2>Things I've <span class="accent">built</span></h2>
+      </div>
+      <div class="projects-grid">
+
+        <div class="project-card reveal">
+          <div class="project-card-header">
+            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span class="project-badge">Featured</span>
+          </div>
+          <h3>Panda — AI Voice Assistant</h3>
+          <p>Python-based AI voice assistant with speech recognition, AI responses via Gemini API, text-to-speech, and computer automation. Modular architecture covering voice, AI, commands, vision, memory, and GUI.</p>
+          <div class="project-footer">
+            <div class="tech-stack">
+              <span>Python</span><span>Gemini API</span><span>PyAudio</span><span>Edge TTS</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://github.com/shrihari12012007-web/Hand_Gesture_Camera." target="_blank" rel="noopener" class="project-card reveal">
+          <div class="project-card-header">
+            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+            <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </div>
+          <h3>Hand Gesture Camera Controller</h3>
+          <p>Android-based computer vision project for camera-based hand gesture recognition. Uses hand landmark detection for gesture-based interaction across Android and desktop components.</p>
+          <div class="project-footer">
+            <div class="tech-stack">
+              <span>Python</span><span>Android</span><span>Computer Vision</span><span>MediaPipe</span>
+            </div>
+            <span class="project-link">GitHub ↗</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/shrihari12012007-web/Desktop-Eye" target="_blank" rel="noopener" class="project-card reveal">
+          <div class="project-card-header">
+            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </div>
+          <h3>Srinidhi Eye Care — Web App</h3>
+          <p>React and Vite-based healthcare website for an eye care clinic. Responsive UI with clean navigation and healthcare-oriented presentation.</p>
+          <div class="project-footer">
+            <div class="tech-stack">
+              <span>React</span><span>Vite</span><span>CSS</span>
+            </div>
+            <span class="project-link">Live ↗</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/shrihari12012007-web/Strategy-Tracker" target="_blank" rel="noopener" class="project-card reveal">
+          <div class="project-card-header">
+            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </div>
+          <h3>Strategy Tracker</h3>
+          <p>A web application to track and manage strategies, built with HTML/CSS/JS and deployed live on Vercel.</p>
+          <div class="project-footer">
+            <div class="tech-stack">
+              <span>HTML</span><span>CSS</span><span>JS</span>
+            </div>
+            <span class="project-link">strategy-tracker-nine.vercel.app ↗</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/shrihari12012007-web/STUDY" target="_blank" rel="noopener" class="project-card reveal">
+          <div class="project-card-header">
+            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </div>
+          <h3>STUDY Resource Hub</h3>
+          <p>A curated study resource hub with notes and references for CSE students. Hosted on GitHub Pages.</p>
+          <div class="project-footer">
+            <div class="tech-stack">
+              <span>HTML</span><span>CSS</span>
+            </div>
+            <span class="project-link">GitHub Pages ↗</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- EDUCATION & CERTIFICATIONS -->
+    <section class="section" id="education">
+      <div class="section-heading reveal">
+        <p class="tag">04 / EDUCATION</p>
+        <h2>My <span class="accent">journey</span></h2>
+      </div>
+      <div class="timeline">
+
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date">2025 – Present</span>
+            <h3>Bachelor of Engineering — Computer Science</h3>
+            <p class="timeline-org">Jain Institute of Technology, Davangere</p>
+            <p>Pursuing B.E. in Computer Science and Engineering. Focused on software development, AI/ML, algorithms, and building real-world projects.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Certifications -->
+      <div class="cert-section reveal">
+        <h3 class="cert-title">Certifications &amp; Learning</h3>
+        <div class="cert-grid">
+          <div class="cert-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Python Programming
+          </div>
+          <div class="cert-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Git and GitHub
+          </div>
+          <div class="cert-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            AI &amp; Machine Learning Fundamentals
+          </div>
+          <div class="cert-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Computer Vision Fundamentals
+          </div>
+          <div class="cert-item learning">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Data Structures &amp; Algorithms <span class="learning-tag">In Progress</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="section-heading reveal">
+        <p class="tag">05 / CONTACT</p>
+        <h2>Let's <span class="accent">connect</span></h2>
+      </div>
+      <div class="contact-wrapper reveal">
+        <div class="contact-info">
+          <p class="contact-desc">
+            I'm always open to new opportunities, collaborations, or just a good conversation about tech.
+            Feel free to reach out!
+          </p>
+          <div class="contact-links">
+            <a href="mailto:shrihari12012007@gmail.com" class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Email</span>
+                <span class="contact-value">shrihari12012007@gmail.com</span>
+              </div>
+            </a>
+            <a href="tel:+918105403378" class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Phone</span>
+                <span class="contact-value">+91 8105403378</span>
+              </div>
+            </a>
+            <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">GitHub</span>
+                <span class="contact-value">shrihari12012007-web</span>
+              </div>
+            </a>
+            <div class="contact-item no-link">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <span class="contact-label">Location</span>
+                <span class="contact-value">Davangere, Karnataka, India</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <a href="#home" class="footer-logo">SH<span>.</span></a>
+      <p class="footer-copy">Designed &amp; built by <strong>Shree Hari S B</strong> · 2026</p>
+      <div class="footer-socials">
+        <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="mailto:shrihari12012007@gmail.com" aria-label="Email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
