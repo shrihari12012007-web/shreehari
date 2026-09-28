@@ -296,18 +296,22 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   grid-template-columns: 260px 1fr;
   gap: 64px; align-items: start;
 }
-/* ── AVATAR PLACEHOLDER ── */
+/* ── PROFILE PHOTO ── */
 .about-photo { flex-shrink: 0; }
-.avatar-placeholder {
+.profile-photo {
   width: 100%;
-  aspect-ratio: 1;
-  border: 1px solid rgba(255,255,255,0.08);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
   border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.02);
-  color: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: block;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s;
+}
+.profile-photo:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.65);
 }
 .about-text p { color: #777; font-size: 15px; line-height: 1.75; margin-bottom: 20px; }
 .about-text strong { color: #e8e8e8; font-weight: 600; }
