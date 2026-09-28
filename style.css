@@ -441,6 +441,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: #333;
   border: 2px solid rgba(255,255,255,0.2);
   transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+  /* needed for radar rings */
+  display: flex; align-items: center; justify-content: center;
+  overflow: visible;
 }
 .timeline-item:hover .timeline-dot {
   background: #fff; border-color: #fff;
@@ -458,6 +461,62 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .timeline-org { font-size: 13px; color: #666; margin-bottom: 10px; }
 .timeline-content > p { font-size: 14px; color: #666; line-height: 1.7; }
+
+/* ── RADAR PULSE — Present / In Progress ── */
+.active-dot {
+  background: #4ade80 !important;
+  border-color: #4ade80 !important;
+  box-shadow: 0 0 10px rgba(74,222,128,0.5) !important;
+}
+.radar-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(74,222,128,0.7);
+  animation: radar-expand 2s ease-out infinite;
+  pointer-events: none;
+}
+.radar-ring-2 { animation-delay: 1s; }
+
+@keyframes radar-expand {
+  0%   { width: 12px; height: 12px; opacity: 0.8; }
+  100% { width: 40px; height: 40px; opacity: 0; }
+}
+
+/* Inline radar dot — used in date text and cert items */
+.radar-dot {
+  display: inline-block;
+  position: relative;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74,222,128,0.8);
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.radar-dot::before,
+.radar-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid rgba(74,222,128,0.6);
+  animation: radar-expand 2s ease-out infinite;
+}
+.radar-dot::after { animation-delay: 1s; }
+
+/* "Present" badge next to the date */
+.present-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #4ade80;
+  font-weight: 600;
+}
 
 /* ── CERTIFICATIONS ── */
 .cert-section { margin-top: 64px; }
