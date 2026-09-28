@@ -27,13 +27,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.reveal.reveal-right {
-  transform: translateX(36px);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translate(0, 0);
-}
+.reveal.reveal-right { transform: translateX(36px); }
+/* Scrolling UP — element enters from above */
+.reveal.reveal-from-below { transform: translateY(-36px); }
+.reveal.visible { opacity: 1; transform: translate(0, 0); }
+
 
 /* stagger children of skill groups & cert grid */
 .skills-grid .reveal:nth-child(1) { transition-delay: 0s; }

@@ -1,42 +1,16 @@
 /* ============================================================
    SHREE HARI S B — PORTFOLIO SCRIPT
-   Features:
-   • Scroll-reactive canvas background (particles + glow)
-   • Background color mood shifts per section on scroll
-   • Typing animation
-   • Scroll reveal (medium speed)
-   • Active nav tracking
-   • Mobile menu
+   • Canvas background — particles + dual glow orbs
+   • Mouse parallax   — glow orbs smoothly follow cursor
+   • Scroll parallax  — particle layers shift on scroll
+   • Section palette  — bg color shifts per section on scroll
+   • Bidirectional reveal — slides UP on scroll-down, DOWN on scroll-up
+   • Typing animation, active nav, mobile menu
    ============================================================ */
 
-// ── 1. CANVAS BACKGROUND ─────────────────────────────────────
+// ── 1. CANVAS SETUP ──────────────────────────────────────────
 const canvas = document.getElementById('bg-canvas');
 const ctx    = canvas.getContext('2d');
-
-// Section color palettes — [r, g, b] for the accent glow
-const SECTION_PALETTES = {
-  home:      { bg: [6,  6,  8],  accent: [80, 160, 255], name: 'home' },
-  about:     { bg: [6,  6,  10], accent: [120, 80, 255],  name: 'about' },
-  skills:    { bg: [4,  8,  10], accent: [0,  200, 180],  name: 'skills' },
-  projects:  { bg: [8,  6,  10], accent: [160, 80, 255],  name: 'projects' },
-  education: { bg: [6,  8,  6],  accent: [80, 200, 120],  name: 'education' },
-  contact:   { bg: [8,  6,  6],  accent: [255, 100, 80],  name: 'contact' },
-};
-
-// Current and target palette (for smooth interpolation)
-let currentPalette  = { ...SECTION_PALETTES.home };
-let targetPalette   = { ...SECTION_PALETTES.home };
-let lerpProgress    = 1; // 0 → 1 (transition progress)
-const LERP_SPEED    = 0.025; // controls transition smoothness (medium)
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-function lerpColor(a, b, t) {
-  return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-}
-
-// ── Particle System ──
-const PARTICLE_COUNT = 70;
-const particles = [];
 
 function resize() {
   canvas.width  = window.innerWidth;
@@ -45,146 +19,238 @@ function resize() {
 resize();
 window.addEventListener('resize', () => { resize(); initParticles(); });
 
+// ── 2. MOUSE TRACKING (with smooth lag) ──────────────────────
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+let smoothMouse = { x: mouse.x, y: mouse.y };
+
+window.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+// Touch support
+window.addEventListener('touchmove', e => {
+  mouse.x = e.touches[0].clientX;
+  mouse.y = e.touches[0].clientY;
+}, { passive: true });
+
+// ── 3. SCROLL TRACKING ───────────────────────────────────────
+let scrollY        = window.scrollY;
+let smoothScrollY  = scrollY;
+let scrollDir      = 0;          // +1 = down, -1 = up
+let lastScrollY    = scrollY;
+
+window.addEventListener('scroll', () => {
+  scrollY   = window.scrollY;
+  scrollDir = scrollY > lastScrollY ? 1 : -1;
+  lastScrollY = scrollY;
+}, { passive: true });
+
+// ── 4. SECTION PALETTES ──────────────────────────────────────
+const PALETTES = {
+  home:      { bg: [5,  5,  8],  a: [80,  160, 255] },
+  about:     { bg: [5,  5,  12], a: [110, 70,  255] },
+  skills:    { bg: [4,  8,  10], a: [0,   210, 185] },
+  projects:  { bg: [8,  5,  12], a: [160, 70,  255] },
+  education: { bg: [5,  9,  5],  a: [70,  210, 120] },
+  contact:   { bg: [10, 5,  5],  a: [255, 90,  70]  },
+};
+
+let curBg     = [...PALETTES.home.bg];
+let curAccent = [...PALETTES.home.a];
+let tgtBg     = [...PALETTES.home.bg];
+let tgtAccent = [...PALETTES.home.a];
+let palLerp   = 1;
+const PAL_SPEED = 0.022;
+let lastSection = 'home';
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function lerpArr(a, b, t) { return a.map((v, i) => lerp(v, b[i], t)); }
+function ease(t) { return t < .5 ? 2*t*t : -1 + (4 - 2*t)*t; }
+
+// ── 5. PARTICLES ─────────────────────────────────────────────
+const PARTICLE_COUNT = 72;
+const particles = [];
+
 class Particle {
-  constructor() { this.reset(true); }
-  reset(randomY = false) {
-    this.x  = Math.random() * canvas.width;
-    this.y  = randomY ? Math.random() * canvas.height : canvas.height + 10;
-    this.r  = Math.random() * 1.5 + 0.3;
-    this.vx = (Math.random() - 0.5) * 0.35;
-    this.vy = -(Math.random() * 0.4 + 0.1);
-    this.alpha = Math.random() * 0.5 + 0.1;
-    this.pulse = Math.random() * Math.PI * 2;
-    this.pulseSpeed = Math.random() * 0.02 + 0.008;
+  constructor(randomY = false) {
+    this.spawn(randomY);
   }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.pulse += this.pulseSpeed;
-    if (this.y < -10 || this.x < -20 || this.x > canvas.width + 20) this.reset();
+  spawn(randomY = false) {
+    this.x      = Math.random() * canvas.width;
+    this.y      = randomY ? Math.random() * canvas.height : canvas.height + 20;
+    this.baseVx = (Math.random() - 0.5) * 0.3;
+    this.baseVy = -(Math.random() * 0.35 + 0.08);
+    this.r      = Math.random() * 1.6 + 0.3;
+    this.alpha  = Math.random() * 0.45 + 0.1;
+    this.depth  = Math.random() * 0.7 + 0.3;  // 0.3–1.0 (parallax layer)
+    this.pulse  = Math.random() * Math.PI * 2;
+    this.pSpeed = Math.random() * 0.018 + 0.007;
+  }
+  update(mouseOffX, mouseOffY, scrollOffY) {
+    // Mouse parallax — closer particles (lower depth) shift more
+    const mFactor = (1 - this.depth) * 0.04;
+    const vx = this.baseVx + mouseOffX * mFactor;
+    const vy = this.baseVy + mouseOffY * mFactor + scrollOffY * (1 - this.depth) * 0.006;
+
+    this.x += vx;
+    this.y += vy;
+    this.pulse += this.pSpeed;
+
+    if (this.y < -20 || this.x < -30 || this.x > canvas.width + 30) {
+      this.spawn(false);
+    }
   }
 }
 
 function initParticles() {
   particles.length = 0;
-  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle(true));
 }
 initParticles();
 
-// ── Draw ──
-function drawBackground(bg, accent) {
+// ── 6. DRAW ──────────────────────────────────────────────────
+function drawFrame() {
+  const bg = curBg, ac = curAccent;
+  const W  = canvas.width, H = canvas.height;
+
   // Base fill
-  ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = `rgb(${bg[0]|0},${bg[1]|0},${bg[2]|0})`;
+  ctx.fillRect(0, 0, W, H);
 
-  // Subtle radial gradient glow in the top-left area
-  const g1 = ctx.createRadialGradient(
-    canvas.width * 0.2, canvas.height * 0.2, 0,
-    canvas.width * 0.2, canvas.height * 0.2, canvas.width * 0.55
-  );
-  g1.addColorStop(0, `rgba(${accent[0]},${accent[1]},${accent[2]},0.07)`);
-  g1.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = g1;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Glow orb 1 — follows mouse (top area)
+  const g1x = smoothMouse.x;
+  const g1y = smoothMouse.y;
+  const grd1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, Math.max(W, H) * 0.55);
+  grd1.addColorStop(0, `rgba(${ac[0]},${ac[1]},${ac[2]},0.1)`);
+  grd1.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grd1;
+  ctx.fillRect(0, 0, W, H);
 
-  // Second glow bottom-right
-  const g2 = ctx.createRadialGradient(
-    canvas.width * 0.85, canvas.height * 0.75, 0,
-    canvas.width * 0.85, canvas.height * 0.75, canvas.width * 0.4
-  );
-  g2.addColorStop(0, `rgba(${accent[0]},${accent[1]},${accent[2]},0.05)`);
-  g2.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = g2;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+  // Glow orb 2 — opposite of mouse (bottom-right area)
+  const g2x = W - smoothMouse.x * 0.5;
+  const g2y = H - smoothMouse.y * 0.5;
+  const grd2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, W * 0.4);
+  grd2.addColorStop(0, `rgba(${ac[0]},${ac[1]},${ac[2]},0.055)`);
+  grd2.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grd2;
+  ctx.fillRect(0, 0, W, H);
 
-function drawParticles(accent) {
+  // Particle connections + dots
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
-    const pulsedAlpha = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+    const pa = p.alpha * (0.65 + 0.35 * Math.sin(p.pulse));
 
-    // Draw connection lines between close particles
     for (let j = i + 1; j < particles.length; j++) {
-      const q = particles[j];
+      const q  = particles[j];
       const dx = p.x - q.x, dy = p.y - q.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 130) {
-        const lineAlpha = (1 - dist / 130) * 0.12;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d < 130) {
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(${accent[0]},${accent[1]},${accent[2]},${lineAlpha})`;
-        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = `rgba(${ac[0]},${ac[1]},${ac[2]},${(1 - d/130) * 0.13})`;
+        ctx.lineWidth = 0.5;
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
         ctx.stroke();
       }
     }
 
-    // Draw particle dot
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${accent[0]},${accent[1]},${accent[2]},${pulsedAlpha})`;
+    ctx.fillStyle = `rgba(${ac[0]},${ac[1]},${ac[2]},${pa})`;
     ctx.fill();
   }
 }
 
-// ── Animation Loop ──
+// ── 7. ANIMATION LOOP ────────────────────────────────────────
+let prevScrollY = 0;
+
 function animate() {
   requestAnimationFrame(animate);
 
-  // Smoothly lerp toward target palette
-  if (lerpProgress < 1) {
-    lerpProgress = Math.min(1, lerpProgress + LERP_SPEED);
-    const t = easeInOut(lerpProgress);
-    currentPalette = {
-      bg:     lerpColor(currentPalette._fromBg     || currentPalette.bg,     targetPalette.bg,     t),
-      accent: lerpColor(currentPalette._fromAccent || currentPalette.accent, targetPalette.accent, t),
-    };
+  // Smooth mouse
+  smoothMouse.x = lerp(smoothMouse.x, mouse.x, 0.055);
+  smoothMouse.y = lerp(smoothMouse.y, mouse.y, 0.055);
+
+  // Smooth scroll
+  const scrollDelta = scrollY - prevScrollY;
+  prevScrollY = lerp(prevScrollY, scrollY, 0.08);
+
+  // Mouse offset relative to center (for particle parallax)
+  const mouseOffX = mouse.x - canvas.width  / 2;
+  const mouseOffY = mouse.y - canvas.height / 2;
+
+  // Section palette transition
+  if (palLerp < 1) {
+    palLerp   = Math.min(1, palLerp + PAL_SPEED);
+    const t   = ease(palLerp);
+    curBg     = lerpArr(curBg,     tgtBg,     t);
+    curAccent = lerpArr(curAccent, tgtAccent, t);
   }
 
-  const { bg, accent } = currentPalette;
-  drawBackground(bg, accent);
+  // Update particles with mouse + scroll parallax
+  particles.forEach(p => p.update(mouseOffX, mouseOffY, scrollDelta));
 
-  particles.forEach(p => p.update());
-  drawParticles(accent);
+  drawFrame();
 }
-
-function easeInOut(t) {
-  return t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
-}
-
 animate();
 
-// ── 2. SCROLL → CHANGE BACKGROUND PER SECTION ────────────────
-const sectionIds = Object.keys(SECTION_PALETTES);
-let lastSection  = 'home';
+// ── 8. SECTION SCROLL → PALETTE CHANGE ──────────────────────
+const sectionIds = Object.keys(PALETTES);
 
-function detectActiveSection() {
-  const scrollY      = window.scrollY;
-  const viewportMid  = scrollY + window.innerHeight * 0.4;
-
+window.addEventListener('scroll', () => {
+  const mid = window.scrollY + window.innerHeight * 0.4;
   let active = sectionIds[0];
   for (const id of sectionIds) {
     const el = document.getElementById(id);
-    if (!el) continue;
-    if (el.offsetTop <= viewportMid) active = id;
+    if (el && el.offsetTop <= mid) active = id;
   }
-  return active;
-}
-
-window.addEventListener('scroll', () => {
-  const section = detectActiveSection();
-  if (section !== lastSection) {
-    lastSection = section;
-    const pal = SECTION_PALETTES[section];
-    // Save current interpolated values as the "from"
-    currentPalette._fromBg     = [...currentPalette.bg];
-    currentPalette._fromAccent = [...currentPalette.accent];
-    targetPalette  = pal;
-    lerpProgress   = 0;
+  if (active !== lastSection) {
+    lastSection = active;
+    tgtBg     = [...PALETTES[active].bg];
+    tgtAccent = [...PALETTES[active].a];
+    palLerp   = 0;
   }
 }, { passive: true });
 
-// ── 3. TYPING ANIMATION ───────────────────────────────────────
+// ── 9. BIDIRECTIONAL SCROLL REVEAL ───────────────────────────
+// Down → slide UP into view | Up → slide DOWN into view
+const reveals = document.querySelectorAll('.reveal');
+
+function checkReveals() {
+  const wTop    = window.scrollY;
+  const wBottom = wTop + window.innerHeight;
+  const dir     = scrollDir;  // +1 down, -1 up
+
+  reveals.forEach(el => {
+    const rect    = el.getBoundingClientRect();
+    const elTop   = rect.top;
+    const elBot   = rect.bottom;
+    const inView  = elTop < window.innerHeight - 50 && elBot > 50;
+
+    if (inView) {
+      // Remove opposite class before adding visible
+      el.classList.remove('reveal-from-below');
+      el.classList.add('visible');
+    } else {
+      // Out of view — reset so it can re-animate
+      el.classList.remove('visible');
+      // Set direction for next entrance
+      if (elTop >= window.innerHeight) {
+        // Element is below viewport → will enter from below (scrolling down)
+        el.classList.remove('reveal-from-below');
+      } else {
+        // Element is above viewport → will enter from above (scrolling up)
+        el.classList.add('reveal-from-below');
+      }
+    }
+  });
+}
+
+window.addEventListener('scroll', checkReveals, { passive: true });
+checkReveals(); // Initial check
+
+// ── 10. TYPING ANIMATION ─────────────────────────────────────
 const typingEl = document.getElementById('typing');
 const words    = ['CSE Student', 'AI Enthusiast', 'Python Developer', 'Problem Solver', 'Future Software Engineer'];
 let wordIdx = 0, charIdx = 0, deleting = false;
@@ -196,25 +262,19 @@ function type() {
     : word.substring(0, charIdx + 1);
   deleting ? charIdx-- : charIdx++;
 
-  if (!deleting && charIdx === word.length) {
-    deleting = true;
-    return setTimeout(type, 2000);
-  }
-  if (deleting && charIdx === 0) {
-    deleting = false;
-    wordIdx = (wordIdx + 1) % words.length;
-  }
+  if (!deleting && charIdx === word.length) { deleting = true; return setTimeout(type, 2000); }
+  if (deleting && charIdx === 0) { deleting = false; wordIdx = (wordIdx + 1) % words.length; }
   setTimeout(type, deleting ? 45 : 85);
 }
 type();
 
-// ── 4. NAVBAR SCROLL ──────────────────────────────────────────
+// ── 11. NAVBAR SCROLL ────────────────────────────────────────
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 30);
 }, { passive: true });
 
-// ── 5. MOBILE MENU ────────────────────────────────────────────
+// ── 12. MOBILE MENU ──────────────────────────────────────────
 const menuBtn = document.getElementById('menuBtn');
 const navMenu = document.getElementById('navMenu');
 menuBtn.addEventListener('click', () => {
@@ -228,29 +288,16 @@ navMenu.querySelectorAll('a').forEach(link => {
   });
 });
 
-// ── 6. ACTIVE NAV LINK ────────────────────────────────────────
-const navLinks = document.querySelectorAll('.nav-link');
+// ── 13. ACTIVE NAV LINK ──────────────────────────────────────
+const navLinks    = document.querySelectorAll('.nav-link');
 const allSections = document.querySelectorAll('section[id]');
-
 const navObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       navLinks.forEach(l => l.classList.remove('active'));
-      const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-      if (active) active.classList.add('active');
+      const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+      if (a) a.classList.add('active');
     }
   });
 }, { threshold: 0.35 });
 allSections.forEach(s => navObserver.observe(s));
-
-// ── 7. SCROLL REVEAL ─────────────────────────────────────────
-const reveals = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-reveals.forEach(el => revealObserver.observe(el));
