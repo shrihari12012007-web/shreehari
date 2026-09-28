@@ -462,41 +462,62 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .timeline-org { font-size: 13px; color: #666; margin-bottom: 10px; }
 .timeline-content > p { font-size: 14px; color: #666; line-height: 1.7; }
 
-/* ── RADAR PULSE — Present / In Progress ── */
+/* ── WATER RIPPLE — Present / In Progress ── */
 .active-dot {
   background: #4ade80 !important;
   border-color: #4ade80 !important;
-  box-shadow: 0 0 10px rgba(74,222,128,0.5) !important;
+  box-shadow: 0 0 8px rgba(74,222,128,0.6) !important;
+  z-index: 1;
 }
-.radar-ring {
+
+/* Ripple rings on the timeline dot */
+.ripple-ring {
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
   width: 12px; height: 12px;
   border-radius: 50%;
-  border: 1.5px solid rgba(74,222,128,0.7);
-  animation: radar-expand 2s ease-out infinite;
+  border: 1.5px solid rgba(74,222,128,0.8);
+  animation: water-ripple 3s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   pointer-events: none;
 }
-.radar-ring-2 { animation-delay: 1s; }
+/* Each ring starts later — like waves after the stone hits */
+.ripple-ring-2 { animation-delay: 0.6s; }
+.ripple-ring-3 { animation-delay: 1.2s; }
+.ripple-ring-4 { animation-delay: 1.8s; }
 
-@keyframes radar-expand {
-  0%   { width: 12px; height: 12px; opacity: 0.8; }
-  100% { width: 40px; height: 40px; opacity: 0; }
+@keyframes water-ripple {
+  0% {
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+    border-color: rgba(74,222,128,0.8);
+  }
+  60% {
+    opacity: 0.25;
+    border-color: rgba(74,222,128,0.3);
+  }
+  100% {
+    width: 52px;
+    height: 52px;
+    opacity: 0;
+    border-color: rgba(74,222,128,0);
+  }
 }
 
-/* Inline radar dot — used in date text and cert items */
+/* Inline ripple dot — for "Present" text and cert item */
 .radar-dot {
   display: inline-block;
   position: relative;
-  width: 8px; height: 8px;
+  width: 9px; height: 9px;
   border-radius: 50%;
   background: #4ade80;
-  box-shadow: 0 0 6px rgba(74,222,128,0.8);
-  margin-right: 6px;
+  box-shadow: 0 0 6px rgba(74,222,128,0.9);
+  margin-right: 5px;
   vertical-align: middle;
   flex-shrink: 0;
 }
+/* 3 pseudo ripple waves on the inline dot */
 .radar-dot::before,
 .radar-dot::after {
   content: '';
@@ -504,12 +525,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 1.5px solid rgba(74,222,128,0.6);
-  animation: radar-expand 2s ease-out infinite;
+  border: 1.5px solid rgba(74,222,128,0.7);
+  animation: water-ripple 3s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
-.radar-dot::after { animation-delay: 1s; }
+.radar-dot::after { animation-delay: 0.9s; }
 
-/* "Present" badge next to the date */
+/* "Present" text styling */
 .present-badge {
   display: inline-flex;
   align-items: center;
