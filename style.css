@@ -181,11 +181,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 80px;
-  padding-top: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 130px 0 80px;
+}
+.hero-text {
+  max-width: 860px;
 }
 .badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -239,8 +242,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 .hero-desc {
-  max-width: 480px;
-  color: #777; font-size: 15px; line-height: 1.75;
+  max-width: 600px;
+  color: #777; font-size: 15.5px; line-height: 1.8;
   margin-bottom: 32px;
 }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
@@ -258,39 +261,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: inline-flex; align-items: center; gap: 5px;
   color: #555; font-size: 13px;
 }
-
-/* ── HERO CARD ── */
-.hero-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  overflow: hidden;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
-  line-height: 1.9;
-  transition: border-color 0.5s, box-shadow 0.5s;
-}
-.hero-card:hover {
-  border-color: rgba(255,255,255,0.16);
-  box-shadow: 0 0 40px rgba(255,255,255,0.04);
-}
-.card-bar {
-  display: flex; align-items: center; gap: 7px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.04);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot.red    { background: #ff5f57; }
-.dot.yellow { background: #febc2e; }
-.dot.green  { background: #28c840; }
-.card-title { margin-left: 8px; color: #555; font-size: 12px; }
-.card-code { padding: 24px; }
-.card-code p { color: #bbb; }
-.kw { color: #c792ea; }
-.str { color: #c3e88d; }
-.fn  { color: #82aaff; }
-.ind { padding-left: 22px; }
 
 /* ── ABOUT ── */
 .about-grid {
@@ -947,8 +917,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 100px; }
-  .hero-card { max-width: 480px; }
+  .hero { padding-top: 110px; }
   .about-grid { grid-template-columns: 1fr; }
   .about-photo { max-width: 200px; }
   .contact-grid { grid-template-columns: 1fr; gap: 36px; }
