@@ -168,6 +168,9 @@ let prevScrollY = 0;
 function animate() {
   requestAnimationFrame(animate);
 
+  // Pause 2D canvas drawing when 3D Drive Mode is active for 60fps performance
+  if (document.body.classList.contains('drive-mode-active')) return;
+
   // Smooth mouse
   smoothMouse.x = lerp(smoothMouse.x, mouse.x, 0.055);
   smoothMouse.y = lerp(smoothMouse.y, mouse.y, 0.055);

@@ -70,12 +70,19 @@
           Passionate about AI, Machine Learning, Computer Vision and building practical software.
         </p>
         <div class="hero-actions">
+          <button id="enterDriveBtn" class="btn btn-drive" aria-label="Enter 3D Drive Mode">
+            <span class="drive-icon">🎮</span>
+            <span>ENTER DRIVE MODE</span>
+          </button>
           <a href="#projects" class="btn btn-primary">View Projects <span class="arrow">↗</span></a>
           <a href="#contact" class="btn btn-secondary">Contact Me <span class="arrow">→</span></a>
           <a href="resume.pdf" download="Shree_Hari_SB_Resume.pdf" class="btn btn-download">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download CV
           </a>
+        </div>
+        <div id="driveFallbackMsg" class="drive-fallback-msg" style="display:none;">
+          3D Drive Mode is unavailable on this device.
         </div>
         <div class="hero-meta">
           <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="meta-link">
@@ -96,6 +103,12 @@
             Davangere, Karnataka
           </span>
         </div>
+      </div>
+
+      <!-- 3D HERO VIEWPORT CONTAINER -->
+      <div id="hero3dContainer" class="hero-3d-container">
+        <canvas id="driveCanvas"></canvas>
+        <div class="hero-3d-overlay"></div>
       </div>
     </section>
 
@@ -495,6 +508,77 @@
     </div>
   </footer>
 
+  <!-- 3D DRIVING HUD (MINIMAL FUTURISTIC) -->
+  <div id="driveHud" class="drive-hud" aria-hidden="true">
+    <!-- Top Bar -->
+    <div class="hud-top">
+      <div class="hud-brand">
+        <span class="hud-logo">SHREE HARI</span>
+        <span class="hud-badge">// DRIVE MODE</span>
+      </div>
+      <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit Drive Mode">
+        <span>EXIT DRIVE MODE</span>
+        <span class="hud-key-tag">ESC</span>
+      </button>
+    </div>
+
+    <!-- Checkpoint Floating Modal -->
+    <div id="checkpointModal" class="checkpoint-modal">
+      <div class="cp-modal-badge" id="cpModalNumber">CHECKPOINT 01</div>
+      <h3 class="cp-modal-title" id="cpModalTitle">ABOUT ME</h3>
+      <p class="cp-modal-desc" id="cpModalDesc">Explore background &amp; engineering journey.</p>
+      <button id="cpModalAction" class="btn btn-primary cp-modal-btn">
+        <span>OPEN SECTION</span>
+        <span class="hud-key-tag">ENTER</span>
+      </button>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="hud-bottom">
+      <!-- Controls Guide -->
+      <div class="hud-controls-guide">
+        <div class="guide-item"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> DRIVE</div>
+        <div class="guide-sep">&bull;</div>
+        <div class="guide-item"><span class="key">SPACE</span> BRAKE</div>
+        <div class="guide-sep">&bull;</div>
+        <div class="guide-item"><span class="key">R</span> RESET</div>
+        <div class="guide-sep">&bull;</div>
+        <div class="guide-item"><span class="key">ESC</span> EXIT</div>
+      </div>
+
+      <!-- Speedometer -->
+      <div class="hud-speedometer">
+        <div class="speed-val-wrap">
+          <span id="hudSpeed" class="speed-number">000</span>
+          <span class="speed-unit">KM/H</span>
+        </div>
+        <div class="speed-bar"><div id="speedBarFill" class="speed-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div id="mobileDriveControls" class="mobile-drive-controls">
+      <div class="mobile-dpad">
+        <button id="touchLeft" class="mobile-touch-btn" aria-label="Steer Left">&#x25C0;</button>
+        <button id="touchRight" class="mobile-touch-btn" aria-label="Steer Right">&#x25B6;</button>
+      </div>
+      <div class="mobile-pedals">
+        <button id="touchBrake" class="mobile-touch-btn pedal-brake" aria-label="Brake / Reverse">&#x25BC;</button>
+        <button id="touchGas" class="mobile-touch-btn pedal-gas" aria-label="Accelerate">&#x25B2;</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
+
+  <!-- THREE.JS & 3D DRIVE EXPERIENCE MODULES -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/3d/controls.js"></script>
+  <script src="js/3d/car.js"></script>
+  <script src="js/3d/environment.js"></script>
+  <script src="js/3d/checkpoints.js"></script>
+  <script src="js/3d/camera.js"></script>
+  <script src="js/3d/scene.js"></script>
+  <script src="js/3d/driveMode.js"></script>
 </body>
 </html>
