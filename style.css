@@ -176,24 +176,78 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform: translateY(-2px);
   box-shadow: 0 0 20px rgba(74,222,128,0.15);
 }
-.btn-drive {
-  background: linear-gradient(135deg, rgba(0,240,255,0.16), rgba(0,180,216,0.05));
-  color: #00f0ff;
-  border: 1px solid rgba(0,240,255,0.5);
-  box-shadow: 0 0 24px rgba(0,240,255,0.16), inset 0 1px 0 rgba(255,255,255,0.2);
-  gap: 8px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
+/* ── BMW ROUNDEL EMBLEM DRIVE TRIGGER ── */
+.bmw-drive-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 20px 7px 9px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(14,20,32,0.95), rgba(6,10,18,0.92));
+  border: 1px solid rgba(0, 102, 177, 0.45);
+  box-shadow: 0 4px 25px rgba(0, 102, 177, 0.22), 0 0 15px rgba(0, 240, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.18);
   cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: visible;
 }
-.btn-drive:hover {
-  background: linear-gradient(135deg, rgba(0,240,255,0.28), rgba(0,180,216,0.12));
+.bmw-drive-trigger:hover {
+  background: linear-gradient(135deg, rgba(18,28,48,0.98), rgba(8,16,30,0.95));
   border-color: #00f0ff;
-  color: #ffffff;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 35px rgba(0,240,255,0.38), inset 0 1px 0 rgba(255,255,255,0.3);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 35px rgba(0, 102, 177, 0.45), 0 0 30px rgba(0, 240, 255, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
 }
-.drive-icon { font-size: 15px; }
+.bmw-emblem-wrap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.bmw-roundel {
+  width: 36px;
+  height: 36px;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.7));
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bmw-drive-trigger:hover .bmw-roundel {
+  transform: rotate(360deg);
+}
+.bmw-glow-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 240, 255, 0.65);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+  animation: bmwGlowPulse 2.4s infinite ease-in-out;
+  pointer-events: none;
+}
+@keyframes bmwGlowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.18); opacity: 0.15; }
+}
+.bmw-btn-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.bmw-btn-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #00f0ff;
+  letter-spacing: 1.5px;
+}
+.bmw-btn-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
 .arrow { font-size: 16px; }
 
 /* ── HERO ── */
@@ -388,6 +442,34 @@ body.drive-mode-active .back-to-top {
   border-radius: 4px;
   background: rgba(0,240,255,0.08);
   border: 1px solid rgba(0,240,255,0.25);
+}
+.hud-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hud-sound-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(10,12,18,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #ddd;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.hud-sound-btn:hover {
+  border-color: #00f0ff;
+  color: #00f0ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0,240,255,0.25);
 }
 .hud-exit-btn {
   pointer-events: auto;

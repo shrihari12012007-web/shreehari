@@ -19,6 +19,7 @@ class DriveControls {
     this.onExitCallback = null;
     this.onResetCallback = null;
     this.onInteractCallback = null;
+    this.onToggleSoundCallback = null;
 
     this.initKeyboard();
     this.initTouch();
@@ -36,6 +37,9 @@ class DriveControls {
       }
       if (e.code === 'Enter') {
         if (this.onInteractCallback) this.onInteractCallback();
+      }
+      if (e.code === 'KeyM') {
+        if (this.onToggleSoundCallback) this.onToggleSoundCallback();
       }
     });
 

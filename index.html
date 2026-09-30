@@ -70,9 +70,36 @@
           Passionate about AI, Machine Learning, Computer Vision and building practical software.
         </p>
         <div class="hero-actions">
-          <button id="enterDriveBtn" class="btn btn-drive" aria-label="Enter 3D Drive Mode">
-            <span class="drive-icon">🎮</span>
-            <span>ENTER DRIVE MODE</span>
+          <button id="enterDriveBtn" class="bmw-drive-trigger" aria-label="Drive through portfolio in BMW">
+            <div class="bmw-emblem-wrap">
+              <div class="bmw-glow-ring"></div>
+              <svg class="bmw-roundel" viewBox="0 0 100 100" width="38" height="38">
+                <!-- Outer Chrome Rim -->
+                <circle cx="50" cy="50" r="48" fill="#181a20" stroke="#d4dce8" stroke-width="2.8"/>
+                <!-- Inner Black Ring -->
+                <circle cx="50" cy="50" r="43.5" fill="#08090d" stroke="#2c303d" stroke-width="1.2"/>
+                <!-- BMW Lettering -->
+                <text x="31" y="24" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">B</text>
+                <text x="45.5" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">M</text>
+                <text x="61.5" y="24" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">W</text>
+                <!-- Inner Chrome Bevel -->
+                <circle cx="50" cy="50" r="29" fill="none" stroke="#d4dce8" stroke-width="1.8"/>
+                <!-- Quadrants (Blue & White) -->
+                <path d="M 50 50 L 50 21 A 29 29 0 0 0 21 50 Z" fill="#0066b1"/>
+                <path d="M 50 50 L 79 50 A 29 29 0 0 0 50 21 Z" fill="#ffffff"/>
+                <path d="M 50 50 L 50 79 A 29 29 0 0 0 79 50 Z" fill="#0066b1"/>
+                <path d="M 50 50 L 21 50 A 29 29 0 0 0 50 79 Z" fill="#ffffff"/>
+                <!-- Chrome Crosshairs -->
+                <line x1="50" y1="21" x2="50" y2="79" stroke="#0a0c10" stroke-width="1.4"/>
+                <line x1="21" y1="50" x2="79" y2="50" stroke="#0a0c10" stroke-width="1.4"/>
+                <!-- Specular Reflection -->
+                <path d="M 23 44 A 27 27 0 0 1 77 44 A 27 13 0 0 0 23 44 Z" fill="rgba(255,255,255,0.28)"/>
+              </svg>
+            </div>
+            <div class="bmw-btn-content">
+              <span class="bmw-btn-tag">BMW M DRIVE</span>
+              <span class="bmw-btn-title">START ROAD TOUR ↗</span>
+            </div>
           </button>
           <a href="#projects" class="btn btn-primary">View Projects <span class="arrow">↗</span></a>
           <a href="#contact" class="btn btn-secondary">Contact Me <span class="arrow">→</span></a>
@@ -516,10 +543,16 @@
         <span class="hud-logo">SHREE HARI</span>
         <span class="hud-badge">// DRIVE MODE</span>
       </div>
-      <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit Drive Mode">
-        <span>EXIT DRIVE MODE</span>
-        <span class="hud-key-tag">ESC</span>
-      </button>
+      <div class="hud-top-actions">
+        <button id="toggleSoundBtn" class="hud-sound-btn" aria-label="Toggle Engine Sound" title="Toggle Sound (M)">
+          <span id="soundIcon">🔊</span>
+          <span class="hud-key-tag">M</span>
+        </button>
+        <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit Drive Mode">
+          <span>EXIT DRIVE MODE</span>
+          <span class="hud-key-tag">ESC</span>
+        </button>
+      </div>
     </div>
 
     <!-- Checkpoint Floating Modal -->

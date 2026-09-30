@@ -13,7 +13,7 @@ class CheckpointManager {
     this.checkpoints = [
       {
         id: 'about',
-        z: -180,
+        z: -280,
         number: '01',
         title: 'ABOUT ME',
         subtitle: 'Background & Engineering Journey',
@@ -23,7 +23,7 @@ class CheckpointManager {
       },
       {
         id: 'skills',
-        z: -420,
+        z: -650,
         number: '02',
         title: 'TECHNICAL SKILLS',
         subtitle: 'Languages & Core Technologies',
@@ -33,17 +33,17 @@ class CheckpointManager {
       },
       {
         id: 'projects',
-        z: -680,
+        z: -1150,
         number: '03',
-        title: 'PROJECTS',
-        subtitle: 'Featured Work & Codebases',
-        desc: 'Panda AI Voice Assistant, Gesture Camera, Nova Cuts, Eye Care.',
+        title: 'PROJECTS SHOWCASE',
+        subtitle: 'The Middle Bridge',
+        desc: 'Nova Cuts, Panda AI Voice Assistant, Eye Care, Gesture Camera.',
         targetId: 'projects',
         color: 0xa855f7, // purple
       },
       {
         id: 'education',
-        z: -960,
+        z: -1680,
         number: '04',
         title: 'EDUCATION & CERTS',
         subtitle: 'Academic Milestones & Certifications',
@@ -53,13 +53,48 @@ class CheckpointManager {
       },
       {
         id: 'contact',
-        z: -1240,
+        z: -2150,
         number: '05',
         title: 'LET\'S CONNECT',
-        subtitle: 'Direct Reachout & Opportunities',
+        subtitle: 'Finish Line & Direct Reachout',
         desc: 'Get in touch for internships, projects, and collaboration.',
         targetId: 'contact',
         color: 0xf43f5e, // warm red/pink
+      },
+    ];
+
+    this.projectBillboards = [
+      {
+        title: 'NOVA CUTS',
+        category: 'WEB APP · LIVE',
+        desc: 'Smart Salon & Grooming Booking Platform with Render Hosting',
+        x: -14.2,
+        z: -1080,
+        color: '#00f0ff',
+      },
+      {
+        title: 'PANDA AI',
+        category: 'AI / PYTHON',
+        desc: 'Smart Desktop Voice Assistant with Speech Recognition & Automation',
+        x: 14.2,
+        z: -1080,
+        color: '#a855f7',
+      },
+      {
+        title: 'EYE CARE MONITOR',
+        category: 'COMPUTER VISION',
+        desc: 'AI Distance & Blink Rate Health Guard with Real-time Camera Tracking',
+        x: -14.2,
+        z: -1220,
+        color: '#4ade80',
+      },
+      {
+        title: 'GESTURE CAMERA',
+        category: 'OPENCV / MEDIAPIPE',
+        desc: 'Touchless Hand Gesture System Control & Real-time Vision Interface',
+        x: 14.2,
+        z: -1220,
+        color: '#f59e0b',
       },
     ];
 
@@ -182,6 +217,122 @@ class CheckpointManager {
 
       this.scene.add(group);
     });
+
+    // ── 3D PROJECT BILLBOARDS ON THE MIDDLE BRIDGE ──
+    this.projectBillboards.forEach(item => {
+      const bGroup = new THREE.Group();
+
+      const supportMat = new THREE.MeshStandardMaterial({
+        color: 0x141824,
+        metalness: 0.85,
+        roughness: 0.3,
+      });
+
+      // Dual support posts anchored to bridge deck
+      [-3.8, 3.8].forEach(dx => {
+        const postGeo = new THREE.BoxGeometry(0.35, 11, 0.35);
+        const post = new THREE.Mesh(postGeo, supportMat);
+        post.position.set(item.x, 5.5, item.z + dx);
+        bGroup.add(post);
+      });
+
+      // Billboard Frame
+      const frameGeo = new THREE.BoxGeometry(0.4, 6.2, 11.2);
+      const frameMat = new THREE.MeshStandardMaterial({
+        color: 0x090c14,
+        metalness: 0.9,
+        roughness: 0.2,
+      });
+      const frame = new THREE.Mesh(frameGeo, frameMat);
+      frame.position.set(item.x, 9.2, item.z);
+      bGroup.add(frame);
+
+      // Glowing display panel facing the oncoming car
+      const screenGeo = new THREE.PlaneGeometry(10.8, 5.8);
+      const tex = this.createBillboardTexture(item);
+      const screenMat = new THREE.MeshBasicMaterial({
+        map: tex,
+        side: THREE.DoubleSide,
+      });
+      const screen = new THREE.Mesh(screenGeo, screenMat);
+      // Face towards oncoming car (facing +Z) and angled inward
+      const angle = item.x < 0 ? 0.38 : -0.38;
+      screen.position.set(item.x > 0 ? item.x - 0.25 : item.x + 0.25, 9.2, item.z);
+      screen.rotation.y = angle;
+      bGroup.add(screen);
+
+      this.scene.add(bGroup);
+    });
+  }
+
+  createBillboardTexture(item) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    // Deep dark background
+    ctx.fillStyle = '#060a14';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Gradient container
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, 'rgba(12, 22, 44, 0.95)');
+    grad.addColorStop(1, 'rgba(4, 8, 16, 0.98)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+    // Top Accent Neon Bar
+    ctx.fillStyle = item.color;
+    ctx.fillRect(10, 10, canvas.width - 20, 12);
+
+    // Outer border
+    ctx.strokeStyle = item.color;
+    ctx.lineWidth = 4;
+    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+    // Category / Tag
+    ctx.fillStyle = item.color;
+    ctx.font = 'bold 30px "JetBrains Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(item.category, 60, 85);
+
+    // Title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 64px "Space Grotesk", sans-serif';
+    ctx.fillText(item.title, 60, 175);
+
+    // Divider line
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.fillRect(60, 215, canvas.width - 120, 3);
+
+    // Description with text wrapping
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '34px "Inter", sans-serif';
+    const words = item.desc.split(' ');
+    let line = '';
+    let y = 285;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > canvas.width - 140 && n > 0) {
+        ctx.fillText(line, 60, y);
+        line = words[n] + ' ';
+        y += 48;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, 60, y);
+
+    // Bottom prompt
+    ctx.fillStyle = item.color;
+    ctx.font = 'bold 26px "Space Grotesk", sans-serif';
+    ctx.fillText('PRESS [ENTER] TO OPEN FULL DETAILS ↗', 60, 450);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
   }
 
   update(carPosition) {
