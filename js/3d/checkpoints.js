@@ -13,53 +13,58 @@ class CheckpointManager {
     this.checkpoints = [
       {
         id: 'about',
-        z: -280,
+        x: 9,
+        z: -560,
         number: '01',
-        title: 'ABOUT ME',
+        title: 'A LITTLE ABOUT ME',
         subtitle: 'Background & Engineering Journey',
         desc: 'B.E. Computer Science student at Jain Institute of Technology.',
         targetId: 'about',
-        color: 0x00f0ff, // cyan
+        color: 0x00f0ff,
       },
       {
         id: 'skills',
-        z: -650,
+        x: 4,
+        z: -840,
         number: '02',
-        title: 'TECHNICAL SKILLS',
+        title: 'WHAT I WORK WITH',
         subtitle: 'Languages & Core Technologies',
         desc: 'Python, C, Java, JavaScript, AI/ML, Computer Vision, React.',
         targetId: 'skills',
-        color: 0x38bdf8, // sky blue
+        color: 0x38bdf8,
       },
       {
         id: 'projects',
-        z: -1150,
+        x: -6,
+        z: -1140,
         number: '03',
-        title: 'PROJECTS SHOWCASE',
-        subtitle: 'The Middle Bridge',
+        title: 'THINGS I\'VE BUILT',
+        subtitle: 'On The Bridge — Over the Pond',
         desc: 'Nova Cuts, Panda AI Voice Assistant, Eye Care, Gesture Camera.',
         targetId: 'projects',
-        color: 0xa855f7, // purple
+        color: 0xa855f7,
       },
       {
         id: 'education',
-        z: -1680,
+        x: -6,
+        z: -1820,
         number: '04',
-        title: 'EDUCATION & CERTS',
+        title: 'MY JOURNEY',
         subtitle: 'Academic Milestones & Certifications',
-        desc: 'Bachelor of Engineering in CSE (2025–Present) & Key Certs.',
+        desc: 'Bachelor of Engineering in CSE (2025-Present) & Key Certs.',
         targetId: 'education',
-        color: 0x4ade80, // emerald green
+        color: 0x4ade80,
       },
       {
         id: 'contact',
-        z: -2150,
+        x: 2,
+        z: -2190,
         number: '05',
         title: 'LET\'S CONNECT',
         subtitle: 'Finish Line & Direct Reachout',
         desc: 'Get in touch for internships, projects, and collaboration.',
         targetId: 'contact',
-        color: 0xf43f5e, // warm red/pink
+        color: 0xf43f5e,
       },
     ];
 
@@ -145,6 +150,7 @@ class CheckpointManager {
   initCheckpointMeshes() {
     this.checkpoints.forEach(cp => {
       const group = new THREE.Group();
+      const cx = cp.x || 0; // Road center X at this checkpoint
 
       // Gate Arch frame
       const archMat = new THREE.MeshStandardMaterial({
@@ -160,34 +166,34 @@ class CheckpointManager {
       // Left Pillar
       const pillarGeo = new THREE.BoxGeometry(0.8, 14, 0.8);
       const leftPillar = new THREE.Mesh(pillarGeo, archMat);
-      leftPillar.position.set(-11, 7, cp.z);
+      leftPillar.position.set(cx - 11, 7, cp.z);
       group.add(leftPillar);
 
       // Right Pillar
       const rightPillar = new THREE.Mesh(pillarGeo, archMat);
-      rightPillar.position.set(11, 7, cp.z);
+      rightPillar.position.set(cx + 11, 7, cp.z);
       group.add(rightPillar);
 
       // Glowing vertical laser strips
       const laserGeo = new THREE.BoxGeometry(0.12, 13.8, 0.12);
       const laserL = new THREE.Mesh(laserGeo, neonMat);
-      laserL.position.set(-10.6, 7, cp.z);
+      laserL.position.set(cx - 10.6, 7, cp.z);
       group.add(laserL);
 
       const laserR = new THREE.Mesh(laserGeo, neonMat);
-      laserR.position.set(10.6, 7, cp.z);
+      laserR.position.set(cx + 10.6, 7, cp.z);
       group.add(laserR);
 
       // Top Crossbar
       const barGeo = new THREE.BoxGeometry(23.2, 0.9, 0.9);
       const crossbar = new THREE.Mesh(barGeo, archMat);
-      crossbar.position.set(0, 13.8, cp.z);
+      crossbar.position.set(cx, 13.8, cp.z);
       group.add(crossbar);
 
       // Glowing Top neon line
       const topNeonGeo = new THREE.BoxGeometry(22.8, 0.12, 0.12);
       const topNeon = new THREE.Mesh(topNeonGeo, neonMat);
-      topNeon.position.set(0, 13.3, cp.z);
+      topNeon.position.set(cx, 13.3, cp.z);
       group.add(topNeon);
 
       // Floating Holographic Signboard
@@ -200,19 +206,19 @@ class CheckpointManager {
         side: THREE.DoubleSide,
       });
       const signMesh = new THREE.Mesh(signGeo, signMat);
-      signMesh.position.set(0, 10.2, cp.z);
+      signMesh.position.set(cx, 10.2, cp.z);
       group.add(signMesh);
 
-      // Subtle ground ring on road
-      const ringGeo = new THREE.PlaneGeometry(18, 2.5);
+      // Ground glow ring centered on road
+      const ringGeo = new THREE.PlaneGeometry(22, 2.5);
       ringGeo.rotateX(-Math.PI / 2);
       const ringMat = new THREE.MeshBasicMaterial({
         color: cp.color,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.22,
       });
       const groundGlow = new THREE.Mesh(ringGeo, ringMat);
-      groundGlow.position.set(0, 0.03, cp.z);
+      groundGlow.position.set(cx, 0.03, cp.z);
       group.add(groundGlow);
 
       this.scene.add(group);
@@ -340,8 +346,9 @@ class CheckpointManager {
     let found = null;
 
     for (let cp of this.checkpoints) {
-      const dist = Math.abs(carPosition.z - cp.z);
-      if (dist < triggerRadius && Math.abs(carPosition.x) < 11) {
+      const dz = Math.abs(carPosition.z - cp.z);
+      // On winding road: use Z proximity only (car is constrained to road anyway)
+      if (dz < triggerRadius) {
         found = cp;
         break;
       }

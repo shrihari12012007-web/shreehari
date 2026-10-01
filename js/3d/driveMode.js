@@ -237,6 +237,11 @@ class DriveModeApp {
     this.cameraController = new DriveCamera(this.driveScene.camera);
     this.controls = new DriveControls();
 
+    // Pass the winding road curve to the car for curved-road boundary physics
+    if (this.environment.roadCurve) {
+      this.car.roadCurve = this.environment.roadCurve;
+    }
+
     // 2. Setup Checkpoint callbacks
     this.checkpoints.onEnterCallback = (cp) => {
       this.showCheckpointHUD(cp);
