@@ -339,49 +339,38 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: #555; font-size: 13px;
 }
 
-/* ── 3D HERO VIEWPORT CONTAINER ── */
-.hero-3d-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 56%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hero-3d-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-.hero-3d-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, #060812 0%, rgba(6,8,18,0.85) 18%, transparent 65%);
-  pointer-events: none;
-  transition: opacity 0.6s ease;
-}
-
-/* ── FULL DRIVE MODE ACTIVE STATE ── */
-body.drive-mode-active {
-  overflow: hidden !important;
-}
-body.drive-mode-active .hero-3d-container {
+/* ── 3D DRIVE WORLD OVERLAY (hidden by default, full-screen on activation) ── */
+.drive-world-overlay {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
-  pointer-events: auto;
-}
-body.drive-mode-active .hero-3d-overlay {
+  z-index: -1;           /* Behind everything when inactive */
+  pointer-events: none;
   opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              visibility 0.55s;
+  background: #060812;
+}
+.drive-world-overlay canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ── WHEN DRIVE MODE IS ACTIVE: Canvas takes over the full page ── */
+body.drive-mode-active {
+  overflow: hidden !important;
+}
+body.drive-mode-active .drive-world-overlay {
+  z-index: 9000;         /* In front of EVERYTHING */
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
 }
 body.drive-mode-active .hero-text {
   opacity: 0;
-  transform: translateY(20px);
   pointer-events: none;
 }
 body.drive-mode-active .navbar.hidden-in-drive {

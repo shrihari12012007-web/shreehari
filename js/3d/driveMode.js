@@ -339,9 +339,17 @@ class DriveModeApp {
     this.isActive = true;
     document.body.classList.add('drive-mode-active');
 
-    // Smoothly scroll to top so canvas fills viewport
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The canvas overlay now covers the FULL page — trigger resize so
+    // the WebGL renderer matches the full viewport (not just the old preview size)
+    setTimeout(() => {
+      if (this.driveScene) {
+        this.driveScene.camera.aspect = window.innerWidth / window.innerHeight;
+        this.driveScene.camera.updateProjectionMatrix();
+        this.driveScene.renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+    }, 60);
 
+    // NO scroll needed — the 3D world covers all sections as a fixed overlay
     // Switch Camera to follow chase mode
     this.cameraController.setMode('DRIVING');
 
