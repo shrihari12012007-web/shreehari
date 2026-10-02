@@ -498,7 +498,51 @@ body.drive-mode-active .back-to-top {
   color: #fff;
 }
 
-/* Checkpoint Floating Modal */
+/* Bruno Simon Quick Teleport Navigation Bar */
+.hud-nav-bar {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(10, 14, 24, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 5px 8px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+.hud-teleport-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.hud-teleport-btn:hover {
+  color: #fff;
+  background: rgba(0, 240, 255, 0.15);
+}
+.hud-teleport-btn.active {
+  color: #060812;
+  background: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
+
+@media (max-width: 900px) {
+  .hud-nav-bar {
+    display: none; /* Mobile screens use touch buttons and modal navigation */
+  }
+}
+
+/* Checkpoint Floating Modal (Bruno Simon Style) */
 .checkpoint-modal {
   position: absolute;
   top: 50%;
@@ -507,17 +551,18 @@ body.drive-mode-active .back-to-top {
   opacity: 0;
   visibility: hidden;
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  background: rgba(8,12,22,0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(0,240,255,0.4);
-  box-shadow: 0 0 45px rgba(0,240,255,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 32px 42px;
+  background: rgba(8,12,22,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,240,255,0.45);
+  box-shadow: 0 0 55px rgba(0,240,255,0.22), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 22px;
+  padding: 34px 44px;
   text-align: center;
-  max-width: 480px;
-  width: 90%;
+  max-width: 520px;
+  width: 92%;
   pointer-events: none;
+  z-index: 10;
 }
 .checkpoint-modal.active {
   opacity: 1;
@@ -525,40 +570,110 @@ body.drive-mode-active .back-to-top {
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
+.cp-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+.cp-modal-close:hover {
+  background: #ff4d6d;
+  color: #fff;
+  border-color: #ff4d6d;
+}
 .cp-modal-badge {
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #4ade80;
-  padding: 4px 12px;
+  color: #00f0ff;
+  padding: 4px 14px;
   border-radius: 100px;
-  background: rgba(74,222,128,0.1);
-  border: 1px solid rgba(74,222,128,0.3);
+  background: rgba(0,240,255,0.1);
+  border: 1px solid rgba(0,240,255,0.35);
   margin-bottom: 12px;
   font-family: 'JetBrains Mono', monospace;
 }
 .cp-modal-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.5px;
   color: #fff;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+}
+.cp-modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.cp-tag-badge {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
 }
 .cp-modal-desc {
-  font-size: 13.5px;
-  color: #8892b0;
-  line-height: 1.6;
-  margin-bottom: 22px;
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.cp-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 .cp-modal-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 12px 24px;
   font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.5px;
   cursor: pointer;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.cp-live-btn {
+  background: #00f0ff !important;
+  color: #060812 !important;
+  border: none;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+.cp-live-btn:hover {
+  background: #fff !important;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+.cp-github-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+.cp-github-btn:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: #fff !important;
+  transform: translateY(-2px);
 }
 
 /* HUD Bottom Bar */

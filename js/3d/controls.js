@@ -20,6 +20,8 @@ class DriveControls {
     this.onResetCallback = null;
     this.onInteractCallback = null;
     this.onToggleSoundCallback = null;
+    this.onHornCallback = null;
+    this.onCameraToggleCallback = null;
 
     this.initKeyboard();
     this.initTouch();
@@ -40,6 +42,12 @@ class DriveControls {
       }
       if (e.code === 'KeyM') {
         if (this.onToggleSoundCallback) this.onToggleSoundCallback();
+      }
+      if (e.code === 'KeyH') {
+        if (this.onHornCallback) this.onHornCallback();
+      }
+      if (e.code === 'KeyC') {
+        if (this.onCameraToggleCallback) this.onCameraToggleCallback();
       }
     });
 

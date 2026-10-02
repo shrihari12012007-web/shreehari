@@ -540,29 +540,58 @@
     <div class="hud-top">
       <div class="hud-brand">
         <span class="hud-logo">SHREE HARI</span>
-        <span class="hud-badge">// DRIVE MODE</span>
+        <span class="hud-badge">// 3D WORLD</span>
       </div>
+
+      <!-- Bruno Simon Style Quick Teleport Navigation Bar -->
+      <nav class="hud-nav-bar" aria-label="3D World Navigation">
+        <button class="hud-teleport-btn active" data-zone="home">🏠 START</button>
+        <button class="hud-teleport-btn" data-zone="about">👤 ABOUT</button>
+        <button class="hud-teleport-btn" data-zone="skills">⚡ SKILLS</button>
+        <button class="hud-teleport-btn" data-zone="projects">🚀 PROJECTS</button>
+        <button class="hud-teleport-btn" data-zone="education">🎓 JOURNEY</button>
+        <button class="hud-teleport-btn" data-zone="contact">📫 CONTACT</button>
+      </nav>
+
       <div class="hud-top-actions">
-        <button id="toggleSoundBtn" class="hud-sound-btn" aria-label="Toggle Engine Sound" title="Toggle Sound (M)">
+        <button id="hornBtn" class="hud-sound-btn" aria-label="Car Horn" title="Horn (H)">
+          <span>🎺</span>
+          <span class="hud-key-tag">H</span>
+        </button>
+        <button id="toggleCamBtn" class="hud-sound-btn" aria-label="Toggle Camera" title="Camera View (C)">
+          <span id="camIcon">📷 ISO</span>
+          <span class="hud-key-tag">C</span>
+        </button>
+        <button id="toggleSoundBtn" class="hud-sound-btn" aria-label="Toggle Sound" title="Toggle Sound (M)">
           <span id="soundIcon">🔊</span>
           <span class="hud-key-tag">M</span>
         </button>
         <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit Drive Mode">
-          <span>EXIT DRIVE MODE</span>
+          <span>EXIT 3D</span>
           <span class="hud-key-tag">ESC</span>
         </button>
       </div>
     </div>
 
-    <!-- Checkpoint Floating Modal -->
+    <!-- Checkpoint / Project Floating Modal (Bruno Simon Style) -->
     <div id="checkpointModal" class="checkpoint-modal">
+      <button id="cpModalCloseBtn" class="cp-modal-close" aria-label="Close Modal">&times;</button>
       <div class="cp-modal-badge" id="cpModalNumber">CHECKPOINT 01</div>
       <h3 class="cp-modal-title" id="cpModalTitle">ABOUT ME</h3>
+      <div id="cpModalTags" class="cp-modal-tags"></div>
       <p class="cp-modal-desc" id="cpModalDesc">Explore background &amp; engineering journey.</p>
-      <button id="cpModalAction" class="btn btn-primary cp-modal-btn">
-        <span>OPEN SECTION</span>
-        <span class="hud-key-tag">ENTER</span>
-      </button>
+      <div class="cp-modal-actions" id="cpModalActions">
+        <a id="cpModalLiveBtn" href="#" target="_blank" rel="noopener" class="btn btn-primary cp-modal-btn cp-live-btn" style="display:none;">
+          <span>VISIT LIVE DEMO ↗</span>
+        </a>
+        <a id="cpModalGithubBtn" href="#" target="_blank" rel="noopener" class="btn btn-secondary cp-modal-btn cp-github-btn" style="display:none;">
+          <span>VIEW GITHUB ↗</span>
+        </a>
+        <button id="cpModalAction" class="btn btn-primary cp-modal-btn">
+          <span>OPEN SECTION</span>
+          <span class="hud-key-tag">ENTER</span>
+        </button>
+      </div>
     </div>
 
     <!-- Bottom Bar -->

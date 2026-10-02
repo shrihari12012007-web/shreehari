@@ -29,14 +29,27 @@ class SportsCar {
     this.friction = 7.5;
     this.speedKmh = 0;
 
-    // Road Limits (curved road - half-width is distance from curve center)
-    this.roadHalfWidth = 10.4;
-    this.roadMinZ = -2350;
-    this.roadMaxZ = 82;
+    // Bruno Simon Open World Island Bounds (Free-Roaming across all zones)
+    this.worldMinX = -260;
+    this.worldMaxX = 260;
+    this.worldMinZ = -2380;
+    this.worldMaxZ = 110;
 
-    // Curved road support
-    this.roadCurve = null;     // Set by driveMode.js after environment init
-    this.lastCurveT = 0;       // Cached t-parameter for efficient nearest-point lookup
+    // Jump & Ramp Physics
+    this.vy = 0;
+    this.groundY = 0.45;
+    this.isAirborne = false;
+    this.gravity = -38;
+    this.ramps = []; // Array of ramp collision objects
+
+    // Drifting & Skid State
+    this.isDrifting = false;
+    this.skidContainer = null;
+    this.lastSkidTime = 0;
+
+    // Curved road support (used for navigation and surface friction)
+    this.roadCurve = null;
+    this.lastCurveT = 0;
 
     // Visual Nodes
     this.meshGroup = new THREE.Group();
@@ -513,47 +526,71 @@ class SportsCar {
     this.position.x += vx * delta;
     this.position.z += vz * delta;
 
-    // ── CURVED ROAD BOUNDARIES ──
-    // If a road curve is set, constrain car to stay within roadHalfWidth of the curve center
-    if (this.roadCurve) {
-      const nearResult = this.findNearestTOnCurve(this.position);
-      const dx = this.position.x - nearResult.point.x;
-      const dz = this.position.z - nearResult.point.z;
-      const distFromCenter = Math.sqrt(dx * dx + dz * dz);
+    // ── RAMP & JUMP COLLISION DETECTION ──
+    let onRamp = false;
+    for (let r of this.ramps) {
+      const rx = this.position.x - r.x;
+      const rz = this.position.z - r.z;
+      const cosA = Math.cos(-r.angle);
+      const sinA = Math.sin(-r.angle);
+      const localX = rx * cosA - rz * sinA;
+      const localZ = rx * sinA + rz * cosA;
 
-      if (distFromCenter > this.roadHalfWidth) {
-        // Push car back to road boundary
-        const excess = (distFromCenter - this.roadHalfWidth) / distFromCenter;
-        this.position.x -= dx * excess;
-        this.position.z -= dz * excess;
-        this.speed *= 0.88; // lose speed on boundary hit
-      }
+      if (Math.abs(localX) <= r.width / 2 && localZ >= -r.length / 2 && localZ <= r.length / 2) {
+        onRamp = true;
+        const progress = (localZ + r.length / 2) / r.length;
+        const rampHeight = progress * r.height;
+        const targetGround = this.groundY + rampHeight;
 
-      // Clamp at curve start/end
-      if (nearResult.t <= 0.001 && this.speed > 0) {
-        // already at start, prevent driving backwards off start
-      }
-      if (nearResult.t >= 0.999) {
-        this.speed = Math.min(0, this.speed); // can't drive past finish
-      }
-    } else {
-      // Fallback to straight road boundaries
-      if (this.position.x > this.roadHalfWidth) {
-        this.position.x = this.roadHalfWidth;
-        this.speed *= 0.88;
-      } else if (this.position.x < -this.roadHalfWidth) {
-        this.position.x = -this.roadHalfWidth;
-        this.speed *= 0.88;
-      }
-      if (this.position.z < this.roadMinZ) {
-        this.position.z = this.roadMinZ;
-        this.speed = 0;
-      }
-      if (this.position.z > this.roadMaxZ) {
-        this.position.z = this.roadMaxZ;
-        this.speed = 0;
+        if (this.position.y <= targetGround + 0.3) {
+          this.position.y = targetGround;
+          this.vy = 0;
+          this.isAirborne = false;
+          if (progress > 0.88 && this.speed > 10) {
+            this.vy = Math.max(14, Math.abs(this.speed) * 0.45);
+            this.isAirborne = true;
+          }
+        }
+        break;
       }
     }
+
+    // ── AIRBORNE & GRAVITY PHYSICS ──
+    if (this.isAirborne || this.position.y > this.groundY + 0.05) {
+      this.vy += this.gravity * delta;
+      this.position.y += this.vy * delta;
+      if (this.position.y <= this.groundY) {
+        this.position.y = this.groundY;
+        this.vy = 0;
+        this.isAirborne = false;
+      }
+    }
+
+    // ── BRUNO SIMON FREE-ROAMING ISLAND BOUNDARIES ──
+    if (this.position.x > this.worldMaxX) {
+      this.position.x = this.worldMaxX;
+      this.speed *= -0.3;
+    } else if (this.position.x < this.worldMinX) {
+      this.position.x = this.worldMinX;
+      this.speed *= -0.3;
+    }
+
+    if (this.position.z < this.worldMinZ) {
+      this.position.z = this.worldMinZ;
+      this.speed = 0;
+    } else if (this.position.z > this.worldMaxZ) {
+      this.position.z = this.worldMaxZ;
+      this.speed = 0;
+    }
+
+    // Deep water safety: if fallen into deep pond away from bridge, respawn on road
+    const pondDist = Math.hypot(this.position.x - 95, this.position.z - (-1220));
+    if (pondDist < 75 && Math.abs(this.position.x) > 22 && !this.isAirborne) {
+      this.teleportTo(-6, 0.45, -1140, 0);
+    }
+
+    // Drifting state check
+    this.isDrifting = (Math.abs(this.speed) > 16.0 && Math.abs(controls.steer) > 0.45) || (isHandbrake && Math.abs(this.speed) > 8);
 
     this.meshGroup.position.copy(this.position);
     this.meshGroup.rotation.y = this.rotation;
@@ -565,11 +602,15 @@ class SportsCar {
     if (this.rearLeftWheel)   this.rearLeftWheel.rotation.x -= wheelRotSpeed;
     if (this.rearRightWheel)  this.rearRightWheel.rotation.x += wheelRotSpeed;
 
-    // Suspension dynamics (M-tuned pitch & roll)
+    // Suspension dynamics (M-tuned pitch & roll + jump pitch)
     if (this.chassisMesh) {
       let targetPitch = 0;
-      if (isAccelerating && this.speed >= 0) targetPitch = -0.028;
-      if (isReversing || isHandbrake || (controls.reverse > 0 && this.speed > 0)) targetPitch = 0.045;
+      if (this.isAirborne) {
+        targetPitch = -0.06; // tilt up when jumping
+      } else {
+        if (isAccelerating && this.speed >= 0) targetPitch = -0.028;
+        if (isReversing || isHandbrake || (controls.reverse > 0 && this.speed > 0)) targetPitch = 0.045;
+      }
       this.chassisMesh.rotation.x += (targetPitch - this.chassisMesh.rotation.x) * 0.16;
 
       const targetRoll = controls.steer * (this.speed / this.maxForwardSpeed) * 0.048;
@@ -589,14 +630,31 @@ class SportsCar {
   }
 
   resetPosition() {
-    this.position.set(0, 0.45, 0);
-    this.rotation = 0;
+    this.teleportTo(0, 0.45, 0, 0);
+  }
+
+  teleportTo(x, y, z, rotation = 0) {
+    this.position.set(x, y !== undefined ? y : 0.45, z);
+    this.rotation = rotation;
     this.speed = 0;
+    this.vy = 0;
+    this.isAirborne = false;
     this.meshGroup.position.copy(this.position);
-    this.meshGroup.rotation.y = 0;
+    this.meshGroup.rotation.y = this.rotation;
     if (this.chassisMesh) {
       this.chassisMesh.rotation.x = 0;
       this.chassisMesh.rotation.z = 0;
+    }
+  }
+
+  honk() {
+    // Flash headlights
+    if (this.headlights && this.headlights.length > 0) {
+      this.headlights.forEach(hl => {
+        const orig = hl.intensity;
+        hl.intensity = 5.5;
+        setTimeout(() => { hl.intensity = orig; }, 180);
+      });
     }
   }
 

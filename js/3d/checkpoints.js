@@ -70,36 +70,56 @@ class CheckpointManager {
 
     this.projectBillboards = [
       {
+        id: 'proj-nova-cuts',
         title: 'NOVA CUTS',
-        category: 'WEB APP · LIVE',
-        desc: 'Smart Salon & Grooming Booking Platform with Render Hosting',
-        x: -14.2,
+        category: 'WEB APP · LIVE ON RENDER',
+        desc: 'Smart Salon & Grooming Booking Platform with modern booking workflow & cloud deployment.',
+        x: -20,
         z: -1080,
         color: '#00f0ff',
+        liveUrl: 'https://nova-cuts.onrender.com/',
+        githubUrl: 'https://github.com/shrihari12012007-web',
+        tags: ['React', 'Vite', 'CSS3', 'Render'],
+        isProject: true,
       },
       {
+        id: 'proj-panda-ai',
         title: 'PANDA AI',
-        category: 'AI / PYTHON',
-        desc: 'Smart Desktop Voice Assistant with Speech Recognition & Automation',
-        x: 14.2,
+        category: 'AI / DESKTOP ASSISTANT',
+        desc: 'Voice assistant with SpeechRecognition, Edge TTS, Gemini API & system automation.',
+        x: 18,
         z: -1080,
         color: '#a855f7',
+        liveUrl: '',
+        githubUrl: 'https://github.com/shrihari12012007-web',
+        tags: ['Python', 'Gemini API', 'Edge TTS', 'Pygame'],
+        isProject: true,
       },
       {
-        title: 'EYE CARE MONITOR',
-        category: 'COMPUTER VISION',
-        desc: 'AI Distance & Blink Rate Health Guard with Real-time Camera Tracking',
-        x: -14.2,
+        id: 'proj-eye-care',
+        title: 'SRINIDHI EYE CARE',
+        category: 'HEALTHCARE WEB APPLICATION',
+        desc: 'Modern healthcare website built with React & Vite featuring responsive clinic portal.',
+        x: -20,
         z: -1220,
         color: '#4ade80',
+        liveUrl: '',
+        githubUrl: 'https://github.com/shrihari12012007-web',
+        tags: ['React', 'JavaScript', 'Tailwind/CSS', 'Vite'],
+        isProject: true,
       },
       {
+        id: 'proj-gesture-camera',
         title: 'GESTURE CAMERA',
-        category: 'OPENCV / MEDIAPIPE',
-        desc: 'Touchless Hand Gesture System Control & Real-time Vision Interface',
-        x: 14.2,
+        category: 'COMPUTER VISION / ANDROID',
+        desc: 'Touchless hand landmark tracking & camera-based gesture control system.',
+        x: 18,
         z: -1220,
         color: '#f59e0b',
+        liveUrl: '',
+        githubUrl: 'https://github.com/shrihari12012007-web',
+        tags: ['OpenCV', 'MediaPipe', 'Android', 'Python'],
+        isProject: true,
       },
     ];
 
@@ -342,15 +362,26 @@ class CheckpointManager {
   }
 
   update(carPosition) {
-    const triggerRadius = 26; // units around checkpoint center
     let found = null;
 
-    for (let cp of this.checkpoints) {
-      const dz = Math.abs(carPosition.z - cp.z);
-      // On winding road: use Z proximity only (car is constrained to road anyway)
-      if (dz < triggerRadius) {
-        found = cp;
+    // 1. Check individual project booths (proximity in X and Z)
+    for (let proj of this.projectBillboards) {
+      const d = Math.hypot(carPosition.x - proj.x, carPosition.z - proj.z);
+      if (d < 18) {
+        found = proj;
         break;
+      }
+    }
+
+    // 2. If not at a project booth, check section checkpoint gates
+    if (!found) {
+      const triggerRadius = 26;
+      for (let cp of this.checkpoints) {
+        const dz = Math.abs(carPosition.z - cp.z);
+        if (dz < triggerRadius) {
+          found = cp;
+          break;
+        }
       }
     }
 

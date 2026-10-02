@@ -15,13 +15,18 @@ class BridgeEnvironment {
     this.scene = scene;
     this.waterMeshes = [];
     this.particles = null;
-    this.roadCurve = null;       // Exposed for car.js boundary physics
+    this.roadCurve = null;
+    this.ramps = []; // Exposed for car physics
 
     this.buildRoadSpline();
     this.initGroundTerrain();
     this.initCurvedRoad();
+    this.initGroundTextAndDecals();
     this.initPondAndRivers();
     this.initBridge();
+    this.initRamps();
+    this.initTrafficConesAndCrates();
+    this.initSkillsPlaza();
     this.initNaturalScenery();
     this.initGantries();
     this.initCitySkyline();
@@ -274,6 +279,370 @@ class BridgeEnvironment {
     group.add(stripe);
 
     return group;
+  }
+
+  // ── BRUNO SIMON PAINTED GROUND TYPOGRAPHY & ROAD MARKINGS ──
+  initGroundTextAndDecals() {
+    const group = new THREE.Group();
+
+    // 1. Welcome Plaza Painted Text (Z = 15 to -70)
+    group.add(this.createGroundText(
+      0, 25, 26, 12,
+      'SHREE HARI S B',
+      'AI & SOFTWARE ENGINEER',
+      'DRIVE WITH W A S D / ARROWS · H FOR HORN'
+    ));
+
+    group.add(this.createGroundText(
+      -6, -180, 22, 10,
+      'WELCOME TO MY 3D WORLD',
+      'EXPLORE PROJECTS & SKILLS',
+      'HIT RAMPS TO JUMP!'
+    ));
+
+    // 2. About Approach Text
+    group.add(this.createGroundText(
+      8, -500, 22, 9,
+      'ZONE 01 // ABOUT ME',
+      'JIT DAVANGERE · CSE STUDENT',
+      'DRIVE AHEAD'
+    ));
+
+    // 3. Skills Plaza Approach Text
+    group.add(this.createGroundText(
+      5, -780, 22, 9,
+      'ZONE 02 // TECHNICAL SKILLS',
+      'PYTHON · AI/ML · COMPUTER VISION · REACT',
+      'VISIT THE SKILLS PLAZA ON RIGHT →'
+    ));
+
+    // 4. Bridge & Projects Showcase Text
+    group.add(this.createGroundText(
+      -7, -1000, 24, 10,
+      'ZONE 03 // PROJECTS SHOWCASE',
+      'CROSSING SUSPENSION BRIDGE OVER POND',
+      'EXPLORE 4 FEATURED PROJECTS'
+    ));
+
+    // 5. Education & Journey Text
+    group.add(this.createGroundText(
+      -5, -1720, 22, 9,
+      'ZONE 04 // MY JOURNEY',
+      'EDUCATION & CERTIFICATIONS',
+      '2025 – PRESENT'
+    ));
+
+    // 6. Finish Line Text
+    group.add(this.createGroundText(
+      0, -2220, 24, 10,
+      'ZONE 05 // LET\'S CONNECT',
+      'OPEN FOR INTERNSHIPS & COLLABORATION',
+      'PRESS ENTER TO CONTACT'
+    ));
+
+    // Directional Ground Arrows on the Road
+    const arrowTex = this.createArrowTexture();
+    const arrowMat = new THREE.MeshBasicMaterial({ map: arrowTex, transparent: true, opacity: 0.85 });
+    [-80, -280, -600, -900, -1120, -1350, -1600, -1850, -2100].forEach(z => {
+      const arrowGeo = new THREE.PlaneGeometry(3.5, 5.0);
+      arrowGeo.rotateX(-Math.PI / 2);
+      const arrow = new THREE.Mesh(arrowGeo, arrowMat);
+      // Sample nearest road X
+      const pt = this.roadCurve.getPointAt(Math.max(0, Math.min(1, Math.abs(z - 80) / 2370)));
+      arrow.position.set(pt ? pt.x : 0, 0.032, z);
+      group.add(arrow);
+    });
+
+    this.scene.add(group);
+  }
+
+  createGroundText(x, z, width, length, line1, line2, line3, angle = 0) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Subtle dark underlay plate for contrast
+    ctx.fillStyle = 'rgba(6, 10, 18, 0.72)';
+    ctx.roundRect ? ctx.roundRect(16, 16, canvas.width - 32, canvas.height - 32, 28) : ctx.fillRect(16, 16, canvas.width - 32, canvas.height - 32);
+    ctx.fill();
+
+    // Border line
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+    // Main Title (bold white)
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 76px "Space Grotesk", sans-serif';
+    ctx.fillText(line1, canvas.width / 2, 140);
+
+    // Accent line
+    ctx.fillStyle = '#00f0ff';
+    ctx.fillRect(140, 175, canvas.width - 280, 6);
+
+    // Subtitle (bright cyan)
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = '700 42px "Space Grotesk", sans-serif';
+    ctx.fillText(line2, canvas.width / 2, 245);
+
+    // Third line (hint / tags)
+    if (line3) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 32px "JetBrains Mono", monospace';
+      ctx.fillText(line3, canvas.width / 2, 340);
+    }
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+
+    const geo = new THREE.PlaneGeometry(width, length);
+    geo.rotateX(-Math.PI / 2);
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.95 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, 0.035, z);
+    mesh.rotation.y = angle;
+    return mesh;
+  }
+
+  createArrowTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00f0ff';
+    ctx.beginPath();
+    ctx.moveTo(128, 20);
+    ctx.lineTo(230, 150);
+    ctx.lineTo(165, 150);
+    ctx.lineTo(165, 235);
+    ctx.lineTo(91, 235);
+    ctx.lineTo(91, 150);
+    ctx.lineTo(26, 150);
+    ctx.closePath();
+    ctx.fill();
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  // ── DRIVABLE JUMP RAMPS ──
+  initRamps() {
+    // Ramp 1: Intro jump ramp right down the first straight
+    this.createRamp(0, -135, 8.5, 12, 3.2, 0);
+
+    // Ramp 2: Skills park ramp for high jump
+    this.createRamp(14, -760, 7.5, 11, 2.9, 0.18);
+
+    // Ramp 3: Lakeside launch ramp
+    this.createRamp(-16, -1490, 7.5, 11, 3.0, -0.15);
+  }
+
+  createRamp(x, z, width, length, height, angle) {
+    const group = new THREE.Group();
+
+    // Wedge prism geometry
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0);
+    shape.lineTo(length, height);
+    shape.lineTo(length, 0);
+    shape.closePath();
+
+    const extrudeSettings = { depth: width, bevelEnabled: false };
+    const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    geo.center();
+
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0x1b2333,
+      metalness: 0.82,
+      roughness: 0.32,
+    });
+    const rampMesh = new THREE.Mesh(geo, mat);
+    rampMesh.position.set(x, height / 2 + 0.05, z);
+    rampMesh.rotation.y = angle + Math.PI / 2;
+    rampMesh.receiveShadow = true;
+    group.add(rampMesh);
+
+    // Glowing edge strips on ramp top
+    const edgeGeo = new THREE.BoxGeometry(width * 0.95, 0.12, 0.4);
+    const edgeMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+    const edge = new THREE.Mesh(edgeGeo, edgeMat);
+    edge.position.set(x, height + 0.1, z - (length / 2) * Math.cos(angle));
+    edge.rotation.y = angle;
+    group.add(edge);
+
+    // Chevrons on ramp slope
+    const chevMat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+    for (let c = -3; c <= 3; c += 2.8) {
+      const chevGeo = new THREE.PlaneGeometry(width * 0.8, 0.4);
+      chevGeo.rotateX(-Math.PI / 2 - Math.atan2(height, length));
+      const chev = new THREE.Mesh(chevGeo, chevMat);
+      chev.position.set(x, height * 0.5 + 0.1, z + c);
+      group.add(chev);
+    }
+
+    this.scene.add(group);
+
+    // Register ramp with car physics
+    this.ramps.push({ x, z, width, length, height, angle });
+  }
+
+  // ── TRAFFIC CONES & PLAYFUL CRATES (Bruno Simon Signature) ──
+  initTrafficConesAndCrates() {
+    const group = new THREE.Group();
+
+    // Traffic cone slalom near start
+    const conePositions = [
+      { x: -3.5, z: -35 },
+      { x: 3.5,  z: -65 },
+      { x: -4.0, z: -95 },
+      { x: 4.0,  z: -125 },
+      { x: -2.5, z: -155 },
+      { x: 2.5,  z: -185 },
+      // Cones guarding bridge approach
+      { x: -9.5, z: -1010 },
+      { x: -4.5, z: -1015 },
+      { x: 1.5,  z: -1015 },
+      // Cones at finish line
+      { x: -5.0, z: -2270 },
+      { x: 5.0,  z: -2270 },
+    ];
+
+    conePositions.forEach(p => {
+      group.add(this.createTrafficConeMesh(p.x, p.z));
+    });
+
+    // Wooden / cyber crates near ramps and plazas
+    const cratePositions = [
+      { x: 9.0,  z: -140, s: 2.2 },
+      { x: -9.0, z: -142, s: 2.0 },
+      { x: 18.0, z: -740, s: 2.4 },
+      { x: -18.0,z: -780, s: 2.2 },
+      { x: -22.0,z: -1460,s: 2.5 },
+      { x: 24.0, z: -1480,s: 2.0 },
+    ];
+
+    cratePositions.forEach(c => {
+      group.add(this.createCrateMesh(c.x, c.s / 2, c.z, c.s));
+    });
+
+    this.scene.add(group);
+  }
+
+  createTrafficConeMesh(x, z) {
+    const grp = new THREE.Group();
+    const baseMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.9 });
+    const coneMat = new THREE.MeshStandardMaterial({ color: 0xff5500, roughness: 0.4 });
+    const whiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+    const base = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.12, 1.2), baseMat);
+    base.position.set(x, 0.06, z);
+    grp.add(base);
+
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(0.48, 1.8, 12), coneMat);
+    cone.position.set(x, 0.96, z);
+    grp.add(cone);
+
+    const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.4, 0.42, 12), whiteMat);
+    stripe.position.set(x, 0.92, z);
+    grp.add(stripe);
+
+    return grp;
+  }
+
+  createCrateMesh(x, y, z, size) {
+    const grp = new THREE.Group();
+    const crateMat = new THREE.MeshStandardMaterial({
+      color: 0x82542a,
+      roughness: 0.8,
+      metalness: 0.1,
+    });
+    const edgeMat = new THREE.MeshStandardMaterial({
+      color: 0x3d2713,
+      roughness: 0.6,
+    });
+
+    const box = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), crateMat);
+    box.position.set(x, y, z);
+    grp.add(box);
+
+    // Metal band around crate
+    const band = new THREE.Mesh(new THREE.BoxGeometry(size * 1.02, size * 0.15, size * 1.02), edgeMat);
+    band.position.set(x, y, z);
+    grp.add(band);
+
+    return grp;
+  }
+
+  // ── TECHNICAL SKILLS PLAZA ──
+  initSkillsPlaza() {
+    const plazaGroup = new THREE.Group();
+    const skills = [
+      { name: 'PYTHON', desc: 'Core Backend & AI', color: 0x3b82f6 },
+      { name: 'C / C++', desc: 'Systems & DSA', color: 0x6366f1 },
+      { name: 'JAVA', desc: 'OOP & Software', color: 0xf97316 },
+      { name: 'JAVASCRIPT', desc: 'Modern Web & UI', color: 0xfacc15 },
+      { name: 'AI / ML', desc: 'Gemini, ML Models', color: 0xa855f7 },
+      { name: 'OPENCV', desc: 'Computer Vision', color: 0x06b6d4 },
+      { name: 'REACT & VITE', desc: 'Responsive Frontends', color: 0x38bdf8 },
+      { name: 'GIT & GITHUB', desc: 'Version Control', color: 0xef4444 },
+    ];
+
+    const center = { x: 32, z: -840 };
+
+    // Circular plaza platform on the grass
+    const platGeo = new THREE.CylinderGeometry(38, 40, 0.4, 32);
+    const platMat = new THREE.MeshStandardMaterial({ color: 0x111622, metalness: 0.82, roughness: 0.28 });
+    const platform = new THREE.Mesh(platGeo, platMat);
+    platform.position.set(center.x, 0.18, center.z);
+    plazaGroup.add(platform);
+
+    // Glowing outer ring
+    const ringGeo = new THREE.RingGeometry(37.5, 38.5, 48);
+    ringGeo.rotateX(-Math.PI / 2);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.set(center.x, 0.39, center.z);
+    plazaGroup.add(ring);
+
+    // Center Monument with Title
+    const monuGeo = new THREE.CylinderGeometry(4.5, 5.0, 3.5, 16);
+    const monuMat = new THREE.MeshStandardMaterial({ color: 0x1e2638, metalness: 0.9, roughness: 0.2 });
+    const monument = new THREE.Mesh(monuGeo, monuMat);
+    monument.position.set(center.x, 1.75, center.z);
+    plazaGroup.add(monument);
+
+    // 8 Skill monoliths with neon crowns arranged in a circle
+    skills.forEach((skill, i) => {
+      const angle = (i / skills.length) * Math.PI * 2;
+      const radius = 25;
+      const sx = center.x + Math.cos(angle) * radius;
+      const sz = center.z + Math.sin(angle) * radius;
+
+      const blockMat = new THREE.MeshStandardMaterial({
+        color: skill.color,
+        metalness: 0.75,
+        roughness: 0.25,
+      });
+      const block = new THREE.Mesh(new THREE.BoxGeometry(3.6, 4.4, 3.6), blockMat);
+      block.position.set(sx, 2.4, sz);
+      block.rotation.y = angle;
+      plazaGroup.add(block);
+
+      // Light beacon
+      const beamMat = new THREE.MeshBasicMaterial({ color: skill.color, transparent: true, opacity: 0.5 });
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 14, 8), beamMat);
+      beam.position.set(sx, 9.4, sz);
+      plazaGroup.add(beam);
+    });
+
+    this.scene.add(plazaGroup);
   }
 
   // ── 5. LARGE POND + WINDING RIVERS ──
