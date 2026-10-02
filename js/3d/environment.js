@@ -17,6 +17,8 @@ class BridgeEnvironment {
     this.particles = null;
     this.roadCurve = null;
     this.ramps = []; // Exposed for car physics
+    this.interactiveObstacles = []; // Physics tumbling cones and crates
+    this.boostPads = []; // Nitro speed boost pads
 
     this.buildRoadSpline();
     this.initGroundTerrain();
@@ -26,6 +28,7 @@ class BridgeEnvironment {
     this.initBridge();
     this.initRamps();
     this.initTrafficConesAndCrates();
+    this.initBoostPads();
     this.initSkillsPlaza();
     this.initNaturalScenery();
     this.initGantries();
@@ -493,11 +496,11 @@ class BridgeEnvironment {
     this.ramps.push({ x, z, width, length, height, angle });
   }
 
-  // ── TRAFFIC CONES & PLAYFUL CRATES (Bruno Simon Signature) ──
+  // ── TRAFFIC CONES & PLAYFUL CRATES (Bruno Simon Signature Interactive Obstacles) ──
   initTrafficConesAndCrates() {
     const group = new THREE.Group();
 
-    // Traffic cone slalom near start
+    // Traffic cone slalom near start & curves
     const conePositions = [
       { x: -3.5, z: -35 },
       { x: 3.5,  z: -65 },
@@ -505,20 +508,39 @@ class BridgeEnvironment {
       { x: 4.0,  z: -125 },
       { x: -2.5, z: -155 },
       { x: 2.5,  z: -185 },
-      // Cones guarding bridge approach
       { x: -9.5, z: -1010 },
       { x: -4.5, z: -1015 },
       { x: 1.5,  z: -1015 },
-      // Cones at finish line
       { x: -5.0, z: -2270 },
       { x: 5.0,  z: -2270 },
     ];
 
     conePositions.forEach(p => {
-      group.add(this.createTrafficConeMesh(p.x, p.z));
+      const coneMesh = this.createTrafficConeMesh(0, 0);
+      coneMesh.position.set(p.x, 0, p.z);
+      group.add(coneMesh);
+
+      this.interactiveObstacles.push({
+        mesh: coneMesh,
+        x: p.x,
+        y: 0,
+        z: p.z,
+        origX: p.x,
+        origZ: p.z,
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        vrx: 0,
+        vry: 0,
+        vrz: 0,
+        radius: 1.2,
+        groundY: 0,
+        type: 'cone',
+        isHit: false,
+      });
     });
 
-    // Wooden / cyber crates near ramps and plazas
+    // Wooden & cyber crates near ramps and plazas
     const cratePositions = [
       { x: 9.0,  z: -140, s: 2.2 },
       { x: -9.0, z: -142, s: 2.0 },
@@ -529,10 +551,108 @@ class BridgeEnvironment {
     ];
 
     cratePositions.forEach(c => {
-      group.add(this.createCrateMesh(c.x, c.s / 2, c.z, c.s));
+      const crateMesh = this.createCrateMesh(0, c.s / 2, 0, c.s);
+      crateMesh.position.set(c.x, 0, c.z);
+      group.add(crateMesh);
+
+      this.interactiveObstacles.push({
+        mesh: crateMesh,
+        x: c.x,
+        y: 0,
+        z: c.z,
+        origX: c.x,
+        origZ: c.z,
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        vrx: 0,
+        vry: 0,
+        vrz: 0,
+        radius: c.s * 0.85,
+        groundY: 0,
+        type: 'crate',
+        isHit: false,
+      });
     });
 
     this.scene.add(group);
+  }
+
+  // ── TURBO SPEED BOOST NITRO PADS ──
+  initBoostPads() {
+    const group = new THREE.Group();
+    const padLocations = [
+      { z: -260 },
+      { z: -720 },
+      { z: -1100 },
+      { z: -1680 },
+    ];
+
+    const chevronTex = this.createBoostChevronTexture();
+    const padMat = new THREE.MeshBasicMaterial({ map: chevronTex, transparent: true, opacity: 0.95 });
+
+    padLocations.forEach((loc) => {
+      const t = Math.max(0, Math.min(1, Math.abs(loc.z - 80) / 2370));
+      const pt = this.roadCurve.getPointAt(t);
+      const px = pt ? pt.x : 0;
+
+      const padGeo = new THREE.PlaneGeometry(8.5, 9.5);
+      padGeo.rotateX(-Math.PI / 2);
+      const mesh = new THREE.Mesh(padGeo, padMat);
+      mesh.position.set(px, 0.038, loc.z);
+      group.add(mesh);
+
+      // Glowing outer ring
+      const ringGeo = new THREE.RingGeometry(5.2, 5.6, 24);
+      ringGeo.rotateX(-Math.PI / 2);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.45 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.set(px, 0.04, loc.z);
+      group.add(ring);
+
+      this.boostPads.push({
+        x: px,
+        z: loc.z,
+        mesh,
+        ring,
+        cooldown: 0,
+      });
+    });
+
+    this.scene.add(group);
+  }
+
+  createBoostChevronTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(0, 240, 255, 0.22)';
+    ctx.fillRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+    ctx.fillStyle = '#00f0ff';
+    [100, 240, 380].forEach(y => {
+      ctx.beginPath();
+      ctx.moveTo(256, y - 70);
+      ctx.lineTo(440, y + 40);
+      ctx.lineTo(390, y + 40);
+      ctx.lineTo(256, y - 30);
+      ctx.lineTo(122, y + 40);
+      ctx.lineTo(72, y + 40);
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    ctx.font = 'bold 36px "Space Grotesk", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚡ NITRO BOOST ⚡', 256, 480);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+    return tex;
   }
 
   createTrafficConeMesh(x, z) {
@@ -945,7 +1065,7 @@ class BridgeEnvironment {
   }
 
   // ── ANIMATION LOOP ──
-  update(time, delta) {
+  update(time, delta, car) {
     // Animate water surfaces with gentle wave motion
     this.waterMeshes.forEach((mesh, i) => {
       mesh.position.y = (i === 0 ? -0.55 : -0.28) + Math.sin(time * 0.65 + i * 1.3) * 0.1;
@@ -959,6 +1079,66 @@ class BridgeEnvironment {
         pos[i]     += Math.cos(time * 0.5 + pos[i + 2]) * 0.016;
       }
       this.particles.geometry.attributes.position.needsUpdate = true;
+    }
+
+    // ── INTERACTIVE OBSTACLES PHYSICS (Cones & Crates) ──
+    if (car && car.position) {
+      const carVx = -Math.sin(car.rotation) * car.speed;
+      const carVz = -Math.cos(car.rotation) * car.speed;
+
+      this.interactiveObstacles.forEach(obs => {
+        const dx = car.position.x - obs.x;
+        const dz = car.position.z - obs.z;
+        const dist = Math.hypot(dx, dz);
+
+        // Check collision with car
+        if (dist < obs.radius + 1.4 && !obs.isHit) {
+          obs.isHit = true;
+          obs.vx = carVx * 1.35 + (Math.random() - 0.5) * 8;
+          obs.vz = carVz * 1.35 + (Math.random() - 0.5) * 8;
+          obs.vy = 6.5 + Math.random() * 5.0; // flies upward
+          obs.vrx = (Math.random() - 0.5) * 16;
+          obs.vrz = (Math.random() - 0.5) * 16;
+          if (car.onObstacleHit) car.onObstacleHit(obs.type);
+        }
+
+        // Apply obstacle physics if hit
+        if (obs.isHit) {
+          obs.vy += -32 * delta; // gravity
+          obs.x += obs.vx * delta;
+          obs.y += obs.vy * delta;
+          obs.z += obs.vz * delta;
+
+          obs.mesh.rotation.x += obs.vrx * delta;
+          obs.mesh.rotation.z += obs.vrz * delta;
+
+          // Ground bounce
+          if (obs.y <= obs.groundY) {
+            obs.y = obs.groundY;
+            obs.vy = -obs.vy * 0.42; // bounce dampening
+            obs.vx *= 0.84;
+            obs.vz *= 0.84;
+            obs.vrx *= 0.75;
+            obs.vrz *= 0.75;
+          }
+
+          obs.mesh.position.set(obs.x, obs.y, obs.z);
+        }
+      });
+
+      // ── BOOST PADS COLLISION ──
+      this.boostPads.forEach(pad => {
+        if (pad.cooldown > 0) {
+          pad.cooldown -= delta;
+        } else {
+          const d = Math.hypot(car.position.x - pad.x, car.position.z - pad.z);
+          if (d < 5.2) {
+            pad.cooldown = 3.5;
+            if (car.applyBoost) car.applyBoost(2.4);
+            if (car.onBoostHit) car.onBoostHit();
+          }
+        }
+      });
     }
   }
 }

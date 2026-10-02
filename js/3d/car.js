@@ -51,6 +51,22 @@ class SportsCar {
     this.roadCurve = null;
     this.lastCurveT = 0;
 
+    // 6-Speed M-Transmission & Engine RPM
+    this.currentGear = 1;
+    this.gearMaxSpeeds = [9.0, 17.5, 26.5, 35.5, 43.0, 52.0];
+    this.rpm = 1000;
+    this.idleRpm = 1000;
+    this.isShifting = false;
+    this.shiftCooldown = 0;
+    this.onGearShiftCallback = null;
+
+    // Turbo Nitro Boost
+    this.boostTimer = 0;
+
+    // Exhaust VFX
+    this.exhaustFlames = [];
+    this.flameTimer = 0;
+
     // Visual Nodes
     this.meshGroup = new THREE.Group();
     this.chassisMesh = null;
@@ -371,7 +387,7 @@ class SportsCar {
     trunkRoundel.rotation.x = Math.PI / 2;
     chassisGroup.add(trunkRoundel);
 
-    // Quad Chrome M Exhaust Tips
+    // Quad Chrome M Exhaust Tips & Flame VFX
     const exGeo = new THREE.CylinderGeometry(0.065, 0.065, 0.22, 16);
     exGeo.rotateX(Math.PI / 2);
     const exhaustX = [-0.64, -0.48, 0.48, 0.64];
@@ -379,6 +395,19 @@ class SportsCar {
       const ex = new THREE.Mesh(exGeo, chromeMat);
       ex.position.set(x, 0.17, 2.26);
       chassisGroup.add(ex);
+
+      // Dynamic Flame Burst mesh
+      const flameGeo = new THREE.ConeGeometry(0.08, 0.42, 8);
+      flameGeo.rotateX(-Math.PI / 2);
+      const flameMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0,
+      });
+      const fl = new THREE.Mesh(flameGeo, flameMat);
+      fl.position.set(x, 0.17, 2.52);
+      chassisGroup.add(fl);
+      this.exhaustFlames.push(fl);
     });
 
     this.chassisMesh = chassisGroup;
@@ -627,6 +656,70 @@ class SportsCar {
     }
 
     this.speedKmh = Math.round(Math.abs(this.speed) * 3.6);
+
+    // ── 6-SPEED TRANSMISSION & RPM CALCULATION ──
+    if (this.shiftCooldown > 0) {
+      this.shiftCooldown -= delta;
+      if (this.shiftCooldown <= 0.12) {
+        this.isShifting = false;
+      }
+    }
+
+    const absSpeed = Math.abs(this.speed);
+    if (absSpeed < 0.8) {
+      this.currentGear = 1;
+      this.rpm = 1000 + controls.throttle * 4400;
+    } else {
+      const maxGearSpeed = this.gearMaxSpeeds[this.currentGear - 1];
+      const prevGearSpeed = this.currentGear > 1 ? this.gearMaxSpeeds[this.currentGear - 2] : 0;
+      const progressInGear = Math.max(0, Math.min(1.08, (absSpeed - prevGearSpeed * 0.45) / (maxGearSpeed - prevGearSpeed * 0.45)));
+
+      this.rpm = 2000 + progressInGear * 5400;
+
+      // Upshift
+      if (this.rpm > 6900 && this.currentGear < 6 && this.shiftCooldown <= 0 && controls.throttle > 0) {
+        this.currentGear++;
+        this.isShifting = true;
+        this.shiftCooldown = 0.32;
+        this.flameTimer = 0.22;
+        if (this.onGearShiftCallback) this.onGearShiftCallback('up', this.currentGear);
+      }
+      // Downshift
+      else if (this.rpm < 2400 && this.currentGear > 1 && this.shiftCooldown <= 0) {
+        this.currentGear--;
+        this.isShifting = true;
+        this.shiftCooldown = 0.28;
+        this.flameTimer = 0.16;
+        if (this.onGearShiftCallback) this.onGearShiftCallback('down', this.currentGear);
+      }
+    }
+
+    // ── NITRO BOOST TIMER ──
+    if (this.boostTimer > 0) {
+      this.boostTimer -= delta;
+      this.speed = Math.min(56.0, this.speed + 26.0 * delta);
+      this.flameTimer = 0.22;
+    }
+
+    // ── EXHAUST FLAME VFX ──
+    if (this.flameTimer > 0) {
+      this.flameTimer -= delta;
+      const opacity = Math.min(1.0, this.flameTimer * 5.0);
+      const scale = 0.8 + Math.random() * 0.55;
+      this.exhaustFlames.forEach((fl, idx) => {
+        fl.material.opacity = opacity;
+        fl.material.color.setHex((idx === 0 || idx === 3) ? 0x00f0ff : 0xff6600);
+        fl.scale.set(scale, scale, scale * 1.4);
+      });
+    } else {
+      this.exhaustFlames.forEach(fl => { fl.material.opacity = 0; });
+    }
+  }
+
+  applyBoost(duration = 2.0) {
+    this.boostTimer = duration;
+    this.speed = Math.max(this.speed, 48.0);
+    this.flameTimer = duration * 0.8;
   }
 
   resetPosition() {

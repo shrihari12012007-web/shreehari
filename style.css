@@ -715,18 +715,134 @@ body.drive-mode-active .back-to-top {
   opacity: 0.3;
 }
 
+.hud-race-btn {
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #fbbf24 !important;
+}
+.hud-race-btn:hover {
+  background: #f59e0b !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5) !important;
+}
+
+/* Race Countdown & Status Banner */
+.race-banner {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 100;
+}
+.race-countdown {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 88px;
+  font-weight: 900;
+  color: #facc15;
+  text-shadow: 0 0 40px rgba(250, 204, 21, 0.8), 0 4px 15px rgba(0,0,0,0.8);
+  animation: countdownPulse 0.85s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  letter-spacing: -2px;
+}
+@keyframes countdownPulse {
+  0% { transform: scale(1.4); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  85% { transform: scale(0.96); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+.race-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+  margin-top: -10px;
+}
+
+/* Race Stats Panel (Timer & Position) */
+.race-stats-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: rgba(10, 14, 24, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.15);
+}
+.race-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.race-stat-label {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+.race-stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+.race-stat-val.gold {
+  color: #facc15;
+}
+
+/* Telemetry (Gear + Speedometer + RPM) */
+.hud-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hud-gear-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 64px;
+  border-radius: 12px;
+  background: rgba(10, 14, 24, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+}
+.gear-sub {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.gear-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #00f0ff;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
 /* Speedometer */
 .hud-speedometer {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
-  padding: 14px 22px;
+  gap: 5px;
+  padding: 12px 20px;
   border-radius: 12px;
-  background: rgba(10,12,20,0.75);
+  background: rgba(10,12,20,0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 .speed-val-wrap {
   display: flex;
@@ -735,16 +851,16 @@ body.drive-mode-active .back-to-top {
 }
 .speed-number {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 38px;
+  font-size: 34px;
   font-weight: 800;
   color: #00f0ff;
   letter-spacing: -1px;
   text-shadow: 0 0 15px rgba(0,240,255,0.4);
 }
 .speed-unit {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: #666;
+  color: #64748b;
   font-family: 'JetBrains Mono', monospace;
 }
 .speed-bar {
@@ -758,7 +874,19 @@ body.drive-mode-active .back-to-top {
   width: 0%;
   height: 100%;
   background: linear-gradient(to right, #00f0ff, #4ade80);
-  transition: width 0.1s linear;
+}
+.rpm-bar {
+  width: 130px;
+  height: 3px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.rpm-fill {
+  width: 15%;
+  height: 100%;
+  background: linear-gradient(to right, #38bdf8, #f59e0b, #ef4444);
+  transition: width 0.08s ease;
 }
 
 /* Mobile Touch Controls */

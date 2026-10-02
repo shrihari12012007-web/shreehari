@@ -1,11 +1,13 @@
 /**
- * driveMode.js - Main Drive Mode Coordinator, Web Audio Engine & HUD Manager
- * Bruno Simon-Inspired 3D Interactive World with:
- * - Web Audio Engine: Ignition roar, continuous BMW inline-6 rumble, dual-tone horn, skid sound, checkpoint ding
- * - Teleport Navigation: Jump directly to Start, About, Skills, Projects, Education, Contact
- * - Camera toggle: Elevated Isometric view (default) vs. Close Chase camera
- * - Interactive Project cards with live demo & GitHub direct links
- * - Full responsive touch controls for mobile
+ * driveMode.js - Main Drive Mode Coordinator, Web Audio Engine, Transmission & Race Manager
+ * Full Features:
+ * - Dynamic Day / Sunset / Night cycle lighting toggle
+ * - Full 360-Degree Camera Rotation via mouse/touch drag and 360° spin button
+ * - Realistic 6-Speed M-Transmission with crisp gear shift sounds & exhaust crackle pops
+ * - Quad exhaust flame burst VFX and RPM tachometer
+ * - Interactive physics obstacles (tumbling traffic cones & crates with crash sounds)
+ * - Turbo Nitro speed boost pads on the track
+ * - AI Rival BMW sports car & Race Competition with 3-2-1 countdown, live lap timer, position tracker
  */
 
 class CarAudioEngine {
@@ -19,6 +21,7 @@ class CarAudioEngine {
     this.isRunning = false;
     this.ignitionTimeout = null;
     this.lastSkidTime = 0;
+    this.lastShiftTime = 0;
   }
 
   initContext() {
@@ -39,10 +42,9 @@ class CarAudioEngine {
     if (!this.ctx) return;
 
     this.stop();
-
     const t = this.ctx.currentTime;
 
-    // 1. Starter motor cranking pulses
+    // 1. Starter motor pulses
     for (let i = 0; i < 3; i++) {
       const crankOsc = this.ctx.createOscillator();
       const crankGain = this.ctx.createGain();
@@ -53,12 +55,11 @@ class CarAudioEngine {
 
       crankOsc.connect(crankGain);
       crankGain.connect(this.ctx.destination);
-
       crankOsc.start(t + i * 0.12);
       crankOsc.stop(t + i * 0.12 + 0.08);
     }
 
-    // 2. Engine Ignition Roar
+    // 2. Throaty Ignition Roar
     const roarOsc = this.ctx.createOscillator();
     const roarGain = this.ctx.createGain();
     const roarFilter = this.ctx.createBiquadFilter();
@@ -66,15 +67,15 @@ class CarAudioEngine {
     roarOsc.type = 'sawtooth';
     roarFilter.type = 'lowpass';
     roarFilter.frequency.setValueAtTime(260, t + 0.38);
-    roarFilter.frequency.exponentialRampToValueAtTime(700, t + 0.72);
+    roarFilter.frequency.exponentialRampToValueAtTime(740, t + 0.72);
     roarFilter.frequency.exponentialRampToValueAtTime(240, t + 1.25);
 
     roarOsc.frequency.setValueAtTime(52, t + 0.38);
-    roarOsc.frequency.exponentialRampToValueAtTime(185, t + 0.72);
+    roarOsc.frequency.exponentialRampToValueAtTime(190, t + 0.72);
     roarOsc.frequency.exponentialRampToValueAtTime(52, t + 1.3);
 
     roarGain.gain.setValueAtTime(0.001, t + 0.38);
-    roarGain.gain.linearRampToValueAtTime(0.24, t + 0.60);
+    roarGain.gain.linearRampToValueAtTime(0.26, t + 0.60);
     roarGain.gain.exponentialRampToValueAtTime(0.07, t + 1.3);
 
     roarOsc.connect(roarFilter);
@@ -122,20 +123,187 @@ class CarAudioEngine {
     this.osc2.start(t);
   }
 
-  updateEngine(speedKmh, throttle) {
+  // Engine Pitch Driven by Engine RPM and Gear Shifts
+  updateEngine(speedKmh, throttle, rpm = 1000, currentGear = 1, isShifting = false) {
     if (!this.isRunning || !this.ctx || this.isMuted) return;
 
     const t = this.ctx.currentTime;
-    const speedRatio = Math.min(1.0, speedKmh / 160);
 
-    const targetFreq = 46 + speedRatio * 140 + (throttle > 0 ? 18 : 0);
-    const targetGain = 0.055 + speedRatio * 0.11 + (throttle > 0 ? 0.04 : 0);
-    const targetFilter = 260 + speedRatio * 620;
+    // RPM fundamental frequency (1000 RPM ≈ 35Hz, 7000 RPM ≈ 220Hz)
+    const rpmRatio = Math.max(0, Math.min(1.0, (rpm - 1000) / 6500));
+    const targetFreq = 40 + rpmRatio * 185;
 
-    if (this.osc1) this.osc1.frequency.setTargetAtTime(targetFreq, t, 0.08);
-    if (this.osc2) this.osc2.frequency.setTargetAtTime(targetFreq * 2, t, 0.08);
-    if (this.gainNode) this.gainNode.gain.setTargetAtTime(targetGain, t, 0.08);
-    if (this.filterNode) this.filterNode.frequency.setTargetAtTime(targetFilter, t, 0.08);
+    // Throttle cut during gear shifting
+    let targetGain = 0.055 + (throttle > 0 ? 0.055 : 0) + rpmRatio * 0.06;
+    if (isShifting) {
+      targetGain = 0.012; // momentary drop during DCT shift
+    }
+
+    const targetFilter = 240 + rpmRatio * 760;
+
+    if (this.osc1) this.osc1.frequency.setTargetAtTime(targetFreq, t, 0.06);
+    if (this.osc2) this.osc2.frequency.setTargetAtTime(targetFreq * 2, t, 0.06);
+    if (this.gainNode) this.gainNode.gain.setTargetAtTime(targetGain, t, 0.04);
+    if (this.filterNode) this.filterNode.frequency.setTargetAtTime(targetFilter, t, 0.06);
+  }
+
+  // Crisp DCT Gear Shift Click + Exhaust Crackle Pop
+  playGearShift(type = 'up', gear = 1) {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const now = Date.now();
+    if (now - this.lastShiftTime < 240) return;
+    this.lastShiftTime = now;
+
+    const t = this.ctx.currentTime;
+
+    // 1. Mechanical shifter click
+    const clickOsc = this.ctx.createOscillator();
+    const clickGain = this.ctx.createGain();
+    clickOsc.type = 'triangle';
+    clickOsc.frequency.setValueAtTime(type === 'up' ? 820 : 640, t);
+    clickOsc.frequency.exponentialRampToValueAtTime(240, t + 0.04);
+
+    clickGain.gain.setValueAtTime(0.12, t);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+
+    clickOsc.connect(clickGain);
+    clickGain.connect(this.ctx.destination);
+    clickOsc.start(t);
+    clickOsc.stop(t + 0.06);
+
+    // 2. Exhaust Backfire Pop
+    this.playExhaustPop(t + 0.02);
+  }
+
+  // Exhaust Backfire Pop / Crackle (Sports Exhaust Burble)
+  playExhaustPop(startTime = null) {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const t = startTime || this.ctx.currentTime;
+
+    // Dual noise burst for throaty backfire
+    for (let p = 0; p < 2; p++) {
+      const popOsc = this.ctx.createOscillator();
+      const popGain = this.ctx.createGain();
+      const popFilter = this.ctx.createBiquadFilter();
+
+      popOsc.type = 'square';
+      popOsc.frequency.setValueAtTime(140 + p * 60, t + p * 0.04);
+      popOsc.frequency.exponentialRampToValueAtTime(45, t + p * 0.04 + 0.08);
+
+      popFilter.type = 'lowpass';
+      popFilter.frequency.setValueAtTime(550, t + p * 0.04);
+
+      popGain.gain.setValueAtTime(0.18, t + p * 0.04);
+      popGain.gain.exponentialRampToValueAtTime(0.001, t + p * 0.04 + 0.09);
+
+      popOsc.connect(popFilter);
+      popFilter.connect(popGain);
+      popGain.connect(this.ctx.destination);
+
+      popOsc.start(t + p * 0.04);
+      popOsc.stop(t + p * 0.04 + 0.1);
+    }
+  }
+
+  // Turbo Nitro Boost Rush
+  playBoost() {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+
+    // Rising turbo whistle
+    const whistle = this.ctx.createOscillator();
+    const wGain = this.ctx.createGain();
+    whistle.type = 'sine';
+    whistle.frequency.setValueAtTime(450, t);
+    whistle.frequency.exponentialRampToValueAtTime(1450, t + 0.35);
+
+    wGain.gain.setValueAtTime(0.001, t);
+    wGain.gain.linearRampToValueAtTime(0.15, t + 0.12);
+    wGain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+
+    whistle.connect(wGain);
+    wGain.connect(this.ctx.destination);
+    whistle.start(t);
+    whistle.stop(t + 0.56);
+  }
+
+  // Interactive Obstacle Crash Sound
+  playObstacleCrash(type = 'cone') {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = type === 'cone' ? 'triangle' : 'sawtooth';
+    osc.frequency.setValueAtTime(type === 'cone' ? 320 : 160, t);
+    osc.frequency.exponentialRampToValueAtTime(60, t + 0.14);
+
+    gain.gain.setValueAtTime(0.22, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.17);
+  }
+
+  // Race Countdown Beeps (3, 2, 1, GO!)
+  playCountdownBeep(isGo = false) {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = isGo ? 'square' : 'sine';
+    osc.frequency.setValueAtTime(isGo ? 880 : 440, t);
+
+    gain.gain.setValueAtTime(0.16, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + (isGo ? 0.45 : 0.2));
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(t);
+    osc.stop(t + (isGo ? 0.46 : 0.22));
+  }
+
+  // Victory Fanfare
+  playVictory() {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C E G C
+    notes.forEach((freq, idx) => {
+      const t = this.ctx.currentTime + idx * 0.12;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, t);
+
+      gain.gain.setValueAtTime(0.14, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.42);
+    });
   }
 
   playHorn() {
@@ -151,7 +319,7 @@ class CarAudioEngine {
     osc1.type = 'triangle';
     osc2.type = 'sawtooth';
     osc1.frequency.setValueAtTime(440, t);
-    osc2.frequency.setValueAtTime(554, t); // Major third automotive horn interval
+    osc2.frequency.setValueAtTime(554, t);
 
     gain.gain.setValueAtTime(0.001, t);
     gain.gain.linearRampToValueAtTime(0.18, t + 0.03);
@@ -195,7 +363,7 @@ class CarAudioEngine {
     if (!this.ctx) return;
 
     const now = Date.now();
-    if (now - this.lastSkidTime < 350) return;
+    if (now - this.lastSkidTime < 320) return;
     this.lastSkidTime = now;
 
     const t = this.ctx.currentTime;
@@ -250,12 +418,126 @@ class CarAudioEngine {
   }
 }
 
+// ── AI RIVAL CAR (Red Sports Coupe Competitor) ──
+class RivalCar {
+  constructor(scene, roadCurve) {
+    this.scene = scene;
+    this.roadCurve = roadCurve;
+    this.splineT = 0;
+    this.speed = 0;
+    this.targetSpeed = 40.5; // units/sec (~145 km/h)
+    this.isRacing = false;
+    this.position = new THREE.Vector3(4.5, 0.45, 20);
+    this.rotation = 0;
+
+    this.meshGroup = new THREE.Group();
+    this.initMesh();
+    this.scene.add(this.meshGroup);
+  }
+
+  initMesh() {
+    // Red Sports Coupe Body
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0xc81e28, // Crimson Red Metallic
+      metalness: 0.9,
+      roughness: 0.18,
+    });
+    const blackMat = new THREE.MeshStandardMaterial({ color: 0x111116, roughness: 0.3 });
+
+    // Chassis
+    const chassis = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.65, 4.4), bodyMat);
+    chassis.position.set(0, 0.5, 0);
+    this.meshGroup.add(chassis);
+
+    // Cabin
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.55, 2.3), blackMat);
+    cabin.position.set(0, 0.95, -0.2);
+    this.meshGroup.add(cabin);
+
+    // Headlights
+    const hlMat = new THREE.MeshBasicMaterial({ color: 0xffddaa });
+    [-0.7, 0.7].forEach(x => {
+      const hl = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.14, 0.1), hlMat);
+      hl.position.set(x, 0.55, -2.2);
+      this.meshGroup.add(hl);
+    });
+
+    // Taillights
+    const tlMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
+    [-0.7, 0.7].forEach(x => {
+      const tl = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.12, 0.1), tlMat);
+      tl.position.set(x, 0.55, 2.2);
+      this.meshGroup.add(tl);
+    });
+
+    // Wheels
+    const tireMat = new THREE.MeshStandardMaterial({ color: 0x161618, roughness: 0.9 });
+    const tireGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.28, 16);
+    tireGeo.rotateZ(Math.PI / 2);
+
+    [
+      { x: -1.0, z: -1.4 },
+      { x: 1.0,  z: -1.4 },
+      { x: -1.0, z: 1.3 },
+      { x: 1.0,  z: 1.3 },
+    ].forEach(pos => {
+      const w = new THREE.Mesh(tireGeo, tireMat);
+      w.position.set(pos.x, 0.36, pos.z);
+      this.meshGroup.add(w);
+    });
+
+    this.meshGroup.position.copy(this.position);
+  }
+
+  reset() {
+    this.splineT = 0;
+    this.speed = 0;
+    this.isRacing = false;
+    this.position.set(4.5, 0.45, 20);
+    this.rotation = 0;
+    this.meshGroup.position.copy(this.position);
+    this.meshGroup.rotation.y = 0;
+  }
+
+  update(delta) {
+    if (!this.isRacing || !this.roadCurve) return;
+
+    // Smooth acceleration
+    if (this.speed < this.targetSpeed) {
+      this.speed += 17.0 * delta;
+    }
+
+    // Advance along spline
+    const totalCurveLength = 2370;
+    const dt = (this.speed * delta) / totalCurveLength;
+    this.splineT = Math.min(1.0, this.splineT + dt);
+
+    const pt = this.roadCurve.getPointAt(this.splineT);
+    const tangent = this.roadCurve.getTangentAt(this.splineT).normalize();
+    const right = new THREE.Vector3(tangent.z, 0, -tangent.x);
+
+    // Ride on right lane (offset = +4.2 units)
+    this.position.copy(pt).addScaledVector(right, 4.2);
+    this.position.y = 0.45;
+    this.rotation = Math.atan2(tangent.x, tangent.z) + Math.PI;
+
+    this.meshGroup.position.copy(this.position);
+    this.meshGroup.rotation.y = this.rotation;
+
+    if (this.splineT >= 0.998) {
+      this.isRacing = false;
+    }
+  }
+}
+
+// ── MAIN DRIVE MODE APPLICATION ──
 class DriveModeApp {
   constructor() {
     this.isActive = false;
     this.clock = null;
     this.driveScene = null;
     this.car = null;
+    this.rival = null;
     this.environment = null;
     this.checkpoints = null;
     this.cameraController = null;
@@ -263,19 +545,36 @@ class DriveModeApp {
     this.audio = new CarAudioEngine();
     this.isSupported = true;
 
+    // Race State
+    this.raceState = 'IDLE'; // 'IDLE', 'COUNTDOWN', 'RACING', 'FINISHED'
+    this.raceTimer = 0;
+    this.raceCountdown = 3;
+    this.raceCountdownTimer = 0;
+
     // DOM Elements
     this.canvas = document.getElementById('driveCanvas');
-    this.heroSection = document.getElementById('home');
     this.enterBtn = document.getElementById('enterDriveBtn');
     this.exitBtn = document.getElementById('exitDriveBtn');
     this.toggleSoundBtn = document.getElementById('toggleSoundBtn');
     this.soundIcon = document.getElementById('soundIcon');
+    this.toggleDayNightBtn = document.getElementById('toggleDayNightBtn');
+    this.dayNightIcon = document.getElementById('dayNightIcon');
+    this.raceModeBtn = document.getElementById('raceModeBtn');
+    this.spinCamBtn = document.getElementById('spinCamBtn');
     this.hornBtn = document.getElementById('hornBtn');
     this.toggleCamBtn = document.getElementById('toggleCamBtn');
     this.camIcon = document.getElementById('camIcon');
     this.hud = document.getElementById('driveHud');
     this.speedometer = document.getElementById('hudSpeed');
     this.speedBarFill = document.getElementById('speedBarFill');
+    this.rpmBarFill = document.getElementById('rpmBarFill');
+    this.hudGear = document.getElementById('hudGear');
+    this.raceBanner = document.getElementById('raceBanner');
+    this.raceCountdownText = document.getElementById('raceCountdownText');
+    this.raceStatusText = document.getElementById('raceStatusText');
+    this.raceStatsPanel = document.getElementById('raceStatsPanel');
+    this.raceTimerDisplay = document.getElementById('raceTimerDisplay');
+    this.racePosDisplay = document.getElementById('racePosDisplay');
     this.checkpointModal = document.getElementById('checkpointModal');
     this.cpModalCloseBtn = document.getElementById('cpModalCloseBtn');
     this.cpNumberEl = document.getElementById('cpModalNumber');
@@ -324,6 +623,7 @@ class DriveModeApp {
     this.driveScene = new DriveScene(this.canvas);
     this.car = new SportsCar(this.driveScene.scene);
     this.environment = new BridgeEnvironment(this.driveScene.scene);
+    this.rival = new RivalCar(this.driveScene.scene, this.environment.roadCurve);
     this.checkpoints = new CheckpointManager(this.driveScene.scene);
     this.cameraController = new DriveCamera(this.driveScene.camera);
     this.controls = new DriveControls();
@@ -336,26 +636,39 @@ class DriveModeApp {
       this.car.ramps = this.environment.ramps;
     }
 
-    // 2. Setup Checkpoint callbacks
-    this.checkpoints.onEnterCallback = (item) => {
-      this.showCheckpointHUD(item);
+    // 2. Setup Car Audio Callbacks (Gear Shifts, Exhaust Pops, Boost, Obstacles)
+    this.car.onGearShiftCallback = (type, gear) => {
+      this.audio.playGearShift(type, gear);
+    };
+    this.car.onBoostHit = () => {
+      this.audio.playBoost();
+    };
+    this.car.onObstacleHit = (type) => {
+      this.audio.playObstacleCrash(type);
     };
 
+    // 3. Setup Checkpoint callbacks
+    this.checkpoints.onEnterCallback = (item) => {
+      if (this.raceState !== 'RACING') {
+        this.showCheckpointHUD(item);
+      }
+    };
     this.checkpoints.onLeaveCallback = () => {
       this.hideCheckpointHUD();
     };
 
-    // 3. Setup Controls callbacks
+    // 4. Setup Controls callbacks
     this.controls.onExitCallback = () => {
       if (this.isActive) this.exitDriveMode();
     };
-
     this.controls.onResetCallback = () => {
       if (this.isActive && this.car) {
         this.car.resetPosition();
+        if (this.raceState === 'RACING') {
+          this.startRace();
+        }
       }
     };
-
     this.controls.onInteractCallback = () => {
       if (this.isActive && this.checkpoints.activeCheckpoint) {
         const item = this.checkpoints.activeCheckpoint;
@@ -366,20 +679,17 @@ class DriveModeApp {
         }
       }
     };
-
     this.controls.onToggleSoundCallback = () => {
       this.handleSoundToggle();
     };
-
     this.controls.onHornCallback = () => {
       this.handleHorn();
     };
-
     this.controls.onCameraToggleCallback = () => {
       this.handleCameraToggle();
     };
 
-    // 4. Bind UI Buttons
+    // 5. Bind UI Buttons
     if (this.enterBtn) {
       this.enterBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -398,6 +708,28 @@ class DriveModeApp {
       this.toggleSoundBtn.addEventListener('click', (e) => {
         e.preventDefault();
         this.handleSoundToggle();
+      });
+    }
+
+    if (this.toggleDayNightBtn) {
+      this.toggleDayNightBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.handleDayNightToggle();
+      });
+    }
+
+    if (this.raceModeBtn) {
+      this.raceModeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.startRace();
+      });
+    }
+
+    if (this.spinCamBtn) {
+      this.spinCamBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isSpin = this.cameraController.toggleAutoSpin();
+        this.spinCamBtn.style.color = isSpin ? '#00f0ff' : '#ddd';
       });
     }
 
@@ -432,7 +764,7 @@ class DriveModeApp {
       });
     }
 
-    // 5. Bruno Simon Quick Teleport Buttons
+    // 6. Quick Teleport Navigation
     if (this.teleportBtns && this.teleportBtns.length > 0) {
       this.teleportBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -445,13 +777,13 @@ class DriveModeApp {
       });
     }
 
-    // 6. Detect Touch Support for Mobile Controls
+    // 7. Touch Support
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     if (isTouch && this.mobileControls) {
       this.mobileControls.classList.add('touch-device');
     }
 
-    // 7. Pause render loop & audio if tab is hidden
+    // 8. Visibility change handling
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         this.clock.stop();
@@ -464,7 +796,7 @@ class DriveModeApp {
       }
     });
 
-    // 8. Start render loop
+    // 9. Start loop
     this.animate();
   }
 
@@ -472,6 +804,16 @@ class DriveModeApp {
     const isMuted = this.audio.toggleMute();
     if (this.soundIcon) {
       this.soundIcon.textContent = isMuted ? '🔇' : '🔊';
+    }
+  }
+
+  handleDayNightToggle() {
+    if (!this.driveScene) return;
+    const mode = this.driveScene.toggleTimeOfDay();
+    if (this.dayNightIcon) {
+      if (mode === 'DAY') this.dayNightIcon.textContent = '☀️ DAY';
+      else if (mode === 'SUNSET') this.dayNightIcon.textContent = '🌅 DUSK';
+      else this.dayNightIcon.textContent = '🌙 NIGHT';
     }
   }
 
@@ -484,7 +826,103 @@ class DriveModeApp {
     if (!this.cameraController) return;
     const newMode = this.cameraController.toggleViewMode();
     if (this.camIcon) {
-      this.camIcon.textContent = newMode === 'ISOMETRIC' ? '📷 ISO' : '📷 CHASE';
+      if (newMode === 'ISOMETRIC') this.camIcon.textContent = '📷 ISO';
+      else if (newMode === 'CHASE') this.camIcon.textContent = '📷 CHASE';
+      else this.camIcon.textContent = '🔄 360°';
+    }
+  }
+
+  // ── RACE COMPETITION ENGINE ──
+  startRace() {
+    if (!this.isActive) {
+      this.enterDriveMode();
+    }
+    this.hideCheckpointHUD();
+
+    // 1. Grid line up: Player on Left, Rival on Right
+    this.car.teleportTo(-4.0, 0.45, 20, 0);
+    this.rival.reset();
+    this.cameraController.snapTo(this.car.position);
+
+    // 2. Start Countdown
+    this.raceState = 'COUNTDOWN';
+    this.raceCountdown = 3;
+    this.raceCountdownTimer = 0;
+    this.raceTimer = 0;
+
+    if (this.raceBanner) this.raceBanner.style.display = 'block';
+    if (this.raceCountdownText) this.raceCountdownText.textContent = '3';
+    if (this.raceStatusText) this.raceStatusText.textContent = 'GET READY';
+    if (this.raceStatsPanel) this.raceStatsPanel.style.display = 'flex';
+
+    this.audio.playCountdownBeep(false);
+  }
+
+  updateRace(delta) {
+    if (this.raceState === 'COUNTDOWN') {
+      this.raceCountdownTimer += delta;
+      if (this.raceCountdownTimer >= 1.0) {
+        this.raceCountdownTimer = 0;
+        this.raceCountdown--;
+
+        if (this.raceCountdown === 2) {
+          if (this.raceCountdownText) this.raceCountdownText.textContent = '2';
+          this.audio.playCountdownBeep(false);
+        } else if (this.raceCountdown === 1) {
+          if (this.raceCountdownText) this.raceCountdownText.textContent = '1';
+          this.audio.playCountdownBeep(false);
+        } else if (this.raceCountdown === 0) {
+          if (this.raceCountdownText) {
+            this.raceCountdownText.textContent = 'GO!';
+            this.raceCountdownText.style.color = '#4ade80';
+          }
+          if (this.raceStatusText) this.raceStatusText.textContent = 'RACE IN PROGRESS';
+          this.audio.playCountdownBeep(true);
+          this.raceState = 'RACING';
+          this.rival.isRacing = true;
+
+          setTimeout(() => {
+            if (this.raceBanner && this.raceState === 'RACING') {
+              this.raceBanner.style.display = 'none';
+            }
+          }, 1200);
+        }
+      }
+    } else if (this.raceState === 'RACING') {
+      this.raceTimer += delta;
+
+      // Format Timer mm:ss.d
+      const mins = Math.floor(this.raceTimer / 60);
+      const secs = (this.raceTimer % 60).toFixed(1);
+      const formattedTime = `${String(mins).padStart(2, '0')}:${secs.padStart(4, '0')}`;
+      if (this.raceTimerDisplay) this.raceTimerDisplay.textContent = formattedTime;
+
+      // Position check (Player vs Rival along Z distance)
+      const isPlayerAhead = this.car.position.z < this.rival.position.z;
+      if (this.racePosDisplay) {
+        this.racePosDisplay.textContent = isPlayerAhead ? '1st' : '2nd';
+        this.racePosDisplay.className = isPlayerAhead ? 'race-stat-val gold' : 'race-stat-val';
+      }
+
+      // Finish Line at Z = -2250
+      if (this.car.position.z <= -2240 || this.rival.position.z <= -2240) {
+        this.raceState = 'FINISHED';
+        this.rival.isRacing = false;
+        const playerWon = this.car.position.z <= this.rival.position.z;
+
+        if (this.raceBanner) this.raceBanner.style.display = 'block';
+        if (this.raceCountdownText) {
+          this.raceCountdownText.textContent = playerWon ? '🏆 YOU WON!' : '🥈 RIVAL WON';
+          this.raceCountdownText.style.color = playerWon ? '#facc15' : '#f43f5e';
+        }
+        if (this.raceStatusText) {
+          this.raceStatusText.textContent = `FINAL TIME: ${formattedTime}`;
+        }
+
+        if (playerWon) {
+          this.audio.playVictory();
+        }
+      }
     }
   }
 
@@ -522,21 +960,18 @@ class DriveModeApp {
       }
     }, 60);
 
-    // Default to Bruno Simon elevated isometric view
     this.cameraController.setMode('DRIVING');
 
-    // Show HUD & Focus
     if (this.hud) this.hud.classList.add('visible');
     if (this.navbar) this.navbar.classList.add('hidden-in-drive');
 
-    // Synthesize BMW sports engine ignition roar!
     this.audio.playIgnition();
-
     this.controls.reset();
   }
 
   exitDriveMode(targetSectionId = null) {
     this.isActive = false;
+    this.raceState = 'IDLE';
     document.body.classList.remove('drive-mode-active');
 
     this.audio.stop();
@@ -544,6 +979,8 @@ class DriveModeApp {
 
     if (this.hud) this.hud.classList.remove('visible');
     if (this.navbar) this.navbar.classList.remove('hidden-in-drive');
+    if (this.raceBanner) this.raceBanner.style.display = 'none';
+    if (this.raceStatsPanel) this.raceStatsPanel.style.display = 'none';
     this.hideCheckpointHUD();
 
     this.controls.reset();
@@ -567,13 +1004,11 @@ class DriveModeApp {
       if (this.cpTitleEl) this.cpTitleEl.textContent = item.title;
       if (this.cpDescEl) this.cpDescEl.textContent = item.desc;
 
-      // Render technology tags
       if (this.cpModalTags) {
         this.cpModalTags.innerHTML = (item.tags || []).map(t => `<span class="cp-tag-badge">${t}</span>`).join('');
         this.cpModalTags.style.display = 'flex';
       }
 
-      // Live Demo Link
       if (this.cpModalLiveBtn) {
         if (item.liveUrl) {
           this.cpModalLiveBtn.href = item.liveUrl;
@@ -583,18 +1018,15 @@ class DriveModeApp {
         }
       }
 
-      // GitHub Link
       if (this.cpModalGithubBtn) {
         this.cpModalGithubBtn.href = item.githubUrl || 'https://github.com/shrihari12012007-web';
         this.cpModalGithubBtn.style.display = 'inline-flex';
       }
 
-      // Hide generic section button
       if (this.cpActionBtn) {
         this.cpActionBtn.style.display = 'none';
       }
     } else {
-      // Standard Section Gate
       if (this.cpNumberEl) this.cpNumberEl.textContent = `CHECKPOINT ${item.number}`;
       if (this.cpTitleEl) this.cpTitleEl.textContent = item.title;
       if (this.cpDescEl) this.cpDescEl.textContent = item.desc;
@@ -629,12 +1061,26 @@ class DriveModeApp {
       this.car.update(delta, this.controls);
       this.checkpoints.update(this.car.position);
 
-      this.audio.updateEngine(this.car.speedKmh, this.controls.throttle);
+      // Audio engine pitch dynamically driven by RPM and gear
+      this.audio.updateEngine(
+        this.car.speedKmh,
+        this.controls.throttle,
+        this.car.rpm,
+        this.car.currentGear,
+        this.car.isShifting
+      );
 
       if (this.car.isDrifting) {
         this.audio.playSkid();
       }
 
+      // Update AI Rival & Race Competition
+      if (this.rival) {
+        this.rival.update(delta);
+      }
+      this.updateRace(delta);
+
+      // Telemetry (Speed, Gear & Tachometer)
       if (this.speedometer) {
         const formattedSpeed = String(this.car.speedKmh).padStart(3, '0');
         this.speedometer.textContent = formattedSpeed;
@@ -643,6 +1089,13 @@ class DriveModeApp {
         const pct = Math.min(100, (this.car.speedKmh / 160) * 100);
         this.speedBarFill.style.width = pct + '%';
       }
+      if (this.hudGear) {
+        this.hudGear.textContent = this.car.currentGear || 1;
+      }
+      if (this.rpmBarFill) {
+        const rpmPct = Math.min(100, Math.max(10, ((this.car.rpm - 1000) / 6500) * 100));
+        this.rpmBarFill.style.width = rpmPct + '%';
+      }
     } else {
       if (this.car && this.car.speed !== 0) {
         this.car.speed *= 0.95;
@@ -650,7 +1103,7 @@ class DriveModeApp {
       }
     }
 
-    this.environment.update(elapsedTime, delta);
+    this.environment.update(elapsedTime, delta, this.car);
     this.cameraController.update(delta, this.car, elapsedTime);
     this.driveScene.render();
   }

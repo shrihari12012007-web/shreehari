@@ -554,6 +554,16 @@
       </nav>
 
       <div class="hud-top-actions">
+        <button id="toggleDayNightBtn" class="hud-sound-btn" aria-label="Toggle Day and Night" title="Day/Night Cycle (N)">
+          <span id="dayNightIcon">☀️ DAY</span>
+          <span class="hud-key-tag">N</span>
+        </button>
+        <button id="raceModeBtn" class="hud-sound-btn hud-race-btn" aria-label="Start Race" title="Race Against Rival BMW">
+          <span id="raceIcon">🏁 RACE</span>
+        </button>
+        <button id="spinCamBtn" class="hud-sound-btn" aria-label="360 Camera Spin" title="360 Orbit Spin (Q/E)">
+          <span>🔄 360°</span>
+        </button>
         <button id="hornBtn" class="hud-sound-btn" aria-label="Car Horn" title="Horn (H)">
           <span>🎺</span>
           <span class="hud-key-tag">H</span>
@@ -571,6 +581,12 @@
           <span class="hud-key-tag">ESC</span>
         </button>
       </div>
+    </div>
+
+    <!-- Race Countdown & Race Live Status Banner -->
+    <div id="raceBanner" class="race-banner" style="display:none;">
+      <div id="raceCountdownText" class="race-countdown">3</div>
+      <div id="raceStatusText" class="race-status">GET READY</div>
     </div>
 
     <!-- Checkpoint / Project Floating Modal (Bruno Simon Style) -->
@@ -600,20 +616,41 @@
       <div class="hud-controls-guide">
         <div class="guide-item"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> DRIVE</div>
         <div class="guide-sep">&bull;</div>
-        <div class="guide-item"><span class="key">SPACE</span> BRAKE</div>
+        <div class="guide-item"><span class="key">DRAG</span> 360° ORBIT</div>
+        <div class="guide-sep">&bull;</div>
+        <div class="guide-item"><span class="key">H</span> HORN</div>
+        <div class="guide-sep">&bull;</div>
+        <div class="guide-item"><span class="key">SPACE</span> DRIFT</div>
         <div class="guide-sep">&bull;</div>
         <div class="guide-item"><span class="key">R</span> RESET</div>
-        <div class="guide-sep">&bull;</div>
-        <div class="guide-item"><span class="key">ESC</span> EXIT</div>
       </div>
 
-      <!-- Speedometer -->
-      <div class="hud-speedometer">
-        <div class="speed-val-wrap">
-          <span id="hudSpeed" class="speed-number">000</span>
-          <span class="speed-unit">KM/H</span>
+      <!-- Live Race HUD Stats (When in Race Mode) -->
+      <div id="raceStatsPanel" class="race-stats-panel" style="display:none;">
+        <div class="race-stat-item">
+          <span class="race-stat-label">TIME</span>
+          <span id="raceTimerDisplay" class="race-stat-val">00:00.0</span>
         </div>
-        <div class="speed-bar"><div id="speedBarFill" class="speed-fill"></div></div>
+        <div class="race-stat-item">
+          <span class="race-stat-label">POS</span>
+          <span id="racePosDisplay" class="race-stat-val gold">1st</span>
+        </div>
+      </div>
+
+      <!-- Transmission Tachometer & Speedometer -->
+      <div class="hud-telemetry">
+        <div class="hud-gear-badge">
+          <span class="gear-sub">GEAR</span>
+          <span id="hudGear" class="gear-num">1</span>
+        </div>
+        <div class="hud-speedometer">
+          <div class="speed-val-wrap">
+            <span id="hudSpeed" class="speed-number">000</span>
+            <span class="speed-unit">KM/H</span>
+          </div>
+          <div class="speed-bar"><div id="speedBarFill" class="speed-fill"></div></div>
+          <div class="rpm-bar"><div id="rpmBarFill" class="rpm-fill"></div></div>
+        </div>
       </div>
     </div>
 
