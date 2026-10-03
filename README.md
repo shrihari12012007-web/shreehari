@@ -1,4 +1,4 @@
-# ðŸŽï¸ Shree Hari S B â€” Interactive 3D Developer Portfolio
+# Shree Hari S B - Interactive 3D Developer Portfolio
 
 <div align="center">
   <a href="https://shreehari.onrender.com/">
@@ -14,72 +14,69 @@
 
 <br />
 
-Welcome to the source code for the personal interactive portfolio of **Shree Hari S B**, Computer Science Engineering student at Jain Institute of Technology, Davangere.
+Welcome to the personal interactive portfolio of **Shree Hari S B**, Computer Science Engineering student at Jain Institute of Technology, Davangere.
 
-Features a unique **interactive BMW 3D Road Tour Mode**, ambient particle canvas background, fluid responsive design, dynamic project showcase, and downloadable resume.
+Features an **interactive BMW 3D Road Tour Mode**, ambient particle canvas background, responsive layout, dynamic project showcase, and downloadable resume.
 
 ---
 
-## ðŸŒ Live URLs
+## Live URLs
 
 - **Live Site on Render:** [https://shreehari.onrender.com/](https://shreehari.onrender.com/)
 - **GitHub Repository:** [https://github.com/shrihari12012007-web/shreehari](https://github.com/shrihari12012007-web/shreehari)
 
 ---
 
-## âœ¨ Key Features
+## Key Features
 
-- **ðŸŽï¸ 3D BMW M Road Tour:** Full-screen 3D road drive mode with realistic steering, terrain generation, and acceleration mechanics.
-- **ðŸŒŒ Ambient Particle Canvas:** Reactive particle physics engine running in the background.
-- **âš¡ High Performance & Lightweight:** Built using modern vanilla HTML5, CSS3, and JavaScript â€” zero heavy framework overhead.
-- **ðŸ“± Fully Responsive:** Adaptive layouts optimized across mobile, tablet, and desktop screens.
-- **ðŸŽ¨ Glassmorphic & Cyber-Dark Aesthetic:** Premium dark theme styled with Space Grotesk, Inter, and JetBrains Mono typography.
-- **ðŸ“„ Integrated Resume & Contact:** Direct CV download and instant contact links.
+- **3D BMW Road Tour:** Full-screen 3D road drive mode with realistic steering, terrain generation, and acceleration mechanics.
+- **Ambient Particle Canvas:** Reactive particle physics engine running in the background.
+- **High Performance & Lightweight:** Built using modern vanilla HTML5, CSS3, and JavaScript with zero heavy framework overhead.
+- **Fully Responsive:** Adaptive layouts optimized across mobile, tablet, and desktop screens.
+- **Dark Theme Aesthetic:** Styled with Space Grotesk, Inter, and JetBrains Mono typography.
+- **Integrated Resume & Contact:** Direct CV download and instant contact links.
 
 ---
 
-## ðŸ› ï¸ Tech Stack
+## Tech Stack
 
 - **Frontend:** HTML5, CSS3, Vanilla ES6+ JavaScript
 - **3D & Graphics:** WebGL, HTML5 Canvas API, Math/Physics simulation
-- **Typography:** Space Grotesk, Inter, JetBrains Mono
-- **Hosting & CI/CD:** Render Static Site Deployment (ender.yaml)
+- **Hosting & CI/CD:** Render Static Site Deployment (render.yaml)
 
 ---
 
-## ðŸš€ One-Click Deploy to Render
-
-You can easily bind and deploy this portfolio to your own Render account in under 60 seconds:
+## One-Click Deploy to Render
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/shrihari12012007-web/shreehari)
 
 ### Manual Binding Steps on Render:
 1. Log in to [Render Dashboard](https://dashboard.render.com).
 2. Click **New +** > **Static Site**.
-3. Connect your GitHub repository: https://github.com/shrihari12012007-web/shreehari.
+3. Connect your GitHub repository: `https://github.com/shrihari12012007-web/shreehari`.
 4. Leave **Build Command** empty.
-5. Set **Publish Directory** to ..
+5. Set **Publish Directory** to `.`.
 6. Click **Create Static Site**.
 
 ---
 
-## ðŸ’» Local Setup & Development
+## Local Setup & Development
 
 1. **Clone the repository:**
-   `ash
+   ```bash
    git clone https://github.com/shrihari12012007-web/shreehari.git
    cd shreehari
-   `
+   ```
 
 2. **Run locally:**
-   Open index.html in your browser or run with VS Code Live Server:
-   `ash
+   Open `index.html` in your browser or run with VS Code Live Server:
+   ```bash
    npx serve .
-   `
+   ```
 
 ---
 
-## ðŸ“¬ Contact & Connect
+## Contact & Connect
 
 - **Portfolio:** [shreehari.onrender.com](https://shreehari.onrender.com/)
 - **LinkedIn:** [linkedin.com/in/shreehari-s-b](https://linkedin.com/in/shreehari-s-b)
@@ -87,6 +84,4 @@ You can easily bind and deploy this portfolio to your own Render account in unde
 
 ---
 
-<div align="center">
-  <sub>Created with passion by Shree Hari S B. â­ Star this repo if you like the 3D drive experience!</sub>
-</div>
+Developed by Shree Hari S B
