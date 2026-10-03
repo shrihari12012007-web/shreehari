@@ -7,7 +7,7 @@
   <a href="https://render.com/deploy?repo=https://github.com/shrihari12012007-web/shreehari">
     <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" />
   </a>
-  <a href="https://linkedin.com/in/shreehari-s-b">
+  <a href="https://www.linkedin.com/in/shreehari-s-b-580a66440/">
     <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>
 </div>
@@ -78,7 +78,7 @@ Features an **interactive BMW 3D Road Tour Mode**, ambient particle canvas backg
 ## :mailbox_with_mail: Contact & Connect
 
 - :globe_with_meridians: **Portfolio:** [shreehari.onrender.com](https://shreehari.onrender.com/)
-- :briefcase: **LinkedIn:** [linkedin.com/in/shreehari-s-b](https://linkedin.com/in/shreehari-s-b)
+- :briefcase: **LinkedIn:** [linkedin.com/in/shreehari-s-b](https://www.linkedin.com/in/shreehari-s-b-580a66440/)
 - :envelope: **Email:** [shrihari12012007@gmail.com](mailto:shrihari12012007@gmail.com)
 
 ---
