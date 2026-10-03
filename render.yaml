@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: shreehari-portfolio
+    env: static
+    buildCommand: ""
+    staticPublishPath: "."
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
