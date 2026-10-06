@@ -1654,3 +1654,370 @@ body.drive-mode-active .back-to-top {
   .cert-grid { flex-direction: column; }
   .contact-form-card { padding: 24px; }
 }
+
+/* ── MODERN PORTFOLIO ENHANCEMENTS & DUAL-DELIVERY CONTACT STYLES ── */
+.section-subtext {
+  font-size: 15px;
+  color: #777;
+  margin-top: 10px;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Hero Stats Pill Strip */
+.hero-stats-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0 30px;
+}
+.hero-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12.5px;
+  color: #aaa;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+.hero-stat-pill:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: translateY(-2px);
+}
+.hero-stat-pill strong {
+  color: #fff;
+  font-weight: 600;
+}
+.pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.pill-dot.green {
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+}
+.pill-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+.meta-whatsapp:hover {
+  color: #25d366 !important;
+}
+.meta-phone:hover {
+  color: #00f0ff !important;
+}
+
+/* Core Strengths / Engineering Pillars */
+.core-strengths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 36px;
+}
+.strength-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.strength-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+.strength-icon {
+  font-size: 24px;
+  line-height: 1;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.strength-body h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.strength-body p {
+  font-size: 12.5px;
+  color: #888;
+  line-height: 1.6;
+  margin-bottom: 0 !important;
+}
+
+/* Project Filter Bar & Badges */
+.projects-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.filter-tab {
+  padding: 8px 18px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #888;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.filter-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.filter-tab.active {
+  background: #fff;
+  color: #060810;
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+}
+
+.project-badge.badge-live {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+.project-badge.badge-ai {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border-color: rgba(168, 85, 247, 0.3);
+}
+.project-badge.badge-vision {
+  background: rgba(0, 240, 255, 0.12);
+  color: #38bdf8;
+  border-color: rgba(0, 240, 255, 0.3);
+}
+.project-badge.badge-web {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+.project-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.project-action-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.project-action-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+.project-action-link.primary-action {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.06);
+}
+.project-action-link.primary-action:hover {
+  background: #4ade80;
+  color: #060810;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+
+/* Contact Details & Dual Dispatch Cards */
+.email-icon { color: #a855f7 !important; background: rgba(168, 85, 247, 0.08) !important; border-color: rgba(168, 85, 247, 0.2) !important; }
+.phone-icon { color: #00f0ff !important; background: rgba(0, 240, 255, 0.08) !important; border-color: rgba(0, 240, 255, 0.2) !important; }
+.wa-icon { color: #25d366 !important; background: rgba(37, 211, 102, 0.08) !important; border-color: rgba(37, 211, 102, 0.2) !important; }
+
+.contact-availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 24px;
+}
+
+.form-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #4ade80;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 12px;
+}
+.form-sub-note {
+  font-size: 13px;
+  color: #777;
+  margin-top: -16px;
+  margin-bottom: 24px;
+}
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .form-row-2col { grid-template-columns: 1fr; }
+}
+
+.form-dispatch-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #888;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.form-dispatch-guarantee code {
+  color: #4ade80;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Dispatch Confirmation Card */
+.dispatch-success-box {
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 28, 22, 0.95), rgba(8, 16, 12, 0.9));
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(74, 222, 128, 0.15);
+  display: flex;
+  gap: 16px;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
+}
+.dispatch-check {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4ade80;
+  color: #060810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+}
+.dispatch-info { flex: 1; }
+.dispatch-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.dispatch-desc {
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.mobile-ping-panel {
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.mobile-ping-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #00f0ff;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.mobile-ping-text {
+  font-size: 12.5px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+.mobile-ping-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ping-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.wa-ping-btn {
+  background: #25d366;
+  color: #000;
+}
+.wa-ping-btn:hover {
+  background: #20ba5a;
+  box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+  transform: translateY(-2px);
+}
+.sms-ping-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.sms-ping-btn:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.status-sending {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #00f0ff;
+  font-size: 13.5px;
+}
+.status-error {
+  color: #ef4444;
+  font-size: 13.5px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

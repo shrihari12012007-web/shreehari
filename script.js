@@ -339,36 +339,136 @@ function setupCardStagger(gridSelector, cardSelector) {
 setupCardStagger('.skills-grid',   '.skill-group');
 setupCardStagger('.projects-grid', '.project-card');
 
-// ── 15. INTERACTIVE CONTACT FORM ─────────────────────────────
+// ── PROJECT FILTER TABS ─────────────────────────────────────
+const filterTabs = document.querySelectorAll('.filter-tab');
+const projectCards = document.querySelectorAll('.projects-grid .project-card');
+
+if (filterTabs.length > 0) {
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      filterTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filterValue = tab.getAttribute('data-filter');
+
+      projectCards.forEach((card, index) => {
+        const category = card.getAttribute('data-category') || '';
+        if (filterValue === 'all' || category === filterValue || category.includes(filterValue)) {
+          card.style.display = 'flex';
+          setTimeout(() => card.classList.add('card-visible'), index * 60);
+        } else {
+          card.style.display = 'none';
+          card.classList.remove('card-visible');
+        }
+      });
+    });
+  });
+}
+
+// ── 15. DUAL-DELIVERY CONTACT DISPATCH (EMAIL INBOX + MOBILE SMS ALERT) ──
 const contactForm = document.getElementById('contactForm');
 const formStatus  = document.getElementById('formStatus');
+const submitBtn   = document.getElementById('submitBtn');
+const btnText     = document.getElementById('btnText');
 
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name    = document.getElementById('name').value.trim();
     const email   = document.getElementById('email').value.trim();
-    const subject = document.getElementById('subject').value.trim();
+    const phone   = document.getElementById('phone')?.value.trim() || 'Not specified';
+    const subject = document.getElementById('subject').value.trim() || 'Portfolio Contact Request';
     const message = document.getElementById('message').value.trim();
 
     if (!name || !email || !message) {
-      formStatus.textContent = 'Please fill out all required fields.';
-      formStatus.className   = 'form-status error';
+      formStatus.innerHTML = '<span class="status-error">⚠️ Please fill out all required fields (Name, Email, Message).</span>';
       return;
     }
 
-    formStatus.textContent = 'Opening your email client...';
-    formStatus.className   = 'form-status success';
+    // Set UI to active dispatching state
+    if (submitBtn) submitBtn.disabled = true;
+    if (btnText) btnText.textContent = 'Dispatching to Inbox & Mobile... ⏳';
+    formStatus.innerHTML = '<span class="status-sending">⚡ Sending to Shree Hari\'s Email Inbox &amp; notifying mobile...</span>';
 
-    const mailtoSubject = encodeURIComponent(`[Portfolio] ${subject || 'New Message from ' + name}`);
-    const mailtoBody    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-    const mailtoUrl     = `mailto:shrihari12012007@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+    // Prepare SMS and WhatsApp pre-filled bodies
+    const cleanSubject = `[Portfolio] ${subject} from ${name}`;
+    const smsMessage = encodeURIComponent(`Hi Shree Hari, this is ${name} (${email}, ${phone}): ${message}`);
+    const waMessage  = encodeURIComponent(`Hi Shree Hari,\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone}\n*Subject:* ${subject}\n\n*Message:*\n${message}`);
 
-    setTimeout(() => {
-      window.location.href = mailtoUrl;
+    try {
+      // 1. Direct AJAX POST to FormSubmit API - delivers straight to shrihari12012007@gmail.com
+      await fetch('https://formsubmit.co/ajax/shrihari12012007@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          phone: phone,
+          subject: cleanSubject,
+          message: message,
+          _subject: `[Portfolio Alert] ${cleanSubject}`,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      });
+
+      // Render high-touch interactive confirmation card
+      formStatus.innerHTML = `
+        <div class="dispatch-success-box">
+          <div class="dispatch-check">✓</div>
+          <div class="dispatch-info">
+            <h4 class="dispatch-title">Message Delivered to Shree Hari!</h4>
+            <p class="dispatch-desc">
+              Your message was dispatched directly to Shree Hari's primary <strong>Email Inbox</strong> (<code>shrihari12012007@gmail.com</code>).
+            </p>
+            <div class="mobile-ping-panel">
+              <span class="mobile-ping-badge"><span class="radar-dot"></span> DIRECT MOBILE PHONE ALERT</span>
+              <p class="mobile-ping-text">Need an instant response? Tap below to alert Shree Hari's phone (+91 8105403378) directly:</p>
+              <div class="mobile-ping-buttons">
+                <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
+                  <span>💬 WhatsApp (+91 8105403378)</span>
+                </a>
+                <a href="sms:+918105403378?body=${smsMessage}" class="ping-btn sms-ping-btn">
+                  <span>📱 Send SMS (+91 8105403378)</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
       contactForm.reset();
-      formStatus.textContent = 'Message prepared! Thank you for reaching out.';
-    }, 600);
+      if (submitBtn) submitBtn.disabled = false;
+      if (btnText) btnText.textContent = 'Message Dispatched! Send Another ↗';
+
+    } catch (err) {
+      console.warn('FormSubmit fallback:', err);
+      // Fallback
+      formStatus.innerHTML = `
+        <div class="dispatch-success-box">
+          <div class="dispatch-check">📱</div>
+          <div class="dispatch-info">
+            <h4 class="dispatch-title">Direct Reachout to Shree Hari</h4>
+            <p class="dispatch-desc">Click below to dispatch your message straight to his mobile phone &amp; email:</p>
+            <div class="mobile-ping-buttons" style="margin-top: 10px;">
+              <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
+                💬 WhatsApp (+91 8105403378)
+              </a>
+              <a href="sms:+918105403378?body=${smsMessage}" class="ping-btn sms-ping-btn">
+                📱 Send SMS (+91 8105403378)
+              </a>
+              <a href="mailto:shrihari12012007@gmail.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(message)}" class="ping-btn sms-ping-btn">
+                ✉️ Email Client
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      if (submitBtn) submitBtn.disabled = false;
+      if (btnText) btnText.textContent = 'Send Message ↗';
+    }
   });
 }
 
