@@ -436,54 +436,114 @@ class RivalCar {
   }
 
   initMesh() {
-    // Red Sports Coupe Body
+    // Red Sports Coupe Body (Rosso Corsa Metallic)
     const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0xc81e28, // Crimson Red Metallic
-      metalness: 0.9,
-      roughness: 0.18,
+      color: 0xb5121b,
+      metalness: 0.88,
+      roughness: 0.22,
     });
-    const blackMat = new THREE.MeshStandardMaterial({ color: 0x111116, roughness: 0.3 });
+    const blackMat = new THREE.MeshStandardMaterial({ color: 0x07080b, roughness: 0.15, metalness: 0.9 });
+    const chromeMat = new THREE.MeshStandardMaterial({ color: 0xdde4ec, metalness: 0.98, roughness: 0.10 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x05080e, metalness: 0.95, roughness: 0.05, transparent: true, opacity: 0.86 });
 
-    // Chassis
-    const chassis = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.65, 4.4), bodyMat);
-    chassis.position.set(0, 0.5, 0);
-    this.meshGroup.add(chassis);
+    // 0. Soft Ground Contact Shadow
+    const shadowGeo = new THREE.PlaneGeometry(2.7, 5.2);
+    shadowGeo.rotateX(-Math.PI / 2);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true,
+      depthWrite: false,
+      opacity: 0.65,
+    });
+    const shadow = new THREE.Mesh(shadowGeo, shadowMat);
+    shadow.position.y = 0.02;
+    this.meshGroup.add(shadow);
 
-    // Cabin
-    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.55, 2.3), blackMat);
-    cabin.position.set(0, 0.95, -0.2);
+    // Lower Sculpted Chassis
+    const lowerBody = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.32, 4.38), bodyMat);
+    lowerBody.position.y = 0.24;
+    this.meshGroup.add(lowerBody);
+
+    // Front Bumper Splitter
+    const splitter = new THREE.Mesh(new THREE.BoxGeometry(1.94, 0.05, 0.60), blackMat);
+    splitter.position.set(0, 0.06, -2.20);
+    this.meshGroup.add(splitter);
+
+    // Sloping Aerodynamic Hood
+    const hood = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.24, 1.60), bodyMat);
+    hood.position.set(0, 0.44, -1.26);
+    hood.rotation.x = -0.075;
+    this.meshGroup.add(hood);
+
+    // Sleek Aerodynamic Cabin
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.48, 0.52, 2.05), blackMat);
+    cabin.position.set(0, 0.78, 0.10);
     this.meshGroup.add(cabin);
 
-    // Headlights
-    const hlMat = new THREE.MeshBasicMaterial({ color: 0xffddaa });
-    [-0.7, 0.7].forEach(x => {
-      const hl = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.14, 0.1), hlMat);
-      hl.position.set(x, 0.55, -2.2);
+    // Sloped Windshield
+    const windshield = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.50, 0.70), glassMat);
+    windshield.position.set(0, 0.76, -0.68);
+    windshield.rotation.x = -0.52;
+    this.meshGroup.add(windshield);
+
+    // Fastback Rear Glass
+    const rearGlass = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.46, 0.76), glassMat);
+    rearGlass.position.set(0, 0.78, 0.84);
+    rearGlass.rotation.x = 0.45;
+    this.meshGroup.add(rearGlass);
+
+    // Rear Carbon Lip Spoiler
+    const spoiler = new THREE.Mesh(new THREE.BoxGeometry(1.50, 0.04, 0.16), blackMat);
+    spoiler.position.set(0, 0.62, 2.18);
+    spoiler.rotation.x = 0.12;
+    this.meshGroup.add(spoiler);
+
+    // Dual Twin Chrome Exhaust Tips
+    const exGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.22, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.55, 0.55].forEach(x => {
+      const ex = new THREE.Mesh(exGeo, chromeMat);
+      ex.position.set(x, 0.16, 2.24);
+      this.meshGroup.add(ex);
+    });
+
+    // Aggressive Headlights
+    const hlMat = new THREE.MeshBasicMaterial({ color: 0xffeedd });
+    [-0.72, 0.72].forEach((x, idx) => {
+      const hl = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.10, 0.14), hlMat);
+      hl.position.set(x, 0.42, -2.20);
+      hl.rotation.y = idx === 0 ? 0.22 : -0.22;
       this.meshGroup.add(hl);
     });
 
-    // Taillights
-    const tlMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
-    [-0.7, 0.7].forEach(x => {
-      const tl = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.12, 0.1), tlMat);
-      tl.position.set(x, 0.55, 2.2);
+    // 3D LED Taillights
+    const tlMat = new THREE.MeshBasicMaterial({ color: 0xff002e });
+    [-0.66, 0.66].forEach(x => {
+      const tl = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.08, 0.08), tlMat);
+      tl.position.set(x, 0.51, 2.22);
       this.meshGroup.add(tl);
     });
 
-    // Wheels
-    const tireMat = new THREE.MeshStandardMaterial({ color: 0x161618, roughness: 0.9 });
-    const tireGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.28, 16);
+    // Realistic Alloy Wheels
+    const tireMat = new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.92 });
+    const tireGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.26, 24);
     tireGeo.rotateZ(Math.PI / 2);
+    const rimGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.27, 16);
+    rimGeo.rotateZ(Math.PI / 2);
 
     [
-      { x: -1.0, z: -1.4 },
-      { x: 1.0,  z: -1.4 },
-      { x: -1.0, z: 1.3 },
-      { x: 1.0,  z: 1.3 },
+      { x: -0.96, z: -1.35 },
+      { x: 0.96,  z: -1.35 },
+      { x: -0.96, z: 1.25 },
+      { x: 0.96,  z: 1.25 },
     ].forEach(pos => {
-      const w = new THREE.Mesh(tireGeo, tireMat);
-      w.position.set(pos.x, 0.36, pos.z);
-      this.meshGroup.add(w);
+      const wGroup = new THREE.Group();
+      const tire = new THREE.Mesh(tireGeo, tireMat);
+      const rim = new THREE.Mesh(rimGeo, chromeMat);
+      wGroup.add(tire);
+      wGroup.add(rim);
+      wGroup.position.set(pos.x, 0.36, pos.z);
+      this.meshGroup.add(wGroup);
     });
 
     this.meshGroup.position.copy(this.position);

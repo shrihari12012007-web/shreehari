@@ -180,6 +180,61 @@ class BridgeEnvironment {
       group.add(new THREE.Mesh(eGeo, cyanMat));
     });
 
+    // --- Motorsport Rumble Kerbs (Alternating Red & White) ---
+    const kerbBlockLen = 3.2;
+    const totalKerbBlocks = Math.floor(arcLen / kerbBlockLen);
+    const redKerbMat = new THREE.MeshStandardMaterial({
+      color: 0xcc2026,
+      roughness: 0.55,
+      metalness: 0.1,
+    });
+    const whiteKerbMat = new THREE.MeshStandardMaterial({
+      color: 0xf2f4f8,
+      roughness: 0.55,
+      metalness: 0.1,
+    });
+    const kerbGeo = new THREE.BoxGeometry(0.65, 0.08, kerbBlockLen * 0.95);
+
+    // Instanced meshes for optimal 60FPS performance (1 draw call per color)
+    const kerbInstancesTotal = (Math.ceil(totalKerbBlocks / 2) + 1) * 2;
+    const redInstanced = new THREE.InstancedMesh(kerbGeo, redKerbMat, kerbInstancesTotal);
+    const whiteInstanced = new THREE.InstancedMesh(kerbGeo, whiteKerbMat, kerbInstancesTotal);
+    redInstanced.receiveShadow = true;
+    whiteInstanced.receiveShadow = true;
+
+    const kerbDummy = new THREE.Object3D();
+    let redKerbIdx = 0, whiteKerbIdx = 0;
+
+    for (let k = 0; k < totalKerbBlocks; k++) {
+      const t = (k * kerbBlockLen + kerbBlockLen * 0.5) / arcLen;
+      if (t > 1) break;
+      const pt = this.roadCurve.getPoint(t);
+      const tang = this.roadCurve.getTangent(t).normalize();
+      const right = new THREE.Vector3(tang.z, 0, -tang.x);
+      const angle = Math.atan2(tang.x, tang.z);
+      const isRed = (k % 2 === 0);
+
+      [-1, 1].forEach(side => {
+        const kp = pt.clone().addScaledVector(right, side * (roadWidth / 2 + 0.15));
+        kerbDummy.position.set(kp.x, 0.042, kp.z);
+        kerbDummy.rotation.set(0, angle, 0);
+        kerbDummy.updateMatrix();
+
+        if (isRed && redKerbIdx < kerbInstancesTotal) {
+          redInstanced.setMatrixAt(redKerbIdx++, kerbDummy.matrix);
+        } else if (!isRed && whiteKerbIdx < kerbInstancesTotal) {
+          whiteInstanced.setMatrixAt(whiteKerbIdx++, kerbDummy.matrix);
+        }
+      });
+    }
+
+    redInstanced.count = redKerbIdx;
+    whiteInstanced.count = whiteKerbIdx;
+    redInstanced.instanceMatrix.needsUpdate = true;
+    whiteInstanced.instanceMatrix.needsUpdate = true;
+    group.add(redInstanced);
+    group.add(whiteInstanced);
+
     // --- Guardrails along road edges ---
     const railMat = new THREE.MeshStandardMaterial({ color: 0x1a2030, metalness: 0.8, roughness: 0.3 });
     const stepSize = 6;

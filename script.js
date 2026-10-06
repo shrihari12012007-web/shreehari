@@ -386,8 +386,8 @@ if (contactForm) {
 
     // Set UI to active dispatching state
     if (submitBtn) submitBtn.disabled = true;
-    if (btnText) btnText.textContent = 'Dispatching to Inbox & Mobile... ⏳';
-    formStatus.innerHTML = '<span class="status-sending">⚡ Sending to Shree Hari\'s Email Inbox &amp; notifying mobile...</span>';
+    if (btnText) btnText.textContent = 'Sending Message...';
+    formStatus.innerHTML = '<span class="status-sending">Sending message to Shree Hari\'s inbox...</span>';
 
     // Prepare SMS and WhatsApp pre-filled bodies
     const cleanSubject = `[Portfolio] ${subject} from ${name}`;
@@ -414,24 +414,24 @@ if (contactForm) {
         })
       });
 
-      // Render high-touch interactive confirmation card
+      // Render interactive confirmation card
       formStatus.innerHTML = `
         <div class="dispatch-success-box">
           <div class="dispatch-check">✓</div>
           <div class="dispatch-info">
-            <h4 class="dispatch-title">Message Delivered to Shree Hari!</h4>
+            <h4 class="dispatch-title">Message Sent Successfully!</h4>
             <p class="dispatch-desc">
-              Your message was dispatched directly to Shree Hari's primary <strong>Email Inbox</strong> (<code>shrihari12012007@gmail.com</code>).
+              Your message was delivered directly to Shree Hari's inbox (<code>shrihari12012007@gmail.com</code>).
             </p>
             <div class="mobile-ping-panel">
-              <span class="mobile-ping-badge"><span class="radar-dot"></span> DIRECT MOBILE PHONE ALERT</span>
-              <p class="mobile-ping-text">Need an instant response? Tap below to alert Shree Hari's phone (+91 8105403378) directly:</p>
+              <span class="mobile-ping-badge"><span class="radar-dot"></span> DIRECT REACHOUT</span>
+              <p class="mobile-ping-text">Need an immediate reply? You can also connect directly via WhatsApp or SMS:</p>
               <div class="mobile-ping-buttons">
                 <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
-                  <span>💬 WhatsApp (+91 8105403378)</span>
+                  <span>WhatsApp (+91 8105403378)</span>
                 </a>
                 <a href="sms:+918105403378?body=${smsMessage}" class="ping-btn sms-ping-btn">
-                  <span>📱 Send SMS (+91 8105403378)</span>
+                  <span>Send SMS (+91 8105403378)</span>
                 </a>
               </div>
             </div>
@@ -441,7 +441,7 @@ if (contactForm) {
 
       contactForm.reset();
       if (submitBtn) submitBtn.disabled = false;
-      if (btnText) btnText.textContent = 'Message Dispatched! Send Another ↗';
+      if (btnText) btnText.textContent = 'Message Sent! Send Another ↗';
 
     } catch (err) {
       console.warn('FormSubmit fallback:', err);
