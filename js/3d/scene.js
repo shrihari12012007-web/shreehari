@@ -1,8 +1,8 @@
 /**
- * scene.js - High-Clarity Three.js Engine with Dynamic Day/Night Cycle
+ * scene.js - High-Clarity Three.js Engine with Smooth Dynamic Day/Night Atmosphere Transitions
  * Features:
- * - Dynamic Day, Sunset, and Night lighting presets for high visibility
- * - Smooth lerping of sun direction, sky colors, ambient intensity, and fog
+ * - Seamless continuous real-time interpolation of sky color, sunlight, ambient intensity, fog, and exposure
+ * - Smooth Day, Sunset, and Night lighting presets for optimal visual clarity
  * - Crisp ACESFilmic tone mapping with optimized DPR clamping
  * - User toggleable via HUD button or auto-cycle
  */
@@ -14,7 +14,7 @@ class DriveScene {
 
     // Mode: 'DAY', 'SUNSET', 'NIGHT', or 'AUTO'
     this.timeOfDay = 'DAY';
-    this.cycleProgress = 0.25; // 0=Day, 0.4=Sunset, 0.75=Night
+    this.cycleProgress = 0.25;
     this.autoCycle = false;
 
     // Presets for lighting & atmosphere
@@ -95,20 +95,20 @@ class DriveScene {
     const p = this.presets[this.timeOfDay];
 
     // Ambient light
-    this.ambientLight = new THREE.AmbientLight(p.ambientColor, p.ambientIntensity);
+    this.ambientLight = new THREE.AmbientLight(p.ambientColor.clone(), p.ambientIntensity);
     this.scene.add(this.ambientLight);
 
     // Hemisphere light (sky vs ground)
-    this.hemiLight = new THREE.HemisphereLight(p.hemiSky, p.hemiGround, p.hemiIntensity);
+    this.hemiLight = new THREE.HemisphereLight(p.hemiSky.clone(), p.hemiGround.clone(), p.hemiIntensity);
     this.scene.add(this.hemiLight);
 
     // Main Sun / Moon directional light
-    this.sunLight = new THREE.DirectionalLight(p.sunColor, p.sunIntensity);
+    this.sunLight = new THREE.DirectionalLight(p.sunColor.clone(), p.sunIntensity);
     this.sunLight.position.copy(p.sunPos);
     this.scene.add(this.sunLight);
 
     // Vibrant cyan accent / rim light
-    this.rimLight = new THREE.DirectionalLight(0x00f0ff, 0.65);
+    this.rimLight = new THREE.DirectionalLight(0x00f0ff, 0.45);
     this.rimLight.position.set(-60, 45, 60);
     this.scene.add(this.rimLight);
   }
@@ -128,33 +128,54 @@ class DriveScene {
   setTimeOfDay(mode) {
     if (!this.presets[mode]) return;
     this.timeOfDay = mode;
-    const p = this.presets[mode];
-
-    // Smoothly apply preset targets
-    this.scene.background.copy(p.bgColor);
-    this.scene.fog.color.copy(p.fogColor);
-    this.scene.fog.density = p.fogDensity;
-
-    this.sunLight.color.copy(p.sunColor);
-    this.sunLight.intensity = p.sunIntensity;
-    this.sunLight.position.copy(p.sunPos);
-
-    this.ambientLight.color.copy(p.ambientColor);
-    this.ambientLight.intensity = p.ambientIntensity;
-
-    this.hemiLight.color.copy(p.hemiSky);
-    this.hemiLight.groundColor.copy(p.hemiGround);
-    this.hemiLight.intensity = p.hemiIntensity;
-
-    this.renderer.toneMappingExposure = p.exposure;
-    this.rimLight.intensity = mode === 'NIGHT' ? 0.75 : 0.35;
   }
 
+  // Smooth continuous atmosphere and lighting interpolation
   update(delta) {
+    if (!delta) delta = 0.016;
+    const p = this.presets[this.timeOfDay];
+    if (!p) return;
+
+    // Smooth exponential blend factor (~1.2s gradual time-lapse transition)
+    const t = 1 - Math.exp(-2.8 * delta);
+
+    if (this.scene.background) {
+      this.scene.background.lerp(p.bgColor, t);
+    }
+    if (this.scene.fog) {
+      this.scene.fog.color.lerp(p.fogColor, t);
+      this.scene.fog.density = THREE.MathUtils.lerp(this.scene.fog.density, p.fogDensity, t);
+    }
+
+    if (this.sunLight) {
+      this.sunLight.color.lerp(p.sunColor, t);
+      this.sunLight.intensity = THREE.MathUtils.lerp(this.sunLight.intensity, p.sunIntensity, t);
+      this.sunLight.position.lerp(p.sunPos, t);
+    }
+
+    if (this.ambientLight) {
+      this.ambientLight.color.lerp(p.ambientColor, t);
+      this.ambientLight.intensity = THREE.MathUtils.lerp(this.ambientLight.intensity, p.ambientIntensity, t);
+    }
+
+    if (this.hemiLight) {
+      this.hemiLight.color.lerp(p.hemiSky, t);
+      this.hemiLight.groundColor.lerp(p.hemiGround, t);
+      this.hemiLight.intensity = THREE.MathUtils.lerp(this.hemiLight.intensity, p.hemiIntensity, t);
+    }
+
+    if (this.renderer) {
+      this.renderer.toneMappingExposure = THREE.MathUtils.lerp(this.renderer.toneMappingExposure, p.exposure, t);
+    }
+
+    if (this.rimLight) {
+      const targetRim = (this.timeOfDay === 'NIGHT') ? 0.75 : 0.35;
+      this.rimLight.intensity = THREE.MathUtils.lerp(this.rimLight.intensity, targetRim, t);
+    }
+
     // Optional gentle auto-cycle
     if (this.autoCycle) {
       this.cycleProgress = (this.cycleProgress + delta * 0.012) % 1.0;
-      // Interpolate smoothly if in auto mode
     }
   }
 

@@ -1121,17 +1121,35 @@ class BridgeEnvironment {
 
   // ── ANIMATION LOOP ──
   update(time, delta, car) {
-    // Animate water surfaces with gentle wave motion
+    // Animate water surfaces with dual-harmonic fluid waves and gentle undulating shimmer
     this.waterMeshes.forEach((mesh, i) => {
-      mesh.position.y = (i === 0 ? -0.55 : -0.28) + Math.sin(time * 0.65 + i * 1.3) * 0.1;
+      const wave1 = Math.sin(time * 0.72 + i * 1.4) * 0.065;
+      const wave2 = Math.cos(time * 1.15 + i * 0.9) * 0.035;
+      const baseLevel = (i === 0 ? -0.55 : -0.28);
+      mesh.position.y = baseLevel + wave1 + wave2;
+      mesh.rotation.z = Math.sin(time * 0.35 + i) * 0.0025;
     });
 
-    // Drift atmospheric particles
+    // Drift atmospheric cyber particles smoothly around the camera / car
     if (this.particles) {
       const pos = this.particles.geometry.attributes.position.array;
+      const carX = (car && car.position) ? car.position.x : 0;
+      const carZ = (car && car.position) ? car.position.z : 0;
+
       for (let i = 0; i < pos.length; i += 3) {
-        pos[i + 1] += Math.sin(time + pos[i]) * 0.012;
-        pos[i]     += Math.cos(time * 0.5 + pos[i + 2]) * 0.016;
+        // Smooth harmonic floating motion
+        pos[i + 1] += Math.sin(time * 0.8 + pos[i] * 0.1) * 0.025;
+        pos[i]     += Math.cos(time * 0.5 + pos[i + 2] * 0.08) * 0.02;
+
+        // Wrap smoothly within a 150m dynamic volume centered on the car
+        if (pos[i] - carX > 75) pos[i] -= 150;
+        else if (pos[i] - carX < -75) pos[i] += 150;
+
+        if (pos[i + 2] - carZ > 90) pos[i + 2] -= 180;
+        else if (pos[i + 2] - carZ < -90) pos[i + 2] += 180;
+
+        if (pos[i + 1] > 26) pos[i + 1] = 0.5;
+        else if (pos[i + 1] < 0.2) pos[i + 1] = 25.0;
       }
       this.particles.geometry.attributes.position.needsUpdate = true;
     }

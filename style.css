@@ -67,7 +67,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   backdrop-filter: blur(22px);
   border-bottom: 1px solid rgba(255,255,255,0.05);
   z-index: 1000;
-  transition: background 0.5s, border-color 0.5s;
+  transition: background 0.5s, border-color 0.5s, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .navbar.scrolled {
   background: rgba(6, 6, 8, 0.92);
@@ -188,7 +188,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 1px solid rgba(0, 102, 177, 0.45);
   box-shadow: 0 4px 25px rgba(0, 102, 177, 0.22), 0 0 15px rgba(0, 240, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.18);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
   overflow: visible;
 }
 .bmw-drive-trigger:hover {
@@ -265,7 +265,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   position: relative;
   z-index: 2;
   max-width: 860px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(0) scale(1);
 }
 .badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -349,8 +350,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              visibility 0.55s;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.85s;
   background: #060812;
 }
 .drive-world-overlay canvas {
@@ -371,6 +372,7 @@ body.drive-mode-active .drive-world-overlay {
 }
 body.drive-mode-active .hero-text {
   opacity: 0;
+  transform: translateY(-24px) scale(0.97);
   pointer-events: none;
 }
 body.drive-mode-active .navbar.hidden-in-drive {
@@ -390,7 +392,10 @@ body.drive-mode-active .back-to-top {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.5s;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.75s,
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.02);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -401,6 +406,7 @@ body.drive-mode-active .back-to-top {
 .drive-hud.visible {
   opacity: 1;
   visibility: visible;
+  transform: scale(1);
 }
 
 /* HUD Top Bar */
@@ -409,6 +415,13 @@ body.drive-mode-active .back-to-top {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+  transform: translateY(-16px);
+  opacity: 0;
+}
+.drive-hud.visible .hud-top {
+  transform: translateY(0);
+  opacity: 1;
 }
 .hud-brand {
   display: flex;
@@ -682,6 +695,13 @@ body.drive-mode-active .back-to-top {
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease;
+  transform: translateY(16px);
+  opacity: 0;
+}
+.drive-hud.visible .hud-bottom {
+  transform: translateY(0);
+  opacity: 1;
 }
 .hud-controls-guide {
   display: flex;

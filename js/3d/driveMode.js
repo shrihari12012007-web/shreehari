@@ -1020,7 +1020,8 @@ class DriveModeApp {
       }
     }, 60);
 
-    this.cameraController.setMode('DRIVING');
+    // Smooth cinematic flight into driving position
+    this.cameraController.setMode('DRIVING', this.car);
 
     if (this.hud) this.hud.classList.add('visible');
     if (this.navbar) this.navbar.classList.add('hidden-in-drive');
@@ -1035,7 +1036,8 @@ class DriveModeApp {
     document.body.classList.remove('drive-mode-active');
 
     this.audio.stop();
-    this.cameraController.setMode('PREVIEW');
+    // Smooth cinematic flight back to preview angle
+    this.cameraController.setMode('PREVIEW', this.car);
 
     if (this.hud) this.hud.classList.remove('visible');
     if (this.navbar) this.navbar.classList.remove('hidden-in-drive');
@@ -1051,7 +1053,7 @@ class DriveModeApp {
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 250);
+      }, 350);
     }
   }
 
@@ -1163,6 +1165,7 @@ class DriveModeApp {
       }
     }
 
+    this.driveScene.update(delta);
     this.environment.update(elapsedTime, delta, this.car);
     this.cameraController.update(delta, this.car, elapsedTime);
     this.driveScene.render();

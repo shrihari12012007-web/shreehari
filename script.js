@@ -93,7 +93,8 @@ class Particle {
     const vx = this.baseVx + mouseOffX * mFactor;
     const vy = this.baseVy + mouseOffY * mFactor + scrollOffY * (1 - this.depth) * 0.006;
 
-    this.x += vx;
+    // Organic harmonic floating sway
+    this.x += vx + Math.sin(this.pulse) * 0.28;
     this.y += vy;
     this.pulse += this.pSpeed;
 
@@ -164,6 +165,7 @@ function drawFrame() {
 
 // ── 7. ANIMATION LOOP ────────────────────────────────────────
 let prevScrollY = 0;
+let scrollVelocity = 0;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -171,19 +173,26 @@ function animate() {
   // Pause 2D canvas drawing when 3D Drive Mode is active for 60fps performance
   if (document.body.classList.contains('drive-mode-active')) return;
 
-  // Smooth mouse
-  smoothMouse.x = lerp(smoothMouse.x, mouse.x, 0.055);
-  smoothMouse.y = lerp(smoothMouse.y, mouse.y, 0.055);
+  const time = performance.now() * 0.001;
 
-  // Smooth scroll
-  const scrollDelta = scrollY - prevScrollY;
+  // Organic harmonic idle drift (gentle breathing motion when mouse is stationary)
+  const idleDriftX = Math.sin(time * 0.38) * 35 + Math.cos(time * 0.22) * 20;
+  const idleDriftY = Math.cos(time * 0.32) * 25 + Math.sin(time * 0.16) * 15;
+
+  // Smooth mouse with fluid inertia
+  smoothMouse.x = lerp(smoothMouse.x, mouse.x + idleDriftX, 0.042);
+  smoothMouse.y = lerp(smoothMouse.y, mouse.y + idleDriftY, 0.042);
+
+  // Smooth scroll velocity damping with inertia
+  const rawScrollDelta = scrollY - prevScrollY;
+  scrollVelocity = lerp(scrollVelocity, rawScrollDelta, 0.08);
   prevScrollY = lerp(prevScrollY, scrollY, 0.08);
 
   // Mouse offset relative to center (for particle parallax)
-  const mouseOffX = mouse.x - canvas.width  / 2;
-  const mouseOffY = mouse.y - canvas.height / 2;
+  const mouseOffX = (mouse.x - canvas.width  / 2) * 0.75;
+  const mouseOffY = (mouse.y - canvas.height / 2) * 0.75;
 
-  // Section palette transition
+  // Section palette transition with silky easing
   if (palLerp < 1) {
     palLerp   = Math.min(1, palLerp + PAL_SPEED);
     const t   = ease(palLerp);
@@ -191,8 +200,8 @@ function animate() {
     curAccent = lerpArr(curAccent, tgtAccent, t);
   }
 
-  // Update particles with mouse + scroll parallax
-  particles.forEach(p => p.update(mouseOffX, mouseOffY, scrollDelta));
+  // Update particles with mouse + scroll inertia parallax
+  particles.forEach(p => p.update(mouseOffX, mouseOffY, scrollVelocity));
 
   drawFrame();
 }
