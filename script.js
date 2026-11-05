@@ -69,7 +69,7 @@ function lerpArr(a, b, t) { return a.map((v, i) => lerp(v, b[i], t)); }
 function ease(t) { return t < .5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
 // ── 5. PARTICLES ─────────────────────────────────────────────
-const PARTICLE_COUNT = 42;
+const PARTICLE_COUNT = 36;
 const particles = [];
 
 class Particle {
@@ -151,7 +151,7 @@ function drawFrame() {
       }
     }
   }
-  ctx.strokeStyle = `rgba(${ac[0]},${ac[1]},${ac[2]},0.09)`;
+  ctx.strokeStyle = `rgba(255,255,255,0.035)`;
   ctx.lineWidth = 0.5;
   ctx.stroke();
 
