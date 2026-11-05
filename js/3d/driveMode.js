@@ -856,7 +856,8 @@ class DriveModeApp {
       }
     });
 
-    // 9. Start loop
+    // 9. Start loop (initial single-frame prewarm, then idle until activated)
+    try { this.driveScene.render(); } catch(e){}
     this.animate();
   }
 
@@ -1010,6 +1011,7 @@ class DriveModeApp {
 
   enterDriveMode() {
     this.isActive = true;
+    if (this.clock) this.clock.getDelta();
     document.body.classList.add('drive-mode-active');
 
     setTimeout(() => {
@@ -1114,55 +1116,49 @@ class DriveModeApp {
     requestAnimationFrame(() => this.animate());
 
     if (document.hidden) return;
+    if (!this.isActive) return; // Immediate bailout when Drive Mode is closed — zero GPU/CPU 3D overhead during normal portfolio browsing & scrolling!
 
     const delta = this.clock.getDelta();
     const elapsedTime = this.clock.getElapsedTime();
 
-    if (this.isActive) {
-      this.controls.update();
-      this.car.update(delta, this.controls);
-      this.checkpoints.update(this.car.position);
+    this.controls.update();
+    this.car.update(delta, this.controls);
+    this.checkpoints.update(this.car.position);
 
-      // Audio engine pitch dynamically driven by RPM and gear
-      this.audio.updateEngine(
-        this.car.speedKmh,
-        this.controls.throttle,
-        this.car.rpm,
-        this.car.currentGear,
-        this.car.isShifting
-      );
+    // Audio engine pitch dynamically driven by RPM and gear
+    this.audio.updateEngine(
+      this.car.speedKmh,
+      this.controls.throttle,
+      this.car.rpm,
+      this.car.currentGear,
+      this.car.isShifting
+    );
 
-      if (this.car.isDrifting) {
-        this.audio.playSkid();
-      }
+    if (this.car.isDrifting) {
+      this.audio.playSkid();
+    }
 
-      // Update AI Rival & Race Competition
-      if (this.rival) {
-        this.rival.update(delta);
-      }
-      this.updateRace(delta);
+    // Update AI Rival & Race Competition
+    if (this.rival) {
+      this.rival.update(delta);
+    }
+    this.updateRace(delta);
 
-      // Telemetry (Speed, Gear & Tachometer)
-      if (this.speedometer) {
-        const formattedSpeed = String(this.car.speedKmh).padStart(3, '0');
-        this.speedometer.textContent = formattedSpeed;
-      }
-      if (this.speedBarFill) {
-        const pct = Math.min(100, (this.car.speedKmh / 160) * 100);
-        this.speedBarFill.style.width = pct + '%';
-      }
-      if (this.hudGear) {
-        this.hudGear.textContent = this.car.currentGear || 1;
-      }
-      if (this.rpmBarFill) {
-        const rpmPct = Math.min(100, Math.max(10, ((this.car.rpm - 1000) / 6500) * 100));
-        this.rpmBarFill.style.width = rpmPct + '%';
-      }
-    } else {
-      if (this.car && this.car.speed !== 0) {
-        this.car.speed *= 0.95;
-        this.car.update(delta, { throttle: 0, reverse: 0, steer: 0, handbrake: false });
-      }
+    // Telemetry (Speed, Gear & Tachometer)
+    if (this.speedometer) {
+      const formattedSpeed = String(this.car.speedKmh).padStart(3, '0');
+      this.speedometer.textContent = formattedSpeed;
+    }
+    if (this.speedBarFill) {
+      const pct = Math.min(100, (this.car.speedKmh / 160) * 100);
+      this.speedBarFill.style.width = pct + '%';
+    }
+    if (this.hudGear) {
+      this.hudGear.textContent = this.car.currentGear || 1;
+    }
+    if (this.rpmBarFill) {
+      const rpmPct = Math.min(100, Math.max(10, ((this.car.rpm - 1000) / 6500) * 100));
+      this.rpmBarFill.style.width = rpmPct + '%';
     }
 
     this.driveScene.update(delta);
