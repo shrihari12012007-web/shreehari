@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgStudy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080e18"/>
+      <stop offset="100%" stop-color="#0f1f33"/>
+    </linearGradient>
+    <linearGradient id="blueCurv" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="360" fill="url(#bgStudy)" rx="16"/>
+  
+  <!-- Browser Chrome Topbar -->
+  <rect width="600" height="36" fill="#040810" rx="16 16 0 0"/>
+  <circle cx="24" cy="18" r="5" fill="#ef4444"/>
+  <circle cx="42" cy="18" r="5" fill="#f59e0b"/>
+  <circle cx="60" cy="18" r="5" fill="#10b981"/>
+  <text x="300" y="22" fill="#64748b" font-family="'Space Grotesk', sans-serif" font-size="11" text-anchor="middle">shrihari12012007-web.github.io/STUDY</text>
+
+  <!-- Header -->
+  <text x="45" y="75" fill="#f8fafc" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="20">STUDY RESOURCE HUB</text>
+  <text x="45" y="95" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12">VTU Computer Science Engineering Academic Curriculum</text>
+
+  <!-- Subject Modules Cards -->
+  <g transform="translate(45, 120)">
+    <rect width="160" height="190" rx="12" fill="rgba(255,255,255,0.03)" stroke="rgba(56,189,248,0.25)" stroke-width="1"/>
+    <text x="20" y="38" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-size="22">📚</text>
+    <text x="20" y="70" fill="#f8fafc" font-family="'Space Grotesk', sans-serif" font-weight="600" font-size="14">Data Structures</text>
+    <text x="20" y="92" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11">Linked Lists, Trees, Stacks, Queues, Graphs &amp; Algorithms.</text>
+    <rect x="20" y="145" width="120" height="26" rx="6" fill="rgba(56,189,248,0.15)"/>
+    <text x="80" y="162" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="600" text-anchor="middle">VIEW MODULE</text>
+
+    <rect x="175" width="160" height="190" rx="12" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="195" y="38" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-size="22">⚙️</text>
+    <text x="195" y="70" fill="#f8fafc" font-family="'Space Grotesk', sans-serif" font-weight="600" font-size="14">Operating Systems</text>
+    <text x="195" y="92" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11">Process threads, CPU scheduling, Memory Management.</text>
+    <rect x="195" y="145" width="120" height="26" rx="6" fill="rgba(255,255,255,0.08)"/>
+    <text x="255" y="162" fill="#cbd5e1" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="600" text-anchor="middle">VIEW MODULE</text>
+
+    <rect x="350" width="160" height="190" rx="12" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <text x="370" y="38" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-size="22">🌐</text>
+    <text x="370" y="70" fill="#f8fafc" font-family="'Space Grotesk', sans-serif" font-weight="600" font-size="14">Computer Networks</text>
+    <text x="370" y="92" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11">OSI / TCP-IP models, Routing protocols, Socket API.</text>
+    <rect x="370" y="145" width="120" height="26" rx="6" fill="rgba(255,255,255,0.08)"/>
+    <text x="430" y="162" fill="#cbd5e1" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="600" text-anchor="middle">VIEW MODULE</text>
+  </g>
+</svg>

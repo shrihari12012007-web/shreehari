@@ -663,17 +663,35 @@ class DriveModeApp {
       this.isSupported = false;
     }
 
+    // Modal fallback dismiss wireup
+    const fallbackModal = document.getElementById('webglFallbackModal');
+    const closeFallbackBtn = document.getElementById('closeFallbackBtn');
+    if (closeFallbackBtn && fallbackModal) {
+      closeFallbackBtn.addEventListener('click', () => {
+        fallbackModal.classList.remove('open');
+        fallbackModal.setAttribute('aria-hidden', 'true');
+      });
+      fallbackModal.addEventListener('click', (e) => {
+        if (e.target === fallbackModal) {
+          fallbackModal.classList.remove('open');
+          fallbackModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+
     if (!this.isSupported) {
-      const fallbackMsg = document.getElementById('driveFallbackMsg');
-      if (fallbackMsg) fallbackMsg.style.display = 'block';
-      if (this.enterBtn) {
-        this.enterBtn.innerHTML = '<span>3D Unavailable</span>';
-        this.enterBtn.style.opacity = '0.5';
-        this.enterBtn.style.cursor = 'not-allowed';
-      }
+      const enterBtns = document.querySelectorAll('#enterDriveBtn, [data-action="enter-drive"], .btn-drive-tour');
+      enterBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (fallbackModal) {
+            fallbackModal.classList.add('open');
+            fallbackModal.setAttribute('aria-hidden', 'false');
+          }
+        });
+      });
     }
   }
-
   init() {
     if (!this.canvas) return;
 
@@ -1010,12 +1028,53 @@ class DriveModeApp {
   }
 
   enterDriveMode() {
+    // If WebGL is not supported, gracefully show fallback modal without crashing
+    if (!this.isSupported || !this.driveScene || !this.driveScene.renderer) {
+      const fallbackModal = document.getElementById('webglFallbackModal');
+      if (fallbackModal) {
+        fallbackModal.classList.add('open');
+        fallbackModal.setAttribute('aria-hidden', 'false');
+      }
+      return;
+    }
+
+    const overlay = document.getElementById('driveLoadingOverlay');
+    const progressBar = document.getElementById('driveLoadingProgress');
+    const statusText = document.getElementById('driveLoadingStatus');
+
+    if (overlay && progressBar) {
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+      progressBar.style.width = '20%';
+      if (statusText) statusText.textContent = 'Compiling shaders & telemetry physics...';
+
+      setTimeout(() => {
+        progressBar.style.width = '65%';
+        if (statusText) statusText.textContent = 'Warming up BMW M twin-turbo engine & asphalt shaders...';
+      }, 140);
+
+      setTimeout(() => {
+        progressBar.style.width = '100%';
+        if (statusText) statusText.textContent = 'Engine primed. Launching cockpit...';
+      }, 340);
+
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        this.launchDrivingExperience();
+      }, 480);
+    } else {
+      this.launchDrivingExperience();
+    }
+  }
+
+  launchDrivingExperience() {
     this.isActive = true;
     if (this.clock) this.clock.getDelta();
     document.body.classList.add('drive-mode-active');
 
     setTimeout(() => {
-      if (this.driveScene) {
+      if (this.driveScene && this.driveScene.renderer) {
         this.driveScene.camera.aspect = window.innerWidth / window.innerHeight;
         this.driveScene.camera.updateProjectionMatrix();
         this.driveScene.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1031,7 +1090,6 @@ class DriveModeApp {
     this.audio.playIgnition();
     this.controls.reset();
   }
-
   exitDriveMode(targetSectionId = null) {
     this.isActive = false;
     this.raceState = 'IDLE';

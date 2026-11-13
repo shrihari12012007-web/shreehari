@@ -3,55 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shree Hari S B | Computer Science Engineer & AI Developer</title>
+  <title>Shree Hari S B | Computer Science Engineer | AI &amp; Software Developer</title>
   
   <!-- Primary Meta Tags -->
-  <meta name="title" content="Shree Hari S B | Computer Science Engineer & AI Developer">
-  <meta name="description" content="Portfolio of Shree Hari S B — CSE student at Jain Institute of Technology, passionate about AI, Computer Vision, and Software Development.">
-  <meta name="keywords" content="Shree Hari S B, Portfolio, Computer Science, AI, Machine Learning, Computer Vision, Python Developer, Jain Institute of Technology, Davangere">
+  <meta name="title" content="Shree Hari S B | Computer Science Engineer | AI &amp; Software Developer">
+  <meta name="description" content="Portfolio of Shree Hari S B — Computer Science Engineering student at Jain Institute of Technology, Davangere. Specialized in Artificial Intelligence, Computer Vision, and interactive software development.">
+  <meta name="keywords" content="Shree Hari S B, Portfolio, Computer Science Engineer, AI Developer, Software Engineer, Machine Learning, Computer Vision, Python Developer, Jain Institute of Technology, Davangere, Karnataka">
   <meta name="author" content="Shree Hari S B">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#060608">
+  <meta name="theme-color" content="#06080e">
 
-  <!-- Open Graph / Facebook / WhatsApp -->
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://shreehari.onrender.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Open Graph / LinkedIn / WhatsApp -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shreehari.onrender.com/">
-  <meta property="og:title" content="Shree Hari S B | Portfolio">
-  <meta property="og:description" content="CSE student at Jain Institute of Technology. Projects in AI, Computer Vision, and Web Development.">
-  <meta property="og:image" content="photo.jpg">
+  <meta property="og:title" content="Shree Hari S B | Computer Science Engineer | AI &amp; Software Developer">
+  <meta property="og:description" content="Explore production projects in Artificial Intelligence, Computer Vision, and interactive 3D WebGL systems by Shree Hari S B.">
+  <meta property="og:image" content="https://shreehari.onrender.com/photo.jpg">
 
   <!-- Twitter Card -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://shreehari.onrender.com/">
-  <meta property="twitter:title" content="Shree Hari S B | Portfolio">
-  <meta property="twitter:description" content="CSE student at Jain Institute of Technology. AI & Software Developer.">
-  <meta property="twitter:image" content="photo.jpg">
+  <meta property="twitter:title" content="Shree Hari S B | Computer Science Engineer | AI &amp; Software Developer">
+  <meta property="twitter:description" content="Explore production projects in AI, Computer Vision, and interactive 3D systems by Shree Hari S B.">
+  <meta property="twitter:image" content="https://shreehari.onrender.com/photo.jpg">
 
-  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ANIMATED CANVAS BACKGROUND -->
+  <!-- ANIMATED 2D BACKGROUND CANVAS (Subtle constellation particles) -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- MINIMALIST AMBIENT LAYER (Quiet, architectural depth) -->
+  <!-- RESTRAINED MINIMALIST AMBIENT LAYER (Architectural depth, 0% CPU blur) -->
   <div class="glass-ambient-layer" aria-hidden="true">
     <div class="ambient-glow orb-minimal-1"></div>
     <div class="ambient-glow orb-minimal-2"></div>
   </div>
 
-  <!-- 3D DRIVE WORLD OVERLAY — full-screen, fixed, covers all sections -->
+  <!-- 3D DRIVE LOADING OVERLAY (Shows when activating BMW M drive experience) -->
+  <div id="driveLoadingOverlay" class="drive-loading-overlay" aria-hidden="true">
+    <div class="drive-loading-card">
+      <div class="bmw-roundel-spin">
+        <svg viewBox="0 0 100 100" width="48" height="48">
+          <circle cx="50" cy="50" r="46" fill="#080a12" stroke="#38bdf8" stroke-width="2.5"/>
+          <circle cx="50" cy="50" r="28" fill="#000" stroke="#94a3b8" stroke-width="1.5"/>
+          <path d="M 50 50 L 50 22 A 28 28 0 0 0 22 50 Z" fill="#0066b1"/>
+          <path d="M 50 50 L 78 50 A 28 28 0 0 0 50 22 Z" fill="#ffffff"/>
+          <path d="M 50 50 L 50 78 A 28 28 0 0 0 78 50 Z" fill="#0066b1"/>
+          <path d="M 50 50 L 22 50 A 28 28 0 0 0 50 78 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <h3>STARTING 3D BMW M ENVIRONMENT</h3>
+      <p class="drive-loading-sub">Compiling WebGL shaders &amp; vehicle dynamics...</p>
+      <div class="drive-loading-bar"><div class="drive-loading-progress" id="driveLoadProgress"></div></div>
+      <div class="drive-loading-tips">Controls: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or Touch • <kbd>ESC</kbd> to Exit</div>
+    </div>
+  </div>
+
+  <!-- WEBGL UNSUPPORTED FALLBACK MODAL -->
+  <div id="webglFallbackModal" class="webgl-fallback-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="fallback-modal-card">
+      <div class="fallback-icon">⚠️</div>
+      <h3>WebGL Acceleration Required</h3>
+      <p>3D hardware rendering is disabled or unavailable on this device/browser. You can still explore Shree Hari's complete portfolio, production projects, and verified source code smoothly below!</p>
+      <div class="fallback-actions">
+        <button id="closeFallbackBtn" class="btn btn-primary">Continue Browsing Portfolio ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D DRIVE WORLD OVERLAY — Full-screen WebGL Canvas (Active only when requested) -->
   <div id="hero3dContainer" class="drive-world-overlay">
     <canvas id="driveCanvas"></canvas>
   </div>
 
-  <!-- NAVBAR -->
+  <!-- FLOATING DOCK NAVBAR -->
   <header class="navbar" id="navbar">
-    <a href="#home" class="logo">SH<span>.</span></a>
-    <nav id="navMenu">
+    <a href="#home" class="logo" aria-label="Shree Hari S B Home">
+      <span class="logo-mark">SH</span><span class="accent">.</span>
+    </a>
+    <nav id="navMenu" class="nav-menu" aria-label="Main Navigation">
       <a href="#home"      class="nav-link active">Home</a>
       <a href="#about"     class="nav-link">About</a>
       <a href="#skills"    class="nav-link">Skills</a>
@@ -59,136 +101,150 @@
       <a href="#education" class="nav-link">Education</a>
       <a href="#contact"   class="nav-link">Contact</a>
     </nav>
-    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-actions">
+      <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="nav-icon-link" aria-label="GitHub Profile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      </a>
+      <a href="resume.pdf" download="Shree_Hari_SB_Resume.pdf" class="nav-cta-btn">CV ↗</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <main>
 
-    <!-- HERO -->
+    <!-- ==================== HERO SECTION ==================== -->
     <section class="hero section" id="home">
-      <div class="hero-text reveal">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          Available for opportunities
+      <div class="hero-container reveal">
+        
+        <!-- Status Badge -->
+        <div class="hero-status-row">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Available for SDE &amp; AI Opportunities</span>
+          </div>
+          <div class="hero-location-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Davangere, Karnataka, India</span>
+          </div>
         </div>
-        <p class="eyebrow">HELLO, I'M</p>
-        <h1>Shree Hari <span class="accent">S B</span></h1>
-        <h2 class="typewriter"><span id="typing"></span><span class="cursor">|</span></h2>
+
+        <p class="eyebrow">SOFTWARE ENGINEER &bull; AI DEVELOPER</p>
+        <h1 class="hero-title">Shree Hari <span class="accent">S B</span></h1>
+        
+        <h2 class="hero-identity">
+          Computer Science Engineering Student <span class="sep">|</span> AI Developer <span class="sep">|</span> Software Engineer
+        </h2>
+
         <p class="hero-desc">
-          Computer Science Engineering student at Jain Institute of Technology, Davangere.
-          Focused on Artificial Intelligence, Computer Vision pipelines, and interactive 3D web systems.
+          Undergraduate at <strong>Jain Institute of Technology, Davangere</strong>. Focused on engineering conversational AI systems, real-time computer vision pipelines, and high-performance interactive 3D web applications from first principles.
         </p>
 
         <!-- DYNAMIC HERO STATS PILL STRIP -->
         <div class="hero-stats-strip">
           <div class="hero-stat-pill">
-            <span class="pill-dot green"></span>
-            <span class="pill-text"><strong>B.E. CSE</strong> · JIT Davangere (2025–Present)</span>
+            <span class="pill-dot blue"></span>
+            <span class="pill-text"><strong>B.E. CSE</strong> &bull; JIT Davangere (2025–2029)</span>
           </div>
           <div class="hero-stat-pill">
-            <span class="pill-dot blue"></span>
-            <span class="pill-text"><strong>HackerRank</strong> · 5★ Python Coder</span>
+            <span class="pill-dot green"></span>
+            <span class="pill-text"><strong>HackerRank</strong> &bull; 5★ Python Coder</span>
           </div>
           <div class="hero-stat-pill">
             <span class="pill-dot purple"></span>
-            <span class="pill-text"><strong>AI &amp; Vision</strong> Systems</span>
-          </div>
-          <div class="hero-stat-pill">
-            <span class="pill-dot orange"></span>
-            <span class="pill-text"><strong>Davangere</strong>, Karnataka (UTC+5:30)</span>
+            <span class="pill-text"><strong>Production Deployments</strong> &bull; Render &amp; Vercel</span>
           </div>
         </div>
 
+        <!-- ACTION BUTTONS ROW -->
         <div class="hero-actions">
-          <button id="enterDriveBtn" class="bmw-drive-trigger" aria-label="Drive through portfolio in BMW">
+          <a href="#projects" class="btn btn-primary">
+            <span>View Projects</span>
+            <span class="arrow">↗</span>
+          </a>
+          <a href="#contact" class="btn btn-secondary">
+            <span>Contact Me</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="resume.pdf" download="Shree_Hari_SB_Resume.pdf" class="btn btn-download">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download CV</span>
+          </a>
+
+          <!-- SIGNATURE 3D BMW DRIVE TRIGGER BUTTON -->
+          <button id="enterDriveBtn" class="bmw-drive-trigger" aria-label="Drive through 3D world in BMW">
             <div class="bmw-emblem-wrap">
-              <div class="bmw-glow-ring"></div>
-              <svg class="bmw-roundel" viewBox="0 0 100 100" width="38" height="38">
-                <!-- Outer Chrome Rim -->
-                <circle cx="50" cy="50" r="48" fill="#181a20" stroke="#d4dce8" stroke-width="2.8"/>
-                <!-- Inner Black Ring -->
+              <svg class="bmw-roundel" viewBox="0 0 100 100" width="34" height="34">
+                <circle cx="50" cy="50" r="48" fill="#181a20" stroke="#d4dce8" stroke-width="2.5"/>
                 <circle cx="50" cy="50" r="43.5" fill="#08090d" stroke="#2c303d" stroke-width="1.2"/>
-                <!-- BMW Lettering -->
                 <text x="31" y="24" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">B</text>
                 <text x="45.5" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">M</text>
                 <text x="61.5" y="24" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11">W</text>
-                <!-- Inner Chrome Bevel -->
                 <circle cx="50" cy="50" r="29" fill="none" stroke="#d4dce8" stroke-width="1.8"/>
-                <!-- Quadrants (Blue & White) -->
                 <path d="M 50 50 L 50 21 A 29 29 0 0 0 21 50 Z" fill="#0066b1"/>
                 <path d="M 50 50 L 79 50 A 29 29 0 0 0 50 21 Z" fill="#ffffff"/>
                 <path d="M 50 50 L 50 79 A 29 29 0 0 0 79 50 Z" fill="#0066b1"/>
                 <path d="M 50 50 L 21 50 A 29 29 0 0 0 50 79 Z" fill="#ffffff"/>
-                <!-- Chrome Crosshairs -->
-                <line x1="50" y1="21" x2="50" y2="79" stroke="#0a0c10" stroke-width="1.4"/>
-                <line x1="21" y1="50" x2="79" y2="50" stroke="#0a0c10" stroke-width="1.4"/>
-                <!-- Specular Reflection -->
-                <path d="M 23 44 A 27 27 0 0 1 77 44 A 27 13 0 0 0 23 44 Z" fill="rgba(255,255,255,0.28)"/>
               </svg>
             </div>
             <div class="bmw-btn-content">
-              <span class="bmw-btn-tag">BMW M DRIVE</span>
-              <span class="bmw-btn-title">START ROAD TOUR ↗</span>
+              <span class="bmw-btn-tag">3D INTERACTIVE</span>
+              <span class="bmw-btn-title">TAKE THE WHEEL ↗</span>
             </div>
           </button>
-          <a href="#projects" class="btn btn-primary">View Projects <span class="arrow">↗</span></a>
-          <a href="#contact" class="btn btn-secondary">Contact Me <span class="arrow">→</span></a>
-          <a href="resume.pdf" download="Shree_Hari_SB_Resume.pdf" class="btn btn-download">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download CV
-          </a>
         </div>
-        <div id="driveFallbackMsg" class="drive-fallback-msg" style="display:none;">
-          3D Drive Mode is unavailable on this device.
-        </div>
-        <div class="hero-meta">
-          <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="meta-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            GitHub
+
+        <!-- Social Proof Links Strip -->
+        <div class="hero-social-strip">
+          <span class="social-label">Connect:</span>
+          <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="social-chip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            <span>GitHub (@shrihari12012007-web)</span>
           </a>
-          <a href="https://www.linkedin.com/in/shreehari-s-b-580a66440/" target="_blank" rel="noopener" class="meta-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            LinkedIn
+          <a href="https://www.linkedin.com/in/shreehari-s-b-580a66440/" target="_blank" rel="noopener" class="social-chip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+            <span>LinkedIn</span>
           </a>
-          <a href="mailto:shrihari12012007@gmail.com" class="meta-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Email
+          <a href="mailto:shrihari12012007@gmail.com" class="social-chip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>shrihari12012007@gmail.com</span>
           </a>
-          <a href="https://wa.me/918105403378" target="_blank" rel="noopener" class="meta-link meta-whatsapp">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.075-2.025-.477-1.703-.707-2.802-2.456-2.887-2.57-.084-.113-.687-.914-.687-1.744 0-.83.435-1.238.59-1.397.155-.16.338-.2.45-.2.113 0 .225.002.324.007.104.005.244-.039.381.291.144.344.492 1.2.535 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.287-.087.1-.183.224-.261.301-.088.087-.18.181-.077.357.103.176.457.754.981 1.221.674.601 1.243.787 1.42.874.176.088.279.073.382-.045.103-.118.441-.513.56-.689.118-.176.236-.147.397-.088.161.059 1.025.483 1.201.571.177.088.295.132.338.206.044.074.044.43-.1 1.235z"/></svg>
-            WhatsApp
-          </a>
-          <a href="tel:+918105403378" class="meta-link meta-phone">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            +91 8105403378
-          </a>
-          <span class="meta-sep">·</span>
-          <span class="meta-location">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Davangere, Karnataka
-          </span>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ==================== ABOUT SECTION ==================== -->
     <section class="section" id="about">
       <div class="section-heading reveal">
         <p class="tag">01 / ABOUT</p>
-        <h2>A little <span class="accent">about me</span></h2>
+        <h2>Engineering with <span class="accent">Precision &amp; Purpose</span></h2>
+        <p class="section-subtext">Combining computer science fundamentals with modern artificial intelligence and real-world execution.</p>
       </div>
+
       <div class="about-grid">
         <div class="about-photo reveal-left">
-          <img src="photo.jpg" alt="Shree Hari S B" class="profile-photo">
+          <div class="profile-photo-container">
+            <img src="photo.jpg" alt="Shree Hari S B" class="profile-photo" width="360" height="480">
+            <div class="photo-badge">
+              <span class="photo-badge-dot"></span>
+              <span>CSE Undergraduate &bull; JIT Davangere</span>
+            </div>
+          </div>
         </div>
+
         <div class="about-text reveal">
-          <p>I'm <strong>Shree Hari S B</strong>, an undergraduate Computer Science Engineering student at
-          <strong>Jain Institute of Technology, Davangere</strong>. I enjoy dissecting complex engineering problems and assembling clean, responsive software from first principles.</p>
-          <p>My work centers around <strong>Artificial Intelligence</strong>, <strong>Computer Vision pipelines</strong>,
-          and <strong>real-time 3D simulation</strong>. Whether building conversational agents with the Gemini API or developing touchless camera-based gesture control in OpenCV and MediaPipe, I prioritize reliability, clean architecture, and practical utility.</p>
-          <p>Alongside my degree coursework, I regularly solve algorithmic challenges on HackerRank (5-star rated in Python) and build production deployments across cloud platforms like Render and Vercel.</p>
+          <p>
+            I'm <strong>Shree Hari S B</strong>, an undergraduate Computer Science Engineering student at <strong>Jain Institute of Technology, Davangere</strong>. I build production-ready software centered around <strong>Artificial Intelligence</strong>, <strong>Computer Vision pipelines</strong>, and <strong>interactive WebGL graphics</strong>.
+          </p>
+          <p>
+            My engineering philosophy is simple: understand systems from first principles, write clean modular code, and deploy practical tools that people can actually use. Whether designing conversational assistants powered by Google's Gemini API or constructing touchless hand-gesture tracking systems with MediaPipe and OpenCV, I emphasize performance, reliability, and thoughtful user experience.
+          </p>
+          <p>
+            Alongside academic rigor, I actively practice algorithmic problem solving (5-star rated in Python on HackerRank) and ship software to cloud platforms like Render and Vercel.
+          </p>
+
+          <!-- HIGHLIGHT METRICS STRIP -->
           <div class="about-highlights">
             <div class="highlight-card">
               <span class="hl-num">6+</span>
@@ -210,44 +266,44 @@
               <div class="strength-tag">01</div>
               <div class="strength-body">
                 <h4>AI &amp; Intelligent Systems</h4>
-                <p>Engineering conversational assistants and text-to-speech tools using Google Gemini API, Edge-TTS, and prompt orchestration.</p>
+                <p>Engineering conversational agents, voice automation, and prompt orchestration using Google Gemini API and edge text-to-speech pipelines.</p>
               </div>
             </div>
             <div class="strength-card">
               <div class="strength-tag">02</div>
               <div class="strength-body">
                 <h4>Computer Vision &amp; HCI</h4>
-                <p>Building real-time hand-landmark tracking, gesture classification, and contactless computer control with OpenCV and MediaPipe.</p>
+                <p>Constructing 21-landmark hand skeletal tracking, gesture classification, and touchless control interfaces using OpenCV and MediaPipe.</p>
               </div>
             </div>
             <div class="strength-card">
               <div class="strength-tag">03</div>
               <div class="strength-body">
-                <h4>Interactive 3D &amp; WebGL</h4>
-                <p>Designing performant 60 FPS Three.js scenes, procedural road mathematics, vehicle dynamics, and WebGL lighting systems.</p>
-              </div>
-            </div>
-            <div class="strength-card">
-              <div class="strength-tag">04</div>
-              <div class="strength-body">
-                <h4>Web &amp; Cloud Deployment</h4>
-                <p>Building responsive web frontends with clean DOM manipulation, modular JavaScript, and direct CI/CD deployment to Render and Vercel.</p>
+                <h4>Interactive Web &amp; Simulation</h4>
+                <p>Developing performant 60 FPS Three.js WebGL scenes, procedural road mathematics, vehicle physics, and responsive Single Page Apps.</p>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <!-- SKILLS -->
+    <!-- ==================== SKILLS SECTION ==================== -->
     <section class="section" id="skills">
-      <div class="section-heading reveal-scale">
+      <div class="section-heading reveal">
         <p class="tag">02 / SKILLS</p>
-        <h2>What I <span class="accent">work with</span></h2>
+        <h2>Technical <span class="accent">Capabilities</span></h2>
+        <p class="section-subtext">Structured stack categories based on practical project development and active engineering coursework.</p>
       </div>
+
       <div class="skills-grid">
+        <!-- 1. PROGRAMMING LANGUAGES -->
         <div class="skill-group reveal-left">
-          <h3 class="skill-group-title">Programming Languages</h3>
+          <div class="skill-group-header">
+            <div class="skill-icon">💻</div>
+            <h3 class="skill-group-title">Programming</h3>
+          </div>
           <div class="tags">
             <span class="tag-badge">Python</span>
             <span class="tag-badge">Java</span>
@@ -255,18 +311,28 @@
             <span class="tag-badge">C</span>
           </div>
         </div>
+
+        <!-- 2. WEB DEVELOPMENT -->
         <div class="skill-group reveal">
-          <h3 class="skill-group-title">Web Development</h3>
+          <div class="skill-group-header">
+            <div class="skill-icon">🌐</div>
+            <h3 class="skill-group-title">Web Development</h3>
+          </div>
           <div class="tags">
             <span class="tag-badge">HTML5</span>
             <span class="tag-badge">CSS3</span>
-            <span class="tag-badge">JavaScript</span>
+            <span class="tag-badge">JavaScript (ES6+)</span>
             <span class="tag-badge">React</span>
             <span class="tag-badge">Vite</span>
           </div>
         </div>
+
+        <!-- 3. AI & COMPUTER VISION -->
         <div class="skill-group reveal">
-          <h3 class="skill-group-title">AI / ML & Vision</h3>
+          <div class="skill-group-header">
+            <div class="skill-icon">🤖</div>
+            <h3 class="skill-group-title">AI &amp; Computer Vision</h3>
+          </div>
           <div class="tags">
             <span class="tag-badge">Machine Learning</span>
             <span class="tag-badge">Computer Vision</span>
@@ -275,35 +341,48 @@
             <span class="tag-badge">MediaPipe</span>
           </div>
         </div>
+
+        <!-- 4. TOOLS & PLATFORMS -->
         <div class="skill-group reveal">
-          <h3 class="skill-group-title">Tools & Platforms</h3>
+          <div class="skill-group-header">
+            <div class="skill-icon">🛠️</div>
+            <h3 class="skill-group-title">Tools &amp; Platforms</h3>
+          </div>
           <div class="tags">
-            <span class="tag-badge">Git & GitHub</span>
+            <span class="tag-badge">Git</span>
+            <span class="tag-badge">GitHub</span>
             <span class="tag-badge">VS Code</span>
             <span class="tag-badge">Android Studio</span>
-            <span class="tag-badge">Canva</span>
-            <span class="tag-badge">Vercel</span>
             <span class="tag-badge">Render</span>
+            <span class="tag-badge">Vercel</span>
           </div>
         </div>
-        <div class="skill-group reveal">
-          <h3 class="skill-group-title">Other Skills</h3>
+
+        <!-- 5. DATA STRUCTURES & ALGORITHMS (HONEST PROGRESSION) -->
+        <div class="skill-group skill-group-wide reveal">
+          <div class="skill-group-header">
+            <div class="skill-icon">🧠</div>
+            <h3 class="skill-group-title">Data Structures &amp; Algorithms (Active Learning)</h3>
+          </div>
           <div class="tags">
-            <span class="tag-badge">Data Structures</span>
-            <span class="tag-badge">Algorithms</span>
-            <span class="tag-badge">Automation</span>
-            <span class="tag-badge">Problem Solving</span>
+            <span class="tag-badge">Arrays &amp; Strings</span>
+            <span class="tag-badge">Stacks &amp; Queues</span>
+            <span class="tag-badge">Linked Lists</span>
+            <span class="tag-badge">Sorting &amp; Searching</span>
+            <span class="tag-badge">Recursion</span>
+            <span class="tag-badge">OOP Architecture</span>
+            <span class="tag-badge">HackerRank 5★ Python</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- ==================== PROJECTS SECTION ==================== -->
     <section class="section" id="projects">
       <div class="section-heading reveal">
         <p class="tag">03 / PROJECTS</p>
-        <h2>Things I've <span class="accent">built</span></h2>
-        <p class="section-subtext">Featured production web applications, AI systems, and open-source software.</p>
+        <h2>Featured <span class="accent">Engineering Projects</span></h2>
+        <p class="section-subtext">Verified production applications, AI systems, and open-source software built and deployed by Shree Hari.</p>
       </div>
 
       <!-- INTERACTIVE PROJECT FILTER TABS -->
@@ -315,128 +394,163 @@
       </div>
 
       <div class="projects-grid">
+        
         <!-- 1. NOVA CUTS (FEATURED LIVE ON RENDER) -->
-        <div class="project-card reveal" data-category="web">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        <article class="project-card reveal" data-category="web">
+          <div class="project-preview-wrap">
+            <img src="img/projects/nova-cuts.svg" alt="Nova Cuts Luxury Salon Web UI Preview" class="project-preview-img" loading="lazy">
             <span class="project-badge badge-live">LIVE ON RENDER</span>
           </div>
-          <h3>NOVA CUTS — Luxury Salon &amp; Barbershop</h3>
-          <p>A modern grooming and barbershop web application featuring interactive service selection, appointment scheduling flow, and a luxury dark UI.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Render</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://nova-cuts.onrender.com/" target="_blank" rel="noopener" class="project-action-link primary-action">Live Demo ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">Web &amp; Full Stack</div>
+            <h3 class="project-title">Nova Cuts — Luxury Salon &amp; Barbershop</h3>
+            <p class="project-description">
+              A modern grooming and barbershop web application featuring interactive service catalog selection, appointment scheduling flow, and a luxury dark UI deployed live on Render.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Render</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://nova-cuts.onrender.com/" target="_blank" rel="noopener" class="project-action-link primary-action">Live Demo ↗</a>
+                <a href="https://github.com/shrihari12012007-web/nova-cuts" target="_blank" rel="noopener" class="project-action-link">GitHub Repo ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- 2. PANDA AI VOICE ASSISTANT -->
-        <div class="project-card reveal" data-category="ai">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <article class="project-card reveal" data-category="ai">
+          <div class="project-preview-wrap">
+            <img src="img/projects/panda-ai.svg" alt="Panda AI Voice Assistant Waveform Interface" class="project-preview-img" loading="lazy">
             <span class="project-badge badge-ai">AI &amp; VOICE</span>
           </div>
-          <h3>Panda — AI Voice Assistant</h3>
-          <p>Python-powered desktop AI assistant with SpeechRecognition, Google Gemini API intelligence, edge text-to-speech, and automated system commands.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>Python</span><span>Gemini API</span><span>PyAudio</span><span>Edge TTS</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="project-action-link">GitHub ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">AI &amp; Intelligent Systems</div>
+            <h3 class="project-title">Panda — AI Voice Assistant</h3>
+            <p class="project-description">
+              Modular Python desktop assistant with SpeechRecognition, Google Gemini API intelligence, real-time edge speech synthesis, and operating-system level automated command execution.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>Python</span><span>Gemini API</span><span>PyAudio</span><span>Edge TTS</span><span>Pygame</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="project-action-link primary-action">GitHub Profile ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- 3. HAND GESTURE CAMERA CONTROLLER -->
-        <div class="project-card reveal" data-category="ai">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+        <article class="project-card reveal" data-category="ai">
+          <div class="project-preview-wrap">
+            <img src="img/projects/hand-gesture.svg" alt="Hand Gesture Camera Landmark Detection Viewfinder" class="project-preview-img" loading="lazy">
             <span class="project-badge badge-vision">COMPUTER VISION</span>
           </div>
-          <h3>Hand Gesture Camera Controller</h3>
-          <p>Touchless camera control pipeline using hand landmark tracking with MediaPipe and OpenCV, enabling gesture-driven photo capture across devices.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>Python</span><span>MediaPipe</span><span>OpenCV</span><span>Android</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://github.com/shrihari12012007-web/Hand_Gesture_Camera." target="_blank" rel="noopener" class="project-action-link primary-action">GitHub Repo ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">Computer Vision &amp; HCI</div>
+            <h3 class="project-title">Hand Gesture Camera Controller</h3>
+            <p class="project-description">
+              Touchless camera control pipeline using Google MediaPipe 21-landmark hand tracking and OpenCV angle math, enabling contactless photo capture across desktop and Android devices.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>Python</span><span>MediaPipe</span><span>OpenCV</span><span>Android Studio</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://github.com/shrihari12012007-web/Hand_Gesture_Camera." target="_blank" rel="noopener" class="project-action-link primary-action">GitHub Repo ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- 4. SRINIDHI EYE CARE -->
-        <div class="project-card reveal" data-category="web">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="project-badge badge-web">HEALTHCARE WEB</span>
+        <article class="project-card reveal" data-category="web">
+          <div class="project-preview-wrap">
+            <img src="img/projects/srinidhi-eye-care.svg" alt="Srinidhi Eye Care Hospital Web Portal UI" class="project-preview-img" loading="lazy">
+            <span class="project-badge badge-live">LIVE ON GITHUB PAGES</span>
           </div>
-          <h3>Srinidhi Eye Care — Web Portal</h3>
-          <p>Modern React &amp; Vite web portal for an eye care hospital, featuring doctor schedules, clinical specialties, and patient-first responsive layout.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>React</span><span>Vite</span><span>CSS3</span><span>SPA</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://github.com/shrihari12012007-web/Desktop-Eye" target="_blank" rel="noopener" class="project-action-link">GitHub Repo ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">Healthcare Web Application</div>
+            <h3 class="project-title">Srinidhi Eye Care — Web Portal</h3>
+            <p class="project-description">
+              Responsive React &amp; Vite web portal for an eye care hospital, featuring doctor schedules, clinical specialties, accessibility-first design, and a patient-first responsive layout.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>React</span><span>Vite</span><span>CSS3</span><span>SPA</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://shrihari12012007-web.github.io/srinidhi-eye-care/" target="_blank" rel="noopener" class="project-action-link primary-action">Live Demo ↗</a>
+                <a href="https://github.com/shrihari12012007-web/srinidhi-eye-care" target="_blank" rel="noopener" class="project-action-link">GitHub Repo ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- 5. STRATEGY TRACKER -->
-        <div class="project-card reveal" data-category="tools">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <article class="project-card reveal" data-category="tools">
+          <div class="project-preview-wrap">
+            <img src="img/projects/strategy-tracker.svg" alt="Strategy Tracker Dashboard Interface" class="project-preview-img" loading="lazy">
             <span class="project-badge badge-live">LIVE ON VERCEL</span>
           </div>
-          <h3>Strategy Tracker</h3>
-          <p>Productivity &amp; milestone management web app to organize high-impact goals, tasks, and strategy execution with lightweight responsive UX.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Vercel</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://strategy-tracker-nine.vercel.app/" target="_blank" rel="noopener" class="project-action-link primary-action">Live App ↗</a>
-              <a href="https://github.com/shrihari12012007-web/Strategy-Tracker" target="_blank" rel="noopener" class="project-action-link">Code ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">Productivity &amp; Tools</div>
+            <h3 class="project-title">Strategy Tracker</h3>
+            <p class="project-description">
+              Lightweight productivity and milestone management web app to organize high-impact goals, track task velocity, and visualize sprint completion with responsive glass aesthetics.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Vercel</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://strategy-tracker-nine.vercel.app/" target="_blank" rel="noopener" class="project-action-link primary-action">Live App ↗</a>
+                <a href="https://github.com/shrihari12012007-web/Strategy-Tracker" target="_blank" rel="noopener" class="project-action-link">Code ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- 6. STUDY RESOURCE HUB -->
-        <div class="project-card reveal" data-category="tools">
-          <div class="project-card-header">
-            <svg class="project-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            <span class="project-badge">OPEN SOURCE</span>
+        <article class="project-card reveal" data-category="tools">
+          <div class="project-preview-wrap">
+            <img src="img/projects/study-hub.svg" alt="STUDY Computer Science Hub UI" class="project-preview-img" loading="lazy">
+            <span class="project-badge badge-live">LIVE ON GITHUB PAGES</span>
           </div>
-          <h3>STUDY Resource Hub</h3>
-          <p>Structured academic repository and revision guide for Computer Science undergraduate engineering students, deployed cleanly on GitHub Pages.</p>
-          <div class="project-footer">
-            <div class="tech-stack">
-              <span>HTML</span><span>CSS</span><span>GitHub Pages</span>
-            </div>
-            <div class="project-actions-row">
-              <a href="https://github.com/shrihari12012007-web/STUDY" target="_blank" rel="noopener" class="project-action-link">GitHub Pages ↗</a>
+          <div class="project-content">
+            <div class="project-category-tag">Open Source &amp; Education</div>
+            <h3 class="project-title">STUDY Resource Hub</h3>
+            <p class="project-description">
+              Structured academic curriculum and revision repository for Computer Science undergraduate engineering students, organizing core subject notes and algorithms with clean architecture.
+            </p>
+            <div class="project-footer">
+              <div class="tech-stack">
+                <span>HTML5</span><span>CSS3</span><span>GitHub Pages</span>
+              </div>
+              <div class="project-actions-row">
+                <a href="https://shrihari12012007-web.github.io/STUDY/" target="_blank" rel="noopener" class="project-action-link primary-action">Live Hub ↗</a>
+                <a href="https://github.com/shrihari12012007-web/STUDY" target="_blank" rel="noopener" class="project-action-link">GitHub Repo ↗</a>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
+
       </div>
 
-      <!-- GITHUB STATS & ACTIVITY (NATIVE GLASS CARDS) -->
-      <div class="github-stats-container reveal-scale">
+      <!-- ==================== GITHUB REAL ACTIVITY & STATS ==================== -->
+      <aside class="github-stats-container reveal">
         <div class="github-stats-topbar">
           <div class="github-stats-header">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
             <div>
-              <h3>GitHub Activity &amp; Stats</h3>
-              <p class="stats-sub">@shrihari12012007-web &bull; Live repository overview</p>
+              <h3>GitHub Activity &amp; Live Stats</h3>
+              <p class="stats-sub">@shrihari12012007-web &bull; Synchronized via GitHub REST API</p>
             </div>
           </div>
           <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="gh-profile-btn">
-            View Profile ↗
+            View GitHub Profile ↗
           </a>
         </div>
 
@@ -446,7 +560,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
             </div>
             <div class="gh-stat-data">
-              <span class="gh-stat-number" id="ghRepoCount">5+</span>
+              <span class="gh-stat-number" id="ghRepoCount">16</span>
               <span class="gh-stat-label">Public Repositories</span>
             </div>
           </div>
@@ -466,8 +580,8 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             </div>
             <div class="gh-stat-data">
-              <span class="gh-stat-number">Python / JS</span>
-              <span class="gh-stat-label">Primary Languages</span>
+              <span class="gh-stat-number">Python / JS / TS</span>
+              <span class="gh-stat-label">Core Languages</span>
             </div>
           </div>
 
@@ -477,169 +591,226 @@
             </div>
             <div class="gh-stat-data">
               <span class="gh-stat-number green-text">Active</span>
-              <span class="gh-stat-label">Open Source Contributor</span>
+              <span class="gh-stat-label">Open Source Developer</span>
             </div>
           </div>
         </div>
 
         <div class="gh-langs-container">
           <div class="gh-langs-header">
-            <span>Most Used Tech Stack</span>
-            <span class="gh-langs-note">Across Open Repos</span>
+            <span>Primary Technology Breakdown</span>
+            <span class="gh-langs-note">Live repository distribution</span>
           </div>
           <div class="gh-lang-bar">
-            <div class="lang-segment lang-python" style="width: 45%" title="Python 45%"></div>
-            <div class="lang-segment lang-html" style="width: 30%" title="HTML/CSS 30%"></div>
-            <div class="lang-segment lang-js" style="width: 25%" title="JavaScript/React 25%"></div>
+            <div class="lang-segment lang-python" style="width: 40%" title="Python (AI &amp; Vision)"></div>
+            <div class="lang-segment lang-js" style="width: 35%" title="JavaScript &amp; React"></div>
+            <div class="lang-segment lang-html" style="width: 25%" title="HTML5 &amp; CSS3"></div>
           </div>
           <div class="gh-lang-legend">
-            <span class="legend-item"><span class="legend-dot dot-python"></span> Python (AI &amp; Vision)</span>
-            <span class="legend-item"><span class="legend-dot dot-html"></span> HTML5 &amp; CSS3</span>
-            <span class="legend-item"><span class="legend-dot dot-js"></span> JavaScript &amp; React</span>
+            <span class="legend-item"><span class="legend-dot dot-python"></span> Python (AI &amp; Computer Vision)</span>
+            <span class="legend-item"><span class="legend-dot dot-js"></span> JavaScript &amp; React Web</span>
+            <span class="legend-item"><span class="legend-dot dot-html"></span> HTML5 &amp; CSS3 Layouts</span>
           </div>
         </div>
-      </div>
+      </aside>
+
     </section>
 
-    <!-- EDUCATION & CERTIFICATIONS -->
+    <!-- ==================== EDUCATION & JOURNEY ==================== -->
     <section class="section" id="education">
       <div class="section-heading reveal">
-        <p class="tag">04 / EDUCATION</p>
-        <h2>My <span class="accent">journey</span></h2>
+        <p class="tag">04 / EDUCATION &amp; JOURNEY</p>
+        <h2>Academic &amp; <span class="accent">Professional Path</span></h2>
+        <p class="section-subtext">Formal computer science undergraduate education paired with verified algorithmic certifications.</p>
       </div>
+
       <div class="timeline">
         <div class="timeline-item reveal">
           <div class="timeline-dot active-dot">
-            <span class="ripple-ring"></span>
-            <span class="ripple-ring ripple-ring-2"></span>
-            <span class="ripple-ring ripple-ring-3"></span>
-            <span class="ripple-ring ripple-ring-4"></span>
+            <span class="radar-dot"></span>
           </div>
           <div class="timeline-content">
-            <span class="timeline-date">2025 – <span class="present-badge"><span class="radar-dot"></span>Present</span></span>
-            <h3>Bachelor of Engineering — Computer Science</h3>
-            <p class="timeline-org">Jain Institute of Technology, Davangere</p>
-            <p>Pursuing B.E. in Computer Science and Engineering. Focused on software development, AI/ML, algorithms, and building real-world projects.</p>
+            <div class="timeline-header">
+              <div>
+                <span class="timeline-date">2025 – 2029 &bull; <span class="present-badge">Undergraduate Cohort</span></span>
+                <h3>Bachelor of Engineering — Computer Science and Engineering</h3>
+                <p class="timeline-org">Jain Institute of Technology, Davangere</p>
+              </div>
+            </div>
+            <p class="timeline-body">
+              Pursuing full-time B.E. in Computer Science and Engineering. Rigorous foundational coursework spanning Object-Oriented Programming, Data Structures, Operating Systems, Computer Networks, Database Management Systems, and Artificial Intelligence.
+            </p>
           </div>
         </div>
       </div>
+
+      <!-- CERTIFICATIONS & COMPETENCIES (SEPARATE REPUTATION BLOCK) -->
       <div class="cert-section reveal">
-        <h3 class="cert-title">Certifications &amp; Learning</h3>
+        <h3 class="cert-title">Verified Certifications &amp; Practical Competencies</h3>
+        <p class="cert-subtext">Verified badges, technical workshops, and continuous problem-solving mastery.</p>
+        
         <div class="cert-grid">
-          <div class="cert-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Python Programming</div>
-          <div class="cert-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Git and GitHub</div>
-          <div class="cert-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>AI &amp; Machine Learning Fundamentals</div>
-          <div class="cert-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Computer Vision Fundamentals</div>
-          <div class="cert-item learning"><span class="radar-dot"></span>Data Structures &amp; Algorithms <span class="learning-tag">In Progress</span></div>
+          <div class="cert-item">
+            <div class="cert-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <strong>HackerRank Python (5-Star Gold Badge)</strong>
+              <span class="cert-meta">Algorithmic Problem Solving &bull; Verified</span>
+            </div>
+          </div>
+
+          <div class="cert-item">
+            <div class="cert-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <strong>Google Gemini API &amp; Generative AI</strong>
+              <span class="cert-meta">Prompt Architecture &bull; Multimodal LLMs</span>
+            </div>
+          </div>
+
+          <div class="cert-item">
+            <div class="cert-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <strong>Git &amp; GitHub Professional Workflows</strong>
+              <span class="cert-meta">Branching, PRs, Version Control &bull; Open Source</span>
+            </div>
+          </div>
+
+          <div class="cert-item">
+            <div class="cert-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <strong>Full-Stack Cloud Deployment</strong>
+              <span class="cert-meta">Render, Vercel, &amp; GitHub Pages &bull; Live Apps</span>
+            </div>
+          </div>
+
+          <div class="cert-item learning">
+            <div class="cert-icon-wrap">
+              <span class="radar-dot"></span>
+            </div>
+            <div>
+              <strong>Data Structures &amp; Algorithms Mastery</strong>
+              <span class="cert-meta">Trees, Graphs, Sorting &amp; Dynamic Programming <span class="learning-tag">Active</span></span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- ==================== CONTACT SECTION ==================== -->
     <section class="section" id="contact">
       <div class="section-heading reveal">
         <p class="tag">05 / CONTACT</p>
-        <h2>Let's <span class="accent">connect</span></h2>
-        <p class="section-subtext">Have an opportunity, project, or want to collaborate? Send a message and reach Shree Hari directly.</p>
+        <h2>Let's <span class="accent">Connect</span></h2>
+        <p class="section-subtext">Have an engineering opportunity, project collaboration, or technical inquiry? Reach Shree Hari directly.</p>
       </div>
+
       <div class="contact-grid reveal">
         <div class="contact-info">
           <p class="contact-desc">
-            I'm actively seeking opportunities in software engineering, AI/ML, computer vision, and full-stack development.
-            Whether you want to hire, collaborate, or discuss an idea, my inbox and phone are always open!
+            I am actively seeking software engineering roles, internships, and collaborative opportunities in AI/ML, computer vision, and modern full-stack web development. My communication channels are always monitored.
           </p>
 
           <div class="contact-links">
             <!-- Email -->
             <a href="mailto:shrihari12012007@gmail.com" class="contact-item">
-              <div class="contact-icon email-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-              <div>
+              <div class="contact-icon email-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="contact-details">
                 <span class="contact-label">Email Inbox (Primary)</span>
                 <span class="contact-value">shrihari12012007@gmail.com</span>
               </div>
             </a>
 
-            <!-- Mobile Phone & SMS -->
+            <!-- Mobile Phone -->
             <a href="tel:+918105403378" class="contact-item">
-              <div class="contact-icon phone-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-              <div>
-                <span class="contact-label">Mobile Phone &amp; Direct SMS</span>
+              <div class="contact-icon phone-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="contact-details">
+                <span class="contact-label">Mobile Phone</span>
                 <span class="contact-value">+91 8105403378</span>
               </div>
             </a>
 
-            <!-- WhatsApp Instant Chat -->
-            <a href="https://wa.me/918105403378?text=Hi%20Shree%20Hari,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20connect!" target="_blank" rel="noopener" class="contact-item">
-              <div class="contact-icon wa-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.075-2.025-.477-1.703-.707-2.802-2.456-2.887-2.57-.084-.113-.687-.914-.687-1.744 0-.83.435-1.238.59-1.397.155-.16.338-.2.45-.2.113 0 .225.002.324.007.104.005.244-.039.381.291.144.344.492 1.2.535 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.287-.087.1-.183.224-.261.301-.088.087-.18.181-.077.357.103.176.457.754.981 1.221.674.601 1.243.787 1.42.874.176.088.279.073.382-.045.103-.118.441-.513.56-.689.118-.176.236-.147.397-.088.161.059 1.025.483 1.201.571.177.088.295.132.338.206.044.074.044.43-.1 1.235z"/></svg></div>
-              <div>
-                <span class="contact-label">WhatsApp Quick Chat</span>
-                <span class="contact-value">+91 8105403378 (Instant)</span>
+            <!-- WhatsApp -->
+            <a href="https://wa.me/918105403378" target="_blank" rel="noopener" class="contact-item">
+              <div class="contact-icon wa-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              </div>
+              <div class="contact-details">
+                <span class="contact-label">WhatsApp Direct</span>
+                <span class="contact-value">+91 8105403378</span>
               </div>
             </a>
 
-            <!-- GitHub -->
-            <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" class="contact-item">
-              <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg></div>
-              <div><span class="contact-label">GitHub</span><span class="contact-value">shrihari12012007-web</span></div>
-            </a>
-            <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/in/shreehari-s-b-580a66440/" target="_blank" rel="noopener" class="contact-item">
-              <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></div>
-              <div><span class="contact-label">LinkedIn</span><span class="contact-value">shreehari-s-b</span></div>
-            </a>
-
             <!-- Location -->
-            <div class="contact-item no-link">
-              <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-              <div><span class="contact-label">Location</span><span class="contact-value">Davangere, Karnataka, India</span></div>
+            <div class="contact-item no-click">
+              <div class="contact-icon loc-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="contact-details">
+                <span class="contact-label">Current Location</span>
+                <span class="contact-value">Davangere, Karnataka, India</span>
+              </div>
             </div>
-          </div>
-
-          <div class="contact-availability-badge">
-            <span class="radar-dot"></span>
-            <span>⚡ Typical reply within 2–4 hours</span>
           </div>
         </div>
 
-        <!-- DIRECT CONTACT FORM -->
+        <!-- CONTACT FORM -->
         <div class="contact-form-card">
-          <div class="form-header-badge">
-            <span class="pill-dot green"></span>
-            <span>GET IN TOUCH</span>
+          <div class="form-card-topbar">
+            <div>
+              <h3 class="form-title">Send a Direct Message</h3>
+              <p class="form-subtitle">Delivered straight to Shree Hari's primary inbox.</p>
+            </div>
+            <span class="form-header-badge">Encrypted Form</span>
           </div>
-          <h3 class="form-title">Send a Message</h3>
-          <p class="form-sub-note">Delivered directly to my personal email with an instant mobile notification.</p>
-          
-          <form id="contactForm" class="contact-form">
+
+          <form id="contactForm" class="contact-form" novalidate>
+            <!-- Anti-Spam Honeypot Field (Hidden from real users) -->
+            <input type="text" name="_gotcha_honey" id="gotchaHoney" style="display:none!important;" tabindex="-1" autocomplete="off">
+
             <div class="form-group">
-              <label for="name">Your Name *</label>
-              <input type="text" id="name" name="name" required placeholder="e.g. Rahul Sharma">
+              <label for="name">Full Name <span class="req">*</span></label>
+              <input type="text" id="name" name="name" required placeholder="e.g. John Doe / Tech Recruiter">
+              <span class="field-error" id="nameError"></span>
             </div>
             
             <div class="form-row-2col">
               <div class="form-group">
-                <label for="email">Your Email *</label>
-                <input type="email" id="email" name="email" required placeholder="e.g. rahul@example.com">
+                <label for="email">Email Address <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="e.g. recruiter@company.com">
+                <span class="field-error" id="emailError"></span>
               </div>
               <div class="form-group">
-                <label for="phone">Your Mobile Phone (Optional)</label>
+                <label for="phone">Phone Number <span class="optional">(Optional)</span></label>
                 <input type="tel" id="phone" name="phone" placeholder="e.g. +91 98765 43210">
               </div>
             </div>
 
             <div class="form-group">
-              <label for="subject">Subject</label>
-              <input type="text" id="subject" name="subject" required placeholder="Opportunity / Collaboration / Inquiry">
+              <label for="subject">Subject <span class="req">*</span></label>
+              <input type="text" id="subject" name="subject" required placeholder="e.g. Engineering Opportunity / Collaboration">
+              <span class="field-error" id="subjectError"></span>
             </div>
 
             <div class="form-group">
-              <label for="message">Your Message *</label>
-              <textarea id="message" name="message" rows="4" required placeholder="Hi Shree Hari, I came across your portfolio and wanted to reach out regarding..."></textarea>
+              <label for="message">Message <span class="req">*</span></label>
+              <textarea id="message" name="message" rows="4" required placeholder="Hi Shree Hari, I reviewed your portfolio and would like to connect regarding..."></textarea>
+              <span class="field-error" id="messageError"></span>
             </div>
 
             <div class="form-dispatch-guarantee">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>Direct delivery to <code>shrihari12012007@gmail.com</code> · I typically respond within 24 hours.</span>
+              <span>Direct delivery to <code>shrihari12012007@gmail.com</code> &bull; Verified 24h response guarantee.</span>
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary form-submit-btn">
@@ -647,7 +818,7 @@
               <span class="arrow">↗</span>
             </button>
 
-            <div id="formStatus" class="form-status"></div>
+            <div id="formStatus" class="form-status" role="alert" aria-live="polite"></div>
           </form>
         </div>
       </div>
@@ -657,42 +828,44 @@
 
   <!-- BACK TO TOP BUTTON -->
   <button id="backToTop" class="back-to-top" aria-label="Back to Top">
-    <svg class="progress-ring" width="46" height="46">
-      <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.08)" stroke-width="3" fill="transparent" r="20" cx="23" cy="23"/>
-      <circle id="progressCircle" class="progress-ring-circle" stroke="#4ade80" stroke-width="3" fill="transparent" r="20" cx="23" cy="23"/>
+    <svg class="progress-ring" width="44" height="44">
+      <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.08)" stroke-width="2.5" fill="transparent" r="19" cx="22" cy="22"/>
+      <circle id="progressCircle" class="progress-ring-circle" stroke="#38bdf8" stroke-width="2.5" fill="transparent" r="19" cx="22" cy="22"/>
     </svg>
     <svg class="arrow-up" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
   <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer-inner">
-      <a href="#home" class="footer-logo">SH<span>.</span></a>
-      <p class="footer-copy">Designed &amp; built by <strong>Shree Hari S B</strong> · 2026</p>
-      <div class="footer-socials">
-        <a href="https://github.com/shrihari12012007-web" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/in/shreehari-s-b-580a66440/" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-        </a>
-        <a href="mailto:shrihari12012007@gmail.com" aria-label="Email">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </a>
+    <div class="footer-container">
+      <div class="footer-left">
+        <span class="footer-logo">SHREE HARI S B</span>
+        <span class="footer-tagline">Computer Science Engineering &bull; JIT Davangere</span>
+      </div>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-right">
+        <p class="copyright">&copy; 2026 Shree Hari S B. Built with vanilla HTML, CSS, JavaScript &amp; Three.js.</p>
       </div>
     </div>
   </footer>
 
-  <!-- 3D DRIVING HUD (MINIMAL FUTURISTIC) -->
+  <!-- ==================== 3D BMW INTERACTIVE HUD (Active during Drive Mode) ==================== -->
   <div id="driveHud" class="drive-hud" aria-hidden="true">
     <!-- Top Bar -->
     <div class="hud-top">
       <div class="hud-brand">
         <span class="hud-logo">SHREE HARI</span>
-        <span class="hud-badge">// 3D WORLD</span>
+        <span class="hud-badge">// 3D BMW M WORLD</span>
       </div>
 
-      <!-- Bruno Simon Style Quick Teleport Navigation Bar -->
+      <!-- Quick Teleport Navigation Bar -->
       <nav class="hud-nav-bar" aria-label="3D World Navigation">
         <button class="hud-teleport-btn active" data-zone="home">🏠 START</button>
         <button class="hud-teleport-btn" data-zone="about">👤 ABOUT</button>
@@ -713,61 +886,53 @@
         <button id="spinCamBtn" class="hud-sound-btn" aria-label="360 Camera Spin" title="360 Orbit Spin (Q/E)">
           <span>🔄 360°</span>
         </button>
-        <button id="hornBtn" class="hud-sound-btn" aria-label="Car Horn" title="Horn (H)">
-          <span>🎺</span>
-          <span class="hud-key-tag">H</span>
+        <button id="hornBtn" class="hud-sound-btn" aria-label="Sound Horn" title="Beep Horn (H)">
+          <span>📢 HORN</span>
         </button>
-        <button id="toggleCamBtn" class="hud-sound-btn" aria-label="Toggle Camera" title="Camera View (C)">
-          <span id="camIcon">📷 ISO</span>
+        <button id="toggleCamBtn" class="hud-sound-btn" aria-label="Switch Camera Angle" title="Camera Angle (C)">
+          <span id="camIcon">🎥 CAM</span>
           <span class="hud-key-tag">C</span>
         </button>
-        <button id="toggleSoundBtn" class="hud-sound-btn" aria-label="Toggle Sound" title="Toggle Sound (M)">
+        <button id="toggleSoundBtn" class="hud-sound-btn" aria-label="Toggle Mute Sound" title="Sound Mute (M)">
           <span id="soundIcon">🔊</span>
           <span class="hud-key-tag">M</span>
         </button>
-        <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit Drive Mode">
-          <span>EXIT 3D</span>
+        <button id="exitDriveBtn" class="hud-exit-btn" aria-label="Exit 3D Drive Mode" title="Exit Driving Simulator (ESC)">
+          <span>✕ EXIT DRIVE</span>
           <span class="hud-key-tag">ESC</span>
         </button>
       </div>
     </div>
 
-    <!-- Race Countdown & Race Live Status Banner -->
-    <div id="raceBanner" class="race-banner" style="display:none;">
-      <div id="raceCountdownText" class="race-countdown">3</div>
-      <div id="raceStatusText" class="race-status">GET READY</div>
+    <!-- 3-2-1 RACE COUNTDOWN BANNER -->
+    <div id="raceCountdownBanner" class="race-countdown-banner" style="display:none;">
+      <span id="countdownNumber" class="countdown-number">3</span>
+      <span class="countdown-sub">GET READY</span>
     </div>
 
-    <!-- Checkpoint / Project Floating Modal (Bruno Simon Style) -->
-    <div id="checkpointModal" class="checkpoint-modal">
-      <button id="cpModalCloseBtn" class="cp-modal-close" aria-label="Close Modal">&times;</button>
-      <div class="cp-modal-badge" id="cpModalNumber">CHECKPOINT 01</div>
-      <h3 class="cp-modal-title" id="cpModalTitle">ABOUT ME</h3>
-      <div id="cpModalTags" class="cp-modal-tags"></div>
-      <p class="cp-modal-desc" id="cpModalDesc">Explore background &amp; engineering journey.</p>
-      <div class="cp-modal-actions" id="cpModalActions">
-        <a id="cpModalLiveBtn" href="#" target="_blank" rel="noopener" class="btn btn-primary cp-modal-btn cp-live-btn" style="display:none;">
-          <span>VISIT LIVE DEMO ↗</span>
+    <!-- 3D Checkpoint Information Modal Overlay -->
+    <div id="checkpointModal" class="checkpoint-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <button id="checkpointCloseBtn" class="cp-modal-close" aria-label="Close modal">✕</button>
+      <div class="cp-modal-badge" id="cpModalBadge">PROJECT CHECKPOINT</div>
+      <h3 class="cp-modal-title" id="cpModalTitle">Project Title</h3>
+      <p class="cp-modal-desc" id="cpModalDesc">Project description goes here.</p>
+      <div class="cp-modal-tags" id="cpModalTags"></div>
+      <div class="cp-modal-actions">
+        <a id="cpModalActionBtn" href="#" target="_blank" rel="noopener" class="cp-modal-btn cp-live-btn">
+          View Live Demo ↗
         </a>
-        <a id="cpModalGithubBtn" href="#" target="_blank" rel="noopener" class="btn btn-secondary cp-modal-btn cp-github-btn" style="display:none;">
-          <span>VIEW GITHUB ↗</span>
+        <a id="cpModalGithubBtn" href="#" target="_blank" rel="noopener" class="cp-modal-btn cp-github-btn">
+          GitHub Repo ↗
         </a>
-        <button id="cpModalAction" class="btn btn-primary cp-modal-btn">
-          <span>OPEN SECTION</span>
-          <span class="hud-key-tag">ENTER</span>
-        </button>
       </div>
     </div>
 
-    <!-- Bottom Bar -->
+    <!-- Bottom Telemetry HUD Bar -->
     <div class="hud-bottom">
-      <!-- Controls Guide -->
       <div class="hud-controls-guide">
-        <div class="guide-item"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> DRIVE</div>
-        <div class="guide-sep">&bull;</div>
-        <div class="guide-item"><span class="key">DRAG</span> 360° ORBIT</div>
-        <div class="guide-sep">&bull;</div>
-        <div class="guide-item"><span class="key">H</span> HORN</div>
+        <div class="guide-item"><span class="key">W</span> ACCEL</div>
+        <div class="guide-item"><span class="key">S</span> BRAKE</div>
+        <div class="guide-item"><span class="key">A</span><span class="key">D</span> STEER</div>
         <div class="guide-sep">&bull;</div>
         <div class="guide-item"><span class="key">SPACE</span> DRIFT</div>
         <div class="guide-sep">&bull;</div>

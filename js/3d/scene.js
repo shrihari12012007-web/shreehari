@@ -66,19 +66,24 @@ class DriveScene {
     // Camera
     this.camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 1600);
 
-    // Renderer with ACESFilmic Tone Mapping
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
-      antialias: true,
-      powerPreference: 'high-performance',
-      alpha: false,
-    });
+    // Renderer with ACESFilmic Tone Mapping (try-catch guarded for unsupported hardware)
+    try {
+      this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas,
+        antialias: true,
+        powerPreference: 'high-performance',
+        alpha: false,
+      });
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-    this.renderer.setPixelRatio(dpr);
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.18;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      this.renderer.setPixelRatio(dpr);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this.renderer.toneMappingExposure = 1.18;
+    } catch (err) {
+      console.warn('WebGL initialization failed:', err);
+      this.renderer = null;
+    }
 
     this.initAtmosphere();
     this.initLights();
@@ -181,14 +186,20 @@ class DriveScene {
 
   initResize() {
     window.addEventListener('resize', () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      if (this.camera) {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+      }
+      if (this.renderer) {
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+      }
     });
   }
 
   render() {
-    this.renderer.render(this.scene, this.camera);
+    if (this.renderer && this.scene && this.camera) {
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 }
 
