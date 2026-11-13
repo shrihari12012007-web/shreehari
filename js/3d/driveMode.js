@@ -655,10 +655,17 @@ class DriveModeApp {
   }
 
   checkWebGL() {
+    this.isSupported = false;
     try {
-      const testCanvas = document.createElement('canvas');
-      const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
-      if (!gl) this.isSupported = false;
+      if (typeof THREE !== 'undefined') {
+        const testCanvas = document.createElement('canvas');
+        const gl = testCanvas.getContext('webgl2') ||
+                   testCanvas.getContext('webgl', { failIfMajorPerformanceCaveat: false }) ||
+                   testCanvas.getContext('experimental-webgl');
+        if (gl) {
+          this.isSupported = true;
+        }
+      }
     } catch (e) {
       this.isSupported = false;
     }
@@ -668,12 +675,12 @@ class DriveModeApp {
     const closeFallbackBtn = document.getElementById('closeFallbackBtn');
     if (closeFallbackBtn && fallbackModal) {
       closeFallbackBtn.addEventListener('click', () => {
-        fallbackModal.classList.remove('open');
+        fallbackModal.classList.remove('visible', 'open');
         fallbackModal.setAttribute('aria-hidden', 'true');
       });
       fallbackModal.addEventListener('click', (e) => {
         if (e.target === fallbackModal) {
-          fallbackModal.classList.remove('open');
+          fallbackModal.classList.remove('visible', 'open');
           fallbackModal.setAttribute('aria-hidden', 'true');
         }
       });
@@ -685,7 +692,7 @@ class DriveModeApp {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           if (fallbackModal) {
-            fallbackModal.classList.add('open');
+            fallbackModal.classList.add('visible', 'open');
             fallbackModal.setAttribute('aria-hidden', 'false');
           }
         });
@@ -1032,37 +1039,37 @@ class DriveModeApp {
     if (!this.isSupported || !this.driveScene || !this.driveScene.renderer) {
       const fallbackModal = document.getElementById('webglFallbackModal');
       if (fallbackModal) {
-        fallbackModal.classList.add('open');
+        fallbackModal.classList.add('visible', 'open');
         fallbackModal.setAttribute('aria-hidden', 'false');
       }
       return;
     }
 
     const overlay = document.getElementById('driveLoadingOverlay');
-    const progressBar = document.getElementById('driveLoadingProgress');
-    const statusText = document.getElementById('driveLoadingStatus');
+    const progressBar = document.getElementById('driveLoadProgress') || document.getElementById('driveLoadingProgress');
+    const statusText = document.querySelector('.drive-loading-sub') || document.getElementById('driveLoadingStatus');
 
-    if (overlay && progressBar) {
-      overlay.classList.add('active');
+    if (overlay) {
+      overlay.classList.add('visible', 'active');
       overlay.setAttribute('aria-hidden', 'false');
-      progressBar.style.width = '20%';
-      if (statusText) statusText.textContent = 'Compiling shaders & telemetry physics...';
+      if (progressBar) progressBar.style.width = '20%';
+      if (statusText) statusText.textContent = 'Compiling WebGL shaders & vehicle dynamics...';
 
       setTimeout(() => {
-        progressBar.style.width = '65%';
+        if (progressBar) progressBar.style.width = '65%';
         if (statusText) statusText.textContent = 'Warming up BMW M twin-turbo engine & asphalt shaders...';
-      }, 140);
+      }, 150);
 
       setTimeout(() => {
-        progressBar.style.width = '100%';
+        if (progressBar) progressBar.style.width = '100%';
         if (statusText) statusText.textContent = 'Engine primed. Launching cockpit...';
-      }, 340);
+      }, 350);
 
       setTimeout(() => {
-        overlay.classList.remove('active');
+        overlay.classList.remove('visible', 'active');
         overlay.setAttribute('aria-hidden', 'true');
         this.launchDrivingExperience();
-      }, 480);
+      }, 500);
     } else {
       this.launchDrivingExperience();
     }
@@ -1226,7 +1233,15 @@ class DriveModeApp {
   }
 }
 
-// Instantiate once DOM is ready
-window.addEventListener('DOMContentLoaded', () => {
-  window.driveApp = new DriveModeApp();
-});
+// Safe instantiation whether DOM is loading or already ready
+function initDriveApp() {
+  if (!window.driveApp) {
+    window.driveApp = new DriveModeApp();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDriveApp);
+} else {
+  initDriveApp();
+}

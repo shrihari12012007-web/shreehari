@@ -71,8 +71,9 @@ class DriveScene {
       this.renderer = new THREE.WebGLRenderer({
         canvas: this.canvas,
         antialias: true,
-        powerPreference: 'high-performance',
+        powerPreference: 'default',
         alpha: false,
+        failIfMajorPerformanceCaveat: false,
       });
 
       const dpr = Math.min(window.devicePixelRatio || 1, 1.75);

@@ -4,9 +4,10 @@
    • Silky mouse & scroll parallax with fluid inertia
    • Zero-jank IntersectionObserver scroll reveals & card staggering
    • Category filter tabs for verified projects
-   • FormSubmit direct delivery to shrihari12012007@gmail.com with spam honeypot
-   • Real-time GitHub API metrics sync for @shrihari12012007-web
-   • WebGL graceful fallback & Drive loading coordination
+   • Case study project detail modals (Priority 2)
+   • Live GitHub API sync & repository cards (Priority 3)
+   • FormSubmit delivery verification with spam honeypot (Priority 5)
+   • WebGL graceful fallback & Drive loading coordination (Priority 1)
    ============================================================ */
 
 // ── 1. CANVAS AMBIENT BACKGROUND ──────────────────────────────
@@ -121,7 +122,7 @@ function drawFrame() {
   const bg = curBg, ac = curAccent;
   const W  = canvas.width, H = canvas.height;
 
-  // Background gradient fill
+  // Background fill
   ctx.fillStyle = `rgb(${bg[0]|0},${bg[1]|0},${bg[2]|0})`;
   ctx.fillRect(0, 0, W, H);
 
@@ -170,12 +171,10 @@ let scrollVelocity = 0;
 function animateBg() {
   requestAnimationFrame(animateBg);
 
-  // Suspend 2D rendering when 3D WebGL mode is active to conserve GPU resources
   if (document.body.classList.contains('drive-mode-active')) return;
 
   const time = performance.now() * 0.001;
 
-  // Gentle breathing drift
   const idleDriftX = Math.sin(time * 0.36) * 32 + Math.cos(time * 0.2) * 18;
   const idleDriftY = Math.cos(time * 0.3) * 22 + Math.sin(time * 0.15) * 14;
 
@@ -401,13 +400,279 @@ if (filterTabs.length > 0 && projectCards.length > 0) {
   });
 }
 
-// ── 15. CONTACT FORM (VALIDATION + HONEYPOT + FORMSUBMIT AJAX) ──
+// ── 15. PROJECT DETAIL CASE STUDY MODAL (Priority 2) ───────────
+const PROJECT_DETAILS = {
+  'nova-cuts': {
+    title: 'Nova Cuts — Luxury Salon & Barbershop',
+    category: 'Full-Stack Web Platform',
+    badge: 'LIVE ON RENDER',
+    img: 'img/projects/nova-cuts.svg',
+    liveUrl: 'https://nova-cuts.onrender.com/',
+    githubUrl: 'https://github.com/shrihari12012007-web/nova-cuts',
+    problem: 'Traditional barbershops and luxury styling salons struggle with manual telephone scheduling, peak-hour bottlenecks, and fragmented service pricing menus that leave clients uncertain about service duration and costs.',
+    solution: 'Designed and engineered an end-to-end luxury grooming web portal with an interactive real-time service selection matrix, dynamic booking time slots, transparent price calculation, and instant confirmation summaries.',
+    features: [
+      'Interactive service catalogue covering hair grooming, beard sculpting, and facial treatments.',
+      'Real-time date and time-slot selection with automatic validation to prevent double-booking.',
+      'Responsive dark-mode aesthetic with fluid transitions built for both mobile and desktop clients.',
+      'Zero-downtime deployment pipeline hosted live on Render.'
+    ],
+    contribution: 'Architected the frontend booking interface from scratch using vanilla HTML5, CSS3, and JavaScript, engineered scheduling state logic, and configured production deployment on Render.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript (ES6+)', 'Node.js', 'Render Cloud']
+  },
+  'panda-ai': {
+    title: 'Panda — AI Voice Assistant',
+    category: 'Artificial Intelligence & Speech',
+    badge: 'AI & SPEECH RECOGNITION',
+    img: 'img/projects/panda-ai.svg',
+    liveUrl: null,
+    githubUrl: 'https://github.com/shrihari12012007-web',
+    problem: 'Modern desktop workflows require seamless hands-free productivity, yet conventional assistants often lack contextual reasoning, offline command fallback, and flexible multimodal LLM intelligence.',
+    solution: 'Engineered an autonomous conversational desktop agent powered by the Google Gemini API for intelligent contextual reasoning, coupled with real-time speech-to-text and edge text-to-speech synthesis.',
+    features: [
+      'Live microphone audio streaming with noise-filtering speech recognition.',
+      'Context-aware responses powered by Google Gemini API endpoints.',
+      'Natural voice output synthesis via pyttsx3 / edge-tts audio drivers.',
+      'System automation capabilities for desktop multitasking and command execution.'
+    ],
+    contribution: 'Designed the complete Python audio capture pipeline, integrated Google Gemini API inference endpoints, implemented conversational error recovery, and optimized speech synthesis response latency.',
+    technologies: ['Python 3', 'Google Gemini API', 'SpeechRecognition', 'pyttsx3', 'PyAudio']
+  },
+  'hand-gesture': {
+    title: 'Hand Gesture Camera Controller',
+    category: 'Computer Vision & HCI',
+    badge: 'COMPUTER VISION',
+    img: 'img/projects/hand-gesture.svg',
+    liveUrl: null,
+    githubUrl: 'https://github.com/shrihari12012007-web/Hand_Gesture_Camera.',
+    problem: 'Capturing photographs or operating camera hardware hands-free typically requires awkward timer delays, secondary Bluetooth remotes, or physical button presses that disrupt framing.',
+    solution: 'Developed a touchless computer vision control system that tracks 21 distinct 3D hand landmarks in real time through standard webcam feeds and triggers photo capture via custom gesture recognition algorithms.',
+    features: [
+      'Sub-millisecond 21-landmark 3D hand skeleton detection via Google MediaPipe.',
+      'Geometric finger angle math in OpenCV for gesture classification (V-sign, palm, fist).',
+      'Anti-jitter temporal smoothing to prevent false trigger activations.',
+      'Visual on-screen HUD with real-time gesture feedback and auto-saving photo gallery.'
+    ],
+    contribution: 'Engineered the OpenCV video stream processing pipeline, implemented mathematical vector checks for finger states using MediaPipe landmarks, and crafted the responsive visual feedback overlay.',
+    technologies: ['Python', 'OpenCV (cv2)', 'Google MediaPipe', 'NumPy', 'Android Studio Integration']
+  },
+  'srinidhi-eye-care': {
+    title: 'Srinidhi Eye Care — Healthcare Web Portal',
+    category: 'Healthcare & Medical Informatics',
+    badge: 'LIVE ON GITHUB PAGES',
+    img: 'img/projects/srinidhi-eye-care.svg',
+    liveUrl: 'https://shrihari12012007-web.github.io/srinidhi-eye-care/',
+    githubUrl: 'https://github.com/shrihari12012007-web/srinidhi-eye-care',
+    problem: 'Patients needing clinical eye care, cataract evaluations, and optical services often encounter outdated hospital websites that lack clear doctor availability, optical catalogs, and intuitive mobile reachout.',
+    solution: 'Built a patient-centric, high-accessibility web portal presenting ophthalmology specialties, doctor credentials, diagnostic procedures, optical retail information, and direct inquiry channels.',
+    features: [
+      'Accessible clinical specialty directory covering cataract, retina, glaucoma, and optical services.',
+      'Doctor credentials, visiting hours, and clinic location roadmap.',
+      'High-contrast, large-typography layouts compliant with medical accessibility standards.',
+      'Instant direct appointment inquiry buttons wired to phone and WhatsApp.'
+    ],
+    contribution: 'Designed the accessibility-focused medical interface, structured the treatment hierarchy, built the responsive frontend layout, and deployed to GitHub Pages.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'React & Vite', 'GitHub Pages']
+  },
+  'strategy-tracker': {
+    title: 'Strategy Tracker — Sprint Velocity System',
+    category: 'Productivity & Workflow Engineering',
+    badge: 'LIVE ON VERCEL',
+    img: 'img/projects/strategy-tracker.svg',
+    liveUrl: 'https://strategy-tracker-nine.vercel.app/',
+    githubUrl: 'https://github.com/shrihari12012007-web/Strategy-Tracker',
+    problem: 'Engineering students and software developers frequently juggle coursework, open-source projects, and personal goals without a lightweight, real-time visualization of their daily execution velocity.',
+    solution: 'Created an agile goal and sprint productivity web application with animated SVG velocity progress rings, priority-based task matrices, and zero-latency local persistence.',
+    features: [
+      'Dynamic SVG circular velocity indicator updating in real time as milestones are completed.',
+      'Priority categorization (High, Medium, Normal) with instant status toggling.',
+      'Persistent client-side state via LocalStorage — works seamlessly offline.',
+      'Fast-loading responsive glassmorphism UI deployed on Vercel.'
+    ],
+    contribution: 'Conceptualized and built the productivity application, developed the SVG circular trigonometry math for progress visualization, implemented persistent state storage, and deployed on Vercel.',
+    technologies: ['JavaScript', 'HTML5', 'CSS3', 'SVG Trigonometry', 'Vercel']
+  },
+  'study-hub': {
+    title: 'STUDY Resource Hub (Panda Vault)',
+    category: 'Education & Academic Architecture',
+    badge: 'LIVE ON GITHUB PAGES',
+    img: 'img/projects/study-hub.svg',
+    liveUrl: 'https://shrihari12012007-web.github.io/STUDY/',
+    githubUrl: 'https://github.com/shrihari12012007-web/STUDY',
+    problem: 'Undergraduate Computer Science students navigate fragmented university portals, scattered PDF lecture slides, and unorganized question banks when preparing for semester examinations.',
+    solution: 'Architected a centralized, structured academic hub organizing VTU Computer Science syllabus modules, reference textbooks, practical lab code solutions, and model question banks in one unified portal.',
+    features: [
+      'Semester-by-semester course taxonomy covering core CS topics (DSA, DBMS, OS, Networks).',
+      'Rapid filtering and instant search across subjects and downloadable academic material.',
+      'Minimalist dark UI optimized for long reading sessions and late-night study workflows.',
+      'Zero-bandwidth static architecture deployed on GitHub Pages.'
+    ],
+    contribution: 'Organized and curated the Computer Science academic repository taxonomy, designed the fast, clean reading interface, and optimized static asset delivery on GitHub Pages.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'GitHub Pages', 'Markdown']
+  }
+};
+
+const projectModal         = document.getElementById('projectModal');
+const projectModalBackdrop = document.getElementById('projectModalBackdrop');
+const projectModalCloseBtn = document.getElementById('projectModalCloseBtn');
+
+function openProjectModal(projectId) {
+  const data = PROJECT_DETAILS[projectId];
+  if (!data || !projectModal) return;
+
+  const modalCategory     = document.getElementById('modalCategory');
+  const modalBadge        = document.getElementById('modalBadge');
+  const modalTitle        = document.getElementById('modalTitle');
+  const modalImg          = document.getElementById('modalImg');
+  const modalProblem      = document.getElementById('modalProblem');
+  const modalSolution     = document.getElementById('modalSolution');
+  const modalFeatures     = document.getElementById('modalFeatures');
+  const modalContribution = document.getElementById('modalContribution');
+  const modalTechStack    = document.getElementById('modalTechStack');
+  const modalLiveBtn      = document.getElementById('modalLiveBtn');
+  const modalRepoBtn      = document.getElementById('modalRepoBtn');
+
+  if (modalCategory) modalCategory.textContent = data.category;
+  if (modalBadge) modalBadge.textContent = data.badge;
+  if (modalTitle) modalTitle.textContent = data.title;
+  if (modalImg) {
+    modalImg.src = data.img;
+    modalImg.alt = data.title + ' Architecture Preview';
+  }
+  if (modalProblem) modalProblem.textContent = data.problem;
+  if (modalSolution) modalSolution.textContent = data.solution;
+  if (modalContribution) modalContribution.textContent = data.contribution;
+
+  if (modalFeatures) {
+    modalFeatures.innerHTML = data.features.map(f => `<li>${f}</li>`).join('');
+  }
+
+  if (modalTechStack) {
+    modalTechStack.innerHTML = data.technologies.map(t => `<span>${t}</span>`).join('');
+  }
+
+  if (modalLiveBtn) {
+    if (data.liveUrl) {
+      modalLiveBtn.href = data.liveUrl;
+      modalLiveBtn.style.display = 'inline-flex';
+    } else {
+      modalLiveBtn.style.display = 'none';
+    }
+  }
+
+  if (modalRepoBtn) {
+    modalRepoBtn.href = data.githubUrl;
+  }
+
+  projectModal.classList.add('visible', 'open');
+  projectModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProjectModal() {
+  if (!projectModal) return;
+  projectModal.classList.remove('visible', 'open');
+  projectModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+if (projectModalCloseBtn) projectModalCloseBtn.addEventListener('click', closeProjectModal);
+if (projectModalBackdrop) projectModalBackdrop.addEventListener('click', closeProjectModal);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && projectModal && projectModal.classList.contains('visible')) {
+    closeProjectModal();
+  }
+});
+
+// Wire up open clicks across all project cards
+document.querySelectorAll('[data-project-id]').forEach(el => {
+  el.addEventListener('click', (e) => {
+    // If the clicked target was an external link on the card, let the link open normally
+    if (e.target.tagName.toLowerCase() === 'a' && !e.target.classList.contains('btn-open-modal')) {
+      return;
+    }
+    const pid = el.getAttribute('data-project-id');
+    if (pid) {
+      e.preventDefault();
+      openProjectModal(pid);
+    }
+  });
+});
+
+// ── 16. LIVE GITHUB METRICS & REPOSITORIES (Priority 3) ────────
+async function syncGitHubData() {
+  const repoEl       = document.getElementById('ghRepoCount');
+  const followersEl  = document.getElementById('ghFollowersCount');
+  const langEl       = document.getElementById('ghTopLanguages');
+  const reposGrid    = document.getElementById('ghRecentRepos');
+  const syncStatusEl = document.getElementById('ghSyncStatus');
+
+  // 1. Fetch User Profile Metrics
+  try {
+    const res = await fetch('https://api.github.com/users/shrihari12012007-web');
+    if (res.ok) {
+      const data = await res.json();
+      if (repoEl && data.public_repos !== undefined) repoEl.textContent = data.public_repos;
+      if (followersEl && data.followers !== undefined) followersEl.textContent = data.followers;
+    }
+  } catch (err) {
+    // Retain verified static numbers in HTML (16 repos, 2 followers)
+  }
+
+  // 2. Fetch Live Public Repositories
+  try {
+    const reposRes = await fetch('https://api.github.com/users/shrihari12012007-web/repos?sort=updated&per_page=6');
+    if (reposRes.ok && reposGrid) {
+      const repos = await reposRes.json();
+      if (Array.isArray(repos) && repos.length > 0) {
+        const langDots = {
+          'JavaScript': 'dot-js',
+          'TypeScript': 'dot-ts',
+          'HTML': 'dot-html',
+          'Python': 'dot-python',
+          'CSS': 'dot-css'
+        };
+
+        reposGrid.innerHTML = repos.map(r => {
+          const lang = r.language || 'Code';
+          const dotClass = langDots[lang] || 'dot-js';
+          const desc = r.description || 'Public engineering repository by Shree Hari S B.';
+          return `
+            <div class="gh-repo-item">
+              <div class="gh-repo-top">
+                <a href="${r.html_url}" target="_blank" rel="noopener" class="gh-repo-name">${r.name}</a>
+                <span class="gh-repo-star">★ ${r.stargazers_count || 0}</span>
+              </div>
+              <p class="gh-repo-desc">${desc}</p>
+              <div class="gh-repo-meta">
+                <span class="gh-repo-lang"><span class="lang-color-dot ${dotClass}"></span> ${lang}</span>
+                <span class="gh-repo-vis">Public</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (syncStatusEl) {
+          syncStatusEl.innerHTML = '<span class="sync-dot"></span> Live GitHub Sync (Verified)';
+        }
+      }
+    }
+  } catch (err) {
+    // Keep verified static cards in HTML if API is rate-limited
+    if (syncStatusEl) {
+      syncStatusEl.innerHTML = '<span class="sync-dot" style="background:#38bdf8"></span> Verified Archive';
+    }
+  }
+}
+syncGitHubData();
+
+// ── 17. CONTACT FORM (VALIDATION + HONEYPOT + FORMSUBMIT) ──────
 const contactForm = document.getElementById('contactForm');
 const formStatus  = document.getElementById('formStatus');
 const submitBtn   = document.getElementById('submitBtn');
 const btnText     = document.getElementById('btnText');
 
-// Inline error clearing upon user input
 ['name', 'email', 'subject', 'message'].forEach(id => {
   const el = document.getElementById(id);
   const errEl = document.getElementById(id + 'Error');
@@ -445,7 +710,6 @@ if (contactForm) {
 
     let hasError = false;
 
-    // Field-level validations
     if (name.length < 2) {
       const err = document.getElementById('nameError');
       if (err) err.textContent = 'Please enter your full name (at least 2 characters).';
@@ -510,7 +774,8 @@ if (contactForm) {
 
       const result = await response.json().catch(() => ({}));
 
-      if (response.ok || result.success === 'true' || result.success === true) {
+      // Strictly verify actual delivery success
+      if (result.success === 'true' || result.success === true) {
         if (formStatus) {
           formStatus.innerHTML = `
             <div class="dispatch-success-box">
@@ -518,12 +783,12 @@ if (contactForm) {
               <div class="dispatch-info">
                 <h4 class="dispatch-title">Message Delivered Successfully</h4>
                 <p class="dispatch-desc">
-                  Your message was sent directly to Shree Hari's inbox (<code>shrihari12012007@gmail.com</code>).
+                  Your message was sent directly to Shree Hari's primary inbox (<code>shrihari12012007@gmail.com</code>).
                   Expect a prompt response within 24 hours.
                 </p>
                 <div class="mobile-ping-panel">
                   <span class="mobile-ping-badge"><span class="radar-dot"></span> DIRECT REACHOUT</span>
-                  <p class="mobile-ping-text">Need an immediate answer? Reach Shree Hari directly via WhatsApp or Phone:</p>
+                  <p class="mobile-ping-text">Need an immediate answer? Reach Shree Hari directly via WhatsApp or SMS:</p>
                   <div class="mobile-ping-buttons">
                     <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
                       <span>WhatsApp (+91 8105403378)</span>
@@ -540,8 +805,37 @@ if (contactForm) {
         contactForm.reset();
         if (submitBtn) submitBtn.disabled = false;
         if (btnText) btnText.textContent = 'Message Sent! Send Another';
+      } else if (result.message && result.message.includes('Activation')) {
+        // Truthful activation state feedback
+        if (formStatus) {
+          formStatus.innerHTML = `
+            <div class="dispatch-success-box" style="border-color: rgba(56, 189, 248, 0.4);">
+              <div class="dispatch-check" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">ℹ</div>
+              <div class="dispatch-info">
+                <h4 class="dispatch-title">Form Pending Initial Activation</h4>
+                <p class="dispatch-desc">
+                  FormSubmit has sent a one-time activation link to <code>shrihari12012007@gmail.com</code>.
+                  To ensure instant reachout, you can connect directly with Shree Hari right now via WhatsApp, SMS, or direct email:
+                </p>
+                <div class="mobile-ping-buttons" style="margin-top: 12px;">
+                  <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
+                    <span>WhatsApp (+91 8105403378)</span>
+                  </a>
+                  <a href="sms:+918105403378?body=${smsMessage}" class="ping-btn sms-ping-btn">
+                    <span>Send SMS (+91 8105403378)</span>
+                  </a>
+                  <a href="mailto:shrihari12012007@gmail.com?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(message)}" class="ping-btn sms-ping-btn">
+                    <span>Direct Email Client</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnText) btnText.textContent = 'Send Message';
       } else {
-        throw new Error(result.message || 'FormSubmit response not ok');
+        throw new Error(result.message || 'Delivery confirmation failed');
       }
 
     } catch (err) {
@@ -552,7 +846,7 @@ if (contactForm) {
             <div class="dispatch-check" style="background:rgba(239,68,68,0.15);color:#f87171;border-color:rgba(239,68,68,0.3);">!</div>
             <div class="dispatch-info">
               <h4 class="dispatch-title">Network Notice — Reach Shree Hari Directly</h4>
-              <p class="dispatch-desc">The direct form API had a connectivity hiccup. Please dispatch your drafted message instantly via any direct link below:</p>
+              <p class="dispatch-desc">The direct form API had a connectivity hiccup. Please dispatch your drafted inquiry instantly via any channel below:</p>
               <div class="mobile-ping-buttons" style="margin-top: 10px;">
                 <a href="https://wa.me/918105403378?text=${waMessage}" target="_blank" rel="noopener" class="ping-btn wa-ping-btn">
                   <span>WhatsApp (+91 8105403378)</span>
@@ -574,7 +868,7 @@ if (contactForm) {
   });
 }
 
-// ── 16. BACK TO TOP BUTTON WITH SCROLL PROGRESS ────────────────
+// ── 18. BACK TO TOP BUTTON WITH SCROLL PROGRESS ────────────────
 const backToTopBtn    = document.getElementById('backToTop');
 const progressCircle  = document.getElementById('progressCircle');
 const CIRCLE_LENGTH   = 125.66; // 2 * PI * 20
@@ -599,56 +893,13 @@ if (backToTopBtn) {
   });
 }
 
-// ── 17. LIVE GITHUB METRICS SYNC ───────────────────────────────
-async function syncGitHubStats() {
-  const repoEl      = document.getElementById('ghRepoCount');
-  const followersEl = document.getElementById('ghFollowersCount');
-  const langEl      = document.getElementById('ghTopLanguages');
-
-  try {
-    const res = await fetch('https://api.github.com/users/shrihari12012007-web');
-    if (res.ok) {
-      const data = await res.json();
-      if (repoEl && data.public_repos !== undefined) {
-        repoEl.textContent = data.public_repos;
-      }
-      if (followersEl && data.followers !== undefined) {
-        followersEl.textContent = data.followers;
-      }
-    }
-  } catch (err) {
-    // Graceful fallback to verified figures in HTML
-  }
-
-  // Fetch languages dynamically across repositories
-  try {
-    const reposRes = await fetch('https://api.github.com/users/shrihari12012007-web/repos?per_page=100');
-    if (reposRes.ok && langEl) {
-      const repos = await reposRes.json();
-      const langCounts = {};
-      repos.forEach(r => {
-        if (r.language) {
-          langCounts[r.language] = (langCounts[r.language] || 0) + 1;
-        }
-      });
-      const topLangs = Object.keys(langCounts).sort((a, b) => langCounts[b] - langCounts[a]).slice(0, 5);
-      if (topLangs.length > 0) {
-        langEl.innerHTML = topLangs.map(l => `<span class="gh-lang-pill">${l}</span>`).join('');
-      }
-    }
-  } catch (err) {
-    // Preserve static fallback badges in HTML
-  }
-}
-syncGitHubStats();
-
-// ── 18. WEBGL MODAL DISMISS WIREUP ────────────────────────────
+// ── 19. WEBGL MODAL DISMISS WIREUP ────────────────────────────
 const fallbackModal    = document.getElementById('webglFallbackModal');
 const closeFallbackBtn = document.getElementById('closeFallbackBtn');
 
 if (closeFallbackBtn && fallbackModal) {
   closeFallbackBtn.addEventListener('click', () => {
-    fallbackModal.classList.remove('open');
+    fallbackModal.classList.remove('visible', 'open');
     fallbackModal.setAttribute('aria-hidden', 'true');
   });
 }
